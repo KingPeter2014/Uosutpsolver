@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%@page import="utpsolver.ReadInputs"%>
+ <%@page import="java.util.*" %>
+ <%@ page import="java.io.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,11 +18,22 @@
 			
 		</div>
 <div>
+<% ReadInputs read = new ReadInputs();
+ List<String> roomNames = read.getRoomNames();
+ String rooms = read.getRooms();
+ int capacity = read.getmoduleCount();
+ Iterator<String> iter = roomNames.iterator();
+ //out = response.getWriter();
+%>
 <fieldset><legend>Listing Rooms</legend>
 	<table width="100%"> 
 		<tr>
 			<th> id</th><th>Name</th><th>Type</th><th>Capacity</th><th>Actions</th>
 		</tr>
+		<% 
+			
+			out.println(rooms);
+		%>
 
 	</table>
 </fieldset>

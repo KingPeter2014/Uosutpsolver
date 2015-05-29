@@ -1,6 +1,8 @@
 package utpsolver;
 
 import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBConnection {
 	private Connection con = null;
@@ -8,10 +10,10 @@ public class DBConnection {
 	private ResultSet resultSet = null;
 	private boolean initialized = false;
 	private PreparedStatement pstm = null;
-	private String dbServer = "jdbc:mysql://localhost/";//"jdbc:mysql://localhost/"
-	private String dbname = "dissertation";//
+	private String dbServer = "jdbc:mysql://localhost:3306/";//"jdbc:mysql://localhost/"
+	private String dbname = "dissertation";
 	private String user = "root";
-	private String dbPassword = "";
+	private String dbPassword = "mysql";
 
 	public DBConnection() {
 		initConnection();
@@ -31,7 +33,7 @@ public class DBConnection {
 	public ResultSet executeQuery(PreparedStatement query) {
 		
 		try {
-			if (initConnection()) {
+			if (initialized) {
 				resultSet = query.executeQuery();
 			}
 		} catch (SQLException e) {
@@ -113,7 +115,8 @@ public class DBConnection {
 				stmt = con.createStatement();
 				initialized = true;
 			} catch (Exception e) {
-				System.err.println("fail to start connection.");
+				e.printStackTrace();
+				//System.err.println("failed to start connection.:"+ e.getMessage());
 				return false;
 			}
 		}
