@@ -18,12 +18,10 @@
 			
 		</div>
 <div>
-<% ReadInputs read = new ReadInputs();
- List<String> roomNames = read.getRoomNames();
- String rooms = read.getRooms();
- int capacity = read.getmoduleCount();
- Iterator<String> iter = roomNames.iterator();
- //out = response.getWriter();
+<% 
+	ReadInputs read = new ReadInputs();
+ 	String rooms = read.getRooms();
+ 
 %>
 <fieldset><legend>Listing Rooms</legend>
 	<table width="100%"> 

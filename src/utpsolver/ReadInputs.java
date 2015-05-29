@@ -1,5 +1,5 @@
 package utpsolver;
-import java.io.PrintWriter;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +12,8 @@ import utpsolver.DBConnection;
 public class ReadInputs {
 	private int roomCount=0,lecturerCount=0,moduleCount=0;
 	private int roomCapacity=0,studentsInModule=0,studentsInCohort=0;
-	private List<String> roomnames=new ArrayList<String>(),roomTypes=new ArrayList<String>();
-	String roomName,roomType,rooms="";
+	private List<String> roomTypes=new ArrayList<String>();
+	String roomName,roomType,rooms="",moduleType="";
 	DBConnection db = null;
 	ResultSet rst = null;
 	PreparedStatement pst = null;
@@ -21,13 +21,7 @@ public class ReadInputs {
 		db = new DBConnection();
 		
 	}
-	public List<String> getRoomNames(){
-		
-		rst = db.executeQuery("SELECT code,roomname FROM lecturerooms");
-		roomnames.add("Existing rooms");
-		db.closeConnection();
-		return roomnames;
-	}
+	
 	//Returns a list of all the room types available
 	public String getRooms(){
 		rooms = "<tr>";
@@ -76,20 +70,93 @@ public class ReadInputs {
 	
 	public int getRoomCount(){
 		
+		rst = db.executeQuery("SELECT count(id) AS numrooms FROM lecturerooms");
+		try {
+			rst.first();
+			roomCount= rst.getInt("numrooms");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
 		return roomCount;
 	}
 	
 	public int getRoomCapacity(int roomid){
 		
+		rst = db.executeQuery("SELECT capacity FROM lecturerooms WHERE id=" + roomid);
+		try {
+			rst.first();
+			roomCapacity= rst.getInt("numrooms");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
 		return roomCapacity;
 	}
 	
 	public int getLecturerCount(){
-		
+		rst = db.executeQuery("SELECT count(id) AS numlecturers FROM lecturers");
+		try {
+			rst.first();
+			lecturerCount= rst.getInt("numlecturers");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
 		return lecturerCount;
 	}
 	public int getmoduleCount(){
-		
+		rst = db.executeQuery("SELECT count(id) AS numodules FROM courses");
+		try {
+			rst.first();
+			moduleCount= rst.getInt("numodules");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
 		return moduleCount;
+	}
+	
+	public int getStudentsInModule(int moduleid){
+		rst = db.executeQuery("SELECT numstudents FROM courses WHERE id=" + moduleid);
+		try {
+			rst.first();
+			studentsInModule= rst.getInt("numstudents");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return studentsInModule;
+	}
+	public String getModuleType(int moduleid){
+		rst = db.executeQuery("SELECT coursetype FROM courses WHERE id=" + moduleid);
+		try {
+			rst.first();
+			moduleType= rst.getString("coursetype");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return moduleType;
 	}
 }
