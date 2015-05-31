@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Add new Cohort</title>
 </head>
 <body>
 
 <div id="maincontent">
 	<fieldset><legend>Add New Room</legend>
 		<form action="/utpsolver/AddCohortServlet" method="POST">
-			<table>
+			<table width="60%">
 				<tr>
 					<td>Cohort Name<em>*</em></td>
 					<td><input type="text" name="cname" id="cname" placeholder=" Eg. B.Sc Computer Science"/></td>
@@ -19,7 +19,7 @@
 				
 				
 				<tr>
-				<td style="width:200px"><label>Cohort Name&nbsp;<em>*</em></label></td>
+				<td><label>Cohort Name&nbsp;<em>*</em></label></td>
 				<td><select name="cohortname" id="cohortname"><option value="0">...</option><option value="bsccsc">Bsc. Computer Science</option><option value="bengcsc">B.Eng Computer Science</option><option value="both">Both</optio></select></td>
 				</tr>
 				

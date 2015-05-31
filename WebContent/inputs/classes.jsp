@@ -15,14 +15,15 @@
 		<div id="menubar">
 			<li> <a href="classes.jsp">Home</a></li> 
 			<li><a href="addcohort.jsp"> Add Cohort</a></li>
+			<li><a href="addmoduletocohort.jsp"> Add Module to Cohort</a></li>
 			
 		</div>
-<div>
 <% 
 	ReadInputs read = new ReadInputs();
  	String cohorts = read.getCohorts();
  
 %>
+<br/>
 <fieldset><legend>Listing Cohorts</legend>
 	<table width="100%"> 
 		<tr>

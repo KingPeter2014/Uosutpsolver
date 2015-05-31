@@ -3,13 +3,14 @@ package utpsolver;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.sql.*;
+import utpsolver.UploadInputs;
 
-import com.mysql.jdbc.Driver;
+
 
 public class AddCohortServlet extends HttpServlet {
 	private String message="",cohortname="";
 	private int numstudents=0,level=0;
+	UploadInputs upload = null;
 	public AddCohortServlet() {
 		super();
 		
@@ -27,14 +28,36 @@ public class AddCohortServlet extends HttpServlet {
 		message = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
 		out.println(message);
 		cohortname = req.getParameter("cname");
-		numstudents = Integer.parseInt(req.getParameter("numstudent"));
-		level = Integer.parseInt(req.getParameter("level"));
 		if(cohortname.equals("")){
 			message+="Every Cohort must have a name";
 			out.println(message);
 			return;
 		}
+		String ns = req.getParameter("numstudent");
+		if(ns!=null && !ns.equals("")){
+			numstudents = Integer.parseInt(ns);
+		}
+		else
+		{
+			message+="Please, enter value for number of students in this Cohort";
+			out.println(message);
+			return;
+		}
+		String l = req.getParameter("level");
+		if(l!=null && !l.equals("")){
+			level = Integer.parseInt(l);
+		}
+		else
+		{
+			message+="Please, enter the level of study for this Cohort";
+			out.println(message);
+			return;
+		}		
 		message = "";
+		upload = new UploadInputs();
+		String addcohort = upload.addCohort(cohortname, numstudents, level);
+		message += addcohort;
+		out.println(message);
 	}
 
 }
