@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Modules/Courses</title>
+<title>Add Module</title>
 </head>
 <body>
 

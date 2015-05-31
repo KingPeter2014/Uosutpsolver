@@ -13,7 +13,7 @@ public class ReadInputs {
 	private int roomCount=0,lecturerCount=0,moduleCount=0;
 	private int roomCapacity=0,studentsInModule=0,studentsInCohort=0;
 	private List<String> roomTypes=new ArrayList<String>();
-	String roomName,roomType,rooms="",moduleType="",cohorts="";
+	String roomName,roomType,rooms="",moduleType="",cohorts="",modules="";
 	DBConnection db = null;
 	ResultSet rst = null;
 	PreparedStatement pst = null;
@@ -49,13 +49,13 @@ public class ReadInputs {
 	}
 	
 	public String getCohorts(){
-		cohorts = "<tr>";
+		cohorts = "";
 		rst = db.executeQuery("SELECT * FROM cohorts");
 		
 		try {
 			while(rst.next()){
 				
-				cohorts += "<td>" + rst.getInt("id") +"</td><td>" + rst.getString("cohortname") + "</td><td>" + 
+				cohorts += "<tr><td>" + rst.getInt("id") +"</td><td>" + rst.getString("cohortname") + "</td><td>" + 
 						rst.getString("numstudents") + "</td><td>" + rst.getInt("level_of_study") + "</td><td>"
 						+ "<a href=\"editcohort.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
 						+ "<a href=\"delete.jsp?id=" +rst.getInt("id") + "&what=cohort\"> Delete</a></td></tr>"
@@ -70,6 +70,31 @@ public class ReadInputs {
 			db.closeConnection();
 		}
 		return cohorts;
+	}
+	public String getModules(){
+		modules= "";
+rst = db.executeQuery("SELECT * FROM courses");
+		
+		try {
+			while(rst.next()){
+				
+				modules += "<tr><td>" + rst.getInt("id") +"</td><td>" + rst.getString("coursecode") + "</td><td>" + 
+						rst.getString("coursetitle") + "</td><td>" + rst.getInt("level") + "</td><td>"
+						+ "<a href=\"editmodule.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
+						+ "<a href=\"delete.jsp?id=" +rst.getInt("id") + "&what=module\"> Delete</a></td></tr>"
+						;
+			}
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			cohorts+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
+		return modules;
+		
 	}
 	
 	public String getRoomName(int roomid){

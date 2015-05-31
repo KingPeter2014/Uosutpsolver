@@ -37,6 +37,5 @@
 	</table>
 </fieldset>
 </div>
-</div>
 </body>
 </html>
