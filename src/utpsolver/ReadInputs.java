@@ -13,7 +13,7 @@ public class ReadInputs {
 	private int roomCount=0,lecturerCount=0,moduleCount=0;
 	private int roomCapacity=0,studentsInModule=0,studentsInCohort=0;
 	private List<String> roomTypes=new ArrayList<String>();
-	String roomName,roomType,rooms="",moduleType="";
+	String roomName,roomType,rooms="",moduleType="",cohorts="";
 	DBConnection db = null;
 	ResultSet rst = null;
 	PreparedStatement pst = null;
@@ -26,7 +26,7 @@ public class ReadInputs {
 	public String getRooms(){
 		rooms = "<tr>";
 		rst = db.executeQuery("SELECT * FROM lecturerooms");
-		roomTypes.add("Existing Room Types");
+		
 		try {
 			while(rst.next()){
 				roomTypes.add(rst.getString("roomtype"));
@@ -39,13 +39,37 @@ public class ReadInputs {
 		} catch (SQLException e) {
 		
 			e.printStackTrace();
-			roomTypes.add(e.getMessage());
+			rooms+=e.getMessage();
 		}
 		finally{
 			db.closeConnection();
 		}
 		return rooms;
 		
+	}
+	
+	public String getCohorts(){
+		cohorts = "<tr>";
+		rst = db.executeQuery("SELECT * FROM cohorts");
+		
+		try {
+			while(rst.next()){
+				
+				cohorts += "<td>" + rst.getInt("id") +"</td><td>" + rst.getString("cohortname") + "</td><td>" + 
+						rst.getString("numstudents") + "</td><td>" + rst.getInt("level_of_study") + "</td><td>"
+						+ "<a href=\"editcohort.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
+						+ "<a href=\"delete.jsp?id=" +rst.getInt("id") + "&what=cohort\"> Delete</a></td></tr>"
+						;
+			}
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			cohorts+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return cohorts;
 	}
 	
 	public String getRoomName(int roomid){
