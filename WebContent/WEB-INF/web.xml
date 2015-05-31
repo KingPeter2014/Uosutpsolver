@@ -17,4 +17,13 @@
   	<servlet-name>AddCohort</servlet-name>
   	<url-pattern>/AddCohortServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>AddModule</servlet-name>
+  	<servlet-class>utpsolver.AddModuleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AddModule</servlet-name>
+  	<url-pattern>/AddModuleServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
