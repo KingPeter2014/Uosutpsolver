@@ -17,12 +17,16 @@
 				</tr>
 				<tr>
 					<td>Module Title<em>*</em></td>
-					<td><input type="text" name="title" id="title" placeholder=" Eg. Web Intelligence"/></td>
+					<td><input type="text" name="title" id="title" placeholder="Eg. Web Intelligence"/></td>
 				</tr>
 				
 				<tr>
 				<td><label>Module Category&nbsp;<em>*</em></label></td>
 				<td><select name="category" id="category"><option value="0">Select</option><option value="core">Core Module</option><option value="elective">Elective</option><option value="both">Both</optio></select></td>
+				</tr>
+				<tr>
+				<td><label>Type&nbsp;<em>*</em></label></td>
+				<td><select name="type" id="type"><option value="0">Select</option><option value="lecture">Lectures Only</option><option value="lab">Laboratory Only</option><option value="both">Both</optio></select></td>
 				</tr>
 				<tr>
 				<tr>
@@ -37,7 +41,7 @@
 				
 				<tr>
 					<td>Number of Students<em>*</em></td>
-					<td><input type="number" name="numstudent" id="numstudent" min="1" max="1000"  placeholder="How many students can it take?"/></td>
+					<td><input type="number" name="numstudents" id="numstudent" value = "40" min="1" max="1000"  placeholder="How many students can it take?"/></td>
 				</tr>
 				<tr>
 					<td>Level Offered</td>
@@ -45,13 +49,19 @@
 				</tr>
 				
 				<tr>
-				<td><label>Home Department&nbsp;<em>*</em></label></td>
+				<td><label>Host Department&nbsp;<em>*</em></label></td>
 				<td><select name="department" id="department"><option value="0">Select</option><option value="dcs">Computer Science</option>
 						<option value="iph">Physics</option>
 						<option value="maths">Mathematics</option>
-						<option value="acse">Automatic Control Systems</optio>
+						<option value="mee">Mechanical</option>
+						<option value="aero">Aerospace Engineering</option>
+						<option value="acse">Automatic Control Systems</option>
 						<option value="psch">Psychology</option>
 						<option value="eee">Electrical/Electronic Engineering</option>
+						<option value="faculty">Engineering Faculty</option>
+						<option value="management">Management School</option>
+						<option value="English">English Language Support</option>
+						<option value="others">Other</option>
 						</select></td>
 				</tr>
 				
