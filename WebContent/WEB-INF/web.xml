@@ -35,4 +35,13 @@
   	<servlet-name>AddLecturer</servlet-name>
   	<url-pattern>/AddLecturerServlet</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+  	<servlet-name>AllocateModule</servlet-name>
+  	<servlet-class>utpsolver.AllocateModuleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AllocateModule</servlet-name>
+  	<url-pattern>/AllocateModuleServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

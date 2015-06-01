@@ -91,7 +91,7 @@ public class UploadInputs extends ReadInputs {
 	public String addLecturer(String name, String status,  String department){
 		message = "Has not updated anything yet";
 		String query = "INSERT INTO lecturers(lecturername,lecturer_type,department) VALUES('" + name + "','" + status +"','" + department+"')";
-		message=query;
+		//message=query;
 		
 		try {
 			int count=db.updateQuery(query);
@@ -105,8 +105,26 @@ public class UploadInputs extends ReadInputs {
 		finally{
 			db.closeConnection();
 		}
-		return message;
+		return message;	
+	}
+	
+	//Allocate a course to a lecturer
+	public int courseAllocation(int module,int lecturer){
+		int count=0;
 		
+		String query = "INSERT INTO course_allocations(lecturer_id,course_id) VALUES(" + lecturer + "," + module + ")";
+		message=query;
+		try {
+			count=db.updateQuery(query);
+			message = count + "";
+		} catch (Exception e) {
+			
+			message += e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return count;
 	}
 
 }
