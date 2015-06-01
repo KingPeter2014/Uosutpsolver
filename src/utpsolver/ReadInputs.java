@@ -278,4 +278,24 @@ public class ReadInputs {
 		
 		return lecturers;
 	}
+	//Get Cohorts to which Courses could be assigned to
+	public String displayCohorts(){
+		lecturers = "";
+		rst = db.executeQuery("SELECT * FROM cohorts");
+		
+		try {
+			while(rst.next()){
+				lecturers += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("cohortname") + "</option>";
+			}
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			lecturers+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
+		return lecturers;
+	}
 }
