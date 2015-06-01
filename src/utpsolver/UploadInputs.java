@@ -85,5 +85,28 @@ public class UploadInputs extends ReadInputs {
 				
 		return message;
 	}
+	
+	//Add a new Lecturer
+	
+	public String addLecturer(String name, String status,  String department){
+		message = "Has not updated anything yet";
+		String query = "INSERT INTO lecturers(lecturername,lecturer_type,department) VALUES('" + name + "','" + status +"','" + department+"')";
+		message=query;
+		
+		try {
+			int count=db.updateQuery(query);
+			if(count>0){
+				message = "Lecturer:, " + name + ", successfully added";
+			}
+		} catch (Exception e) {
+			
+			message += e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return message;
+		
+	}
 
 }

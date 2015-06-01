@@ -26,4 +26,13 @@
   	<servlet-name>AddModule</servlet-name>
   	<url-pattern>/AddModuleServlet</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+  	<servlet-name>AddLecturer</servlet-name>
+  	<servlet-class>utpsolver.AddLecturerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AddLecturer</servlet-name>
+  	<url-pattern>/AddLecturerServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

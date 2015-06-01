@@ -9,7 +9,7 @@
 <body>
 <div id="maincontent">
 	<fieldset><legend>Add New Module</legend>
-		<form action="/utpsolver/AddModuleServlet" method="POST">
+		<form action="/utpsolver/AddLecturerServlet" method="POST">
 			<table width="60%">
 				<tr>
 					<td>Lecturer Name<em>*</em></td>

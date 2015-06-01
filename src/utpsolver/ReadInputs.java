@@ -235,4 +235,47 @@ public class ReadInputs {
 		}
 		return moduleType;
 	}
+	//Get Courses for display in a select input for course allocation to lecturer
+	public String displayCourses(){
+		
+		modules= "";
+		rst = db.executeQuery("SELECT * FROM courses");
+		try {
+			while(rst.next()){
+				modules += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("coursecode") + "</option>";
+			}
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			modules+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+
+		
+		return modules;
+		
+	}
+	
+	//Get Lecturers to whom Courses could be assigned
+	public String displayLecturers(){
+		lecturers = "";
+		rst = db.executeQuery("SELECT * FROM lecturers");
+		
+		try {
+			while(rst.next()){
+				lecturers += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("lecturername") + "</option>";
+			}
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			lecturers+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
+		return lecturers;
+	}
 }

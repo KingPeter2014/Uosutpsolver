@@ -15,6 +15,7 @@
 		<div id="menubar">
 			<li> <a href="../index.jsp">Home</a></li> 
 			<li><a href="addmodule.jsp">New Module</a></li>
+			<li><a href="courseallocation.jsp"> Module Allocation</a></li>
 			
 		</div>
 <% 
