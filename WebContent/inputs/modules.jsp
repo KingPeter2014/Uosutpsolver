@@ -23,7 +23,7 @@
  
 %>
 <br/>
-<fieldset><legend>Listing Cohorts</legend>
+<fieldset><legend>Listing Modules</legend>
 	<table width="100%"> 
 		<tr>
 			<th> id</th><th>Course Code</th><th>Title</th><th>Level of Study</th><th>Actions</th>

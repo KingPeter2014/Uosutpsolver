@@ -1,6 +1,6 @@
 package utpsolver;
 
-import java.sql.SQLException;
+
 
 public class UploadInputs extends ReadInputs {
 	private String message="";

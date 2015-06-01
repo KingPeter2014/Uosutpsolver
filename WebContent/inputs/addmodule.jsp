@@ -66,7 +66,7 @@
 				</tr>
 				
 				<tr>
-					<td> <input type="submit" name="addcohort" value="Add new Module"/></td>
+					<td> <input type="submit" name="addmodule" value="Add new Module"/></td>
 					<td> <input type="reset" /> </td> 
 
 				</tr>
