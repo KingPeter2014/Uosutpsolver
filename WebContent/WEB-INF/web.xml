@@ -44,4 +44,14 @@
   	<servlet-name>AllocateModule</servlet-name>
   	<url-pattern>/AllocateModuleServlet</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+  	<servlet-name>ModuleCohortServlet</servlet-name>
+  	<servlet-class>utpsolver.ModuleCohortServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>ModuleCohortServlet</servlet-name>
+  	<url-pattern>/ModuleCohortServlet</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

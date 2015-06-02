@@ -126,5 +126,25 @@ public class UploadInputs extends ReadInputs {
 		}
 		return count;
 	}
+	
+	//Assign a module to a cohort. The module becomes a core module for the cohort
+	public int assignModuleToCohort(int module, int cohort, int level){
+		int count =0;
+		String query = "INSERT INTO modules_in_cohort(cohort_id,course_id,level) VALUES(" + cohort + "," + module + "," + level +  ")";
+		//message=query;
+		try {
+			count=db.updateQuery(query);
+			message = count + "";
+		} catch (Exception e) {
+			
+			message += e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
+		return count;
+		
+	}
 
 }
