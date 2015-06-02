@@ -34,21 +34,26 @@
 <% 
 ReadInputs read = new ReadInputs();
 	//String count = "No of lecturers:" +read.getRoomName(1);
-	List<Integer> roomids=new ArrayList<Integer>();
-	List<Integer> moduleids=new ArrayList<Integer>();
+	int [] roomids=read.getRoomIds();
 	
-	moduleids = read.getModuleIds();
-	int numModules = read.getmoduleCount();
-	Iterator iter = moduleids.iterator();
-	int[] moduleIdsArray = new int[moduleids.size()];
+	int[] moduleIdsArray = read.getModuleIds();
+	int numModules = moduleIdsArray.length;
 	int i=0;
-	while(iter.hasNext()){
-		moduleIdsArray[i] = Integer.parseInt(iter.next().toString());
+	while(i <numModules){
+		
 		out.println(moduleIdsArray[i] + ",");
+		
 		i=i+1;
 	}
-	
-	//out.println(count);
+		out.println("<br/>Rooms ID<br/>");
+	i=0;
+	int numRooms = roomids.length;
+	while(i <numRooms){
+		
+		out.println(roomids[i] + ",");
+		
+		i=i+1;
+	}
 
 %>
 </fieldset>

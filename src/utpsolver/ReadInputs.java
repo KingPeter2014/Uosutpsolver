@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 //import com.mysql.fabric.Response;
 
@@ -15,6 +15,7 @@ public class ReadInputs {
 	//private List<String> roomTypes=new ArrayList<String>();
 	private List<Integer> roomids=new ArrayList<Integer>();
 	private List<Integer> moduleids=new ArrayList<Integer>();
+	int[] idsArray ;
 	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",lecturers="";
 	DBConnection db = null;
 	ResultSet rst = null;
@@ -24,7 +25,7 @@ public class ReadInputs {
 		
 	}
 	//Get list of all the room ids for generating chromosome
-	public List getRoomIds(){
+	public int[] getRoomIds(){
 		rst = db.executeQuery("SELECT * FROM lecturerooms");
 		try {
 			while(rst.next()){
@@ -40,11 +41,24 @@ public class ReadInputs {
 				db.closeConnection();
 			}
 		
-		return roomids;
+		return convertIntegerListToIntegerArray(roomids);
+	}
+	
+	public int[] convertIntegerListToIntegerArray(List<Integer> list){
+		
+		idsArray = new int[list.size()];
+		Iterator<Integer> iter = list.iterator();
+		int i=0;
+		while(iter.hasNext()){
+			idsArray[i] = Integer.parseInt(iter.next().toString());
+			i=i+1;
+		}
+		
+		return  idsArray;
 	}
 	
 	//Get Module ids for generating chromosome
-	public List getModuleIds(){
+	public int[] getModuleIds(){
 		rst = db.executeQuery("SELECT * FROM courses");
 		try {
 			while(rst.next()){
@@ -59,7 +73,7 @@ public class ReadInputs {
 			finally{
 				db.closeConnection();
 			}
-		return moduleids;
+		return convertIntegerListToIntegerArray(moduleids);
 	}
 	//Returns a list of all the room types available
 	public String getRooms(){
