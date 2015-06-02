@@ -34,18 +34,19 @@
 <% 
 ReadInputs read = new ReadInputs();
 	//String count = "No of lecturers:" +read.getRoomName(1);
+	int timeslots = 40;
 	int [] roomids=read.getRoomIds();
-	
 	int[] moduleIdsArray = read.getModuleIds();
 	int numModules = moduleIdsArray.length;
 	int i=0;
+	out.println("<br/>Module IDs:");
 	while(i <numModules){
 		
 		out.println(moduleIdsArray[i] + ",");
 		
 		i=i+1;
 	}
-		out.println("<br/>Rooms ID<br/>");
+		out.println("<br/>Rooms IDs:");
 	i=0;
 	int numRooms = roomids.length;
 	while(i <numRooms){
@@ -53,6 +54,16 @@ ReadInputs read = new ReadInputs();
 		out.println(roomids[i] + ",");
 		
 		i=i+1;
+	}
+	out.println("<br/><hr/>Chromosome Structure<hr/>Time slots:=>");
+	for(int a =1; a <= timeslots; a++){
+		out.println(a + "&nbsp&nbsp");
+		
+	}
+	out.println("<br/>Room IDs:<br/>");
+	for(int b=0; b <numRooms;b++){
+		out.println("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + roomids[b] + "<br/>");
+
 	}
 
 %>
