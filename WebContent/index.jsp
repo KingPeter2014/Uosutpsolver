@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@page import="utpsolver.ReadInputs"%>
+ <%@page import="java.util.*" %>
+ <%@ page import="java.io.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -28,7 +31,26 @@
 
 <fieldset><legend>Run GA</legend>
 <button>Generate Timetable</button>
+<% 
+ReadInputs read = new ReadInputs();
+	//String count = "No of lecturers:" +read.getRoomName(1);
+	List<Integer> roomids=new ArrayList<Integer>();
+	List<Integer> moduleids=new ArrayList<Integer>();
+	
+	moduleids = read.getModuleIds();
+	int numModules = read.getmoduleCount();
+	Iterator iter = moduleids.iterator();
+	int[] moduleIdsArray = new int[moduleids.size()];
+	int i=0;
+	while(iter.hasNext()){
+		moduleIdsArray[i] = Integer.parseInt(iter.next().toString());
+		out.println(moduleIdsArray[i] + ",");
+		i=i+1;
+	}
+	
+	//out.println(count);
 
+%>
 </fieldset>
 </div>
 </body>

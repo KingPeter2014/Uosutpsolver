@@ -34,9 +34,6 @@
 				</tr>
 				
 				
-				
-				
-				
 				<tr>
 				<td><label>Assign To:&nbsp;<em>*</em></label></td>
 				<td><select name="cohort" id="cohort"><option value="0">Select</option>
