@@ -53,5 +53,13 @@
   	<servlet-name>ModuleCohortServlet</servlet-name>
   	<url-pattern>/ModuleCohortServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+  	<servlet-name>AddRoomServlet</servlet-name>
+  	<servlet-class>utpsolver.AddRoomServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AddRoomServlet</servlet-name>
+  	<url-pattern>/AddRoomServlet</url-pattern>
+  </servlet-mapping>
   
 </web-app>

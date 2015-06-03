@@ -24,6 +24,32 @@ public class UploadInputs extends ReadInputs {
 		return message;
 		
 	}
+	//Add new room
+	public String addRoom(String name, String description,  String type,int capacity, double latitude,double longitude){
+		message = "";
+		String query = "INSERT INTO lecturerooms(code,roomname,roomtype,capacity,latitude"
+				+ ",longitude) VALUES('" + name + "','" + description + "','" + type +"',"  + capacity + "," + latitude + "," + longitude +")";
+		message=query;
+		//return message;
+		
+		try {
+			int count=db.updateQuery(query);
+			if(count>0){
+				message = "Room:, " + name + ", successfully added";
+			}
+		} catch (Exception e) {
+			
+			message += "Error: " + e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return message;	
+		
+	}
+	
+	
+	//Add module to db repeating it for lab and lecture components respectively
 	public String addModule(String code, String title, String category,String type, int lecturehour, int labhour,
 			int numstudents, int level, String department){
 		String query = "INSERT INTO courses(coursecode,coursetitle,coursetype,numstudents,lecturehours"
