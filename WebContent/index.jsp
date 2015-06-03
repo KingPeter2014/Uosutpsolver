@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@page import="utpsolver.ReadInputs"%>
+    <%@page import="utpsolver.Chromosomes"%>
  <%@page import="java.util.*" %>
  <%@ page import="java.io.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -33,39 +34,24 @@
 <button>Generate Timetable</button>
 <% 
 ReadInputs read = new ReadInputs();
-	String test = "Time Conversions:" +read.get12HourTime(15);
-	out.println(test + ",");
+Chromosomes cr = new Chromosomes();
+	//String test = "Time Conversions:" + cr.generateRandomInteger(40);
+	
 	int timeslots = 40;
-	int [] roomids=read.getRoomIds();
+	int [][][] chromo = cr.chromosomes;
 	int[] moduleIdsArray = read.getModuleIds();
 	int numModules = moduleIdsArray.length;
 	int i=0;
-	out.println("<br/>Module IDs:");
-	while(i <numModules){
-		
-		out.println(moduleIdsArray[i] + ",");
-		
-		i=i+1;
-	}
-		out.println("<br/>Rooms IDs:");
-	i=0;
-	int numRooms = roomids.length;
-	while(i <numRooms){
-		
-		out.println(roomids[i] + ",");
-		
-		i=i+1;
-	}
-	out.println("<br/><hr/>Chromosome Structure<hr/>Time slots:=>");
-	for(int a =1; a <= timeslots; a++){
-		out.println(a + "&nbsp&nbsp");
+	
+	
+	out.println("<br/><hr/>Chromosome Structure<hr/>");
+	for(int b=0; b< Chromosomes.roomCount; b++){
+		for(int a =0; a < timeslots; a++)
+			out.println(chromo[1][b][a] + "&nbsp&nbsp&nbsp");
+		out.println("<br/>");
 		
 	}
-	out.println("<br/>Room IDs:<br/>");
-	for(int b=0; b <numRooms;b++){
-		out.println("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + roomids[b] + "<br/>");
-
-	}
+	
 
 %>
 </fieldset>
