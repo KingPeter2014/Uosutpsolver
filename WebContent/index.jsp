@@ -33,7 +33,8 @@
 <button>Generate Timetable</button>
 <% 
 ReadInputs read = new ReadInputs();
-	//String count = "No of lecturers:" +read.getRoomName(1);
+	String test = "Time Conversions:" +read.get12HourTime(15);
+	out.println(test + ",");
 	int timeslots = 40;
 	int [] roomids=read.getRoomIds();
 	int[] moduleIdsArray = read.getModuleIds();

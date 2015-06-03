@@ -12,11 +12,11 @@ import utpsolver.DBConnection;
 public class ReadInputs {
 	private int roomCount=0,lecturerCount=0,moduleCount=0;
 	private int roomCapacity=0,studentsInModule=0,studentsInCohort=0;
-	//private List<String> roomTypes=new ArrayList<String>();
 	private List<Integer> roomids=new ArrayList<Integer>();
 	private List<Integer> moduleids=new ArrayList<Integer>();
 	int[] idsArray ;
 	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",lecturers="";
+	String dayOfWeek = "";
 	DBConnection db = null;
 	ResultSet rst = null;
 	PreparedStatement pst = null;
@@ -44,6 +44,7 @@ public class ReadInputs {
 		return convertIntegerListToIntegerArray(roomids);
 	}
 	
+	//Converts an integer ArrayList to int Array
 	public int[] convertIntegerListToIntegerArray(List<Integer> list){
 		
 		idsArray = new int[list.size()];
@@ -100,7 +101,7 @@ public class ReadInputs {
 		return rooms;
 		
 	}
-	
+	//Gets cohorts for listing, editing and deleting purposes
 	public String getCohorts(){
 		cohorts = "";
 		rst = db.executeQuery("SELECT * FROM cohorts");
@@ -124,6 +125,7 @@ public class ReadInputs {
 		}
 		return cohorts;
 	}
+	//Gets modules for listing, editing and deleting purposes
 	public String getModules(){
 		modules= "";
 		rst = db.executeQuery("SELECT * FROM courses");
@@ -194,6 +196,7 @@ public class ReadInputs {
 		return roomName;
 	}
 	
+	//Returns lecture, lab or both depending on the type of room
 	public String getRoomType(int roomid){
 		rst = db.executeQuery("SELECT roomtype FROM lecturerooms WHERE id=" + roomid);
 		try {
@@ -209,6 +212,7 @@ public class ReadInputs {
 		return roomType;
 	}
 	
+	//Get the total number of lecture rooms and labs available
 	public int getRoomCount(){
 		
 		rst = db.executeQuery("SELECT count(id) AS numrooms FROM lecturerooms");
@@ -226,8 +230,8 @@ public class ReadInputs {
 		return roomCount;
 	}
 	
+	//Get the number of students that a room can take
 	public int getRoomCapacity(int roomid){
-		
 		rst = db.executeQuery("SELECT capacity FROM lecturerooms WHERE id=" + roomid);
 		try {
 			rst.first();
@@ -243,6 +247,7 @@ public class ReadInputs {
 		return roomCapacity;
 	}
 	
+	//Get the total number of staffs or lecturers
 	public int getLecturerCount(){
 		rst = db.executeQuery("SELECT count(id) AS numlecturers FROM lecturers");
 		try {
@@ -257,6 +262,8 @@ public class ReadInputs {
 		}
 		return lecturerCount;
 	}
+	
+	//Get the total number of modules in the DB
 	public int getmoduleCount(){
 		rst = db.executeQuery("SELECT count(id) AS numodules FROM courses");
 		try {
@@ -272,6 +279,7 @@ public class ReadInputs {
 		return moduleCount;
 	}
 	
+	//Return the number of students registered in a module
 	public int getStudentsInModule(int moduleid){
 		rst = db.executeQuery("SELECT numstudents FROM courses WHERE id=" + moduleid);
 		try {
@@ -368,7 +376,63 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
-		
+
 		return lecturers;
 	}
+	
+	//Transform time genotype to day phenotype
+	public String getDayOfWeek(int timeslot){
+		dayOfWeek = "INVALID";
+		if(timeslot >=1 && timeslot <=8){
+			dayOfWeek = "MON";
+		}
+		else if(timeslot >=9 && timeslot <=16){
+			dayOfWeek = "TUE";	
+		}
+		else if(timeslot >=17 && timeslot <=24){
+			dayOfWeek = "WED";	
+		}
+		else if(timeslot >=25 && timeslot <=32){
+			dayOfWeek = "THU";
+		}
+		else if(timeslot >=33 && timeslot <=40){
+			dayOfWeek = "FRI";	
+		}
+		return dayOfWeek;
+	}
+	
+	//Transform time gene to time Phenotype
+	public int getTimeOfDay(int timeslot){
+		int time = 9,mod=0;
+		mod=timeslot % 8;
+		switch(mod){
+		case 1: time=9;  break;
+		case 2:	time=10; break;
+		case 3:	time=11; break;
+		case 4:	time=12; break;
+		case 5:	time=13; break;
+		case 6: time=14; break;
+		case 7:	time=15; break;
+		case 0: time=16; break;
+		}
+		return time;
+	}
+	
+	//Transform 24-hour time to 12-hour time
+	public String get12HourTime(int timeslot){
+		String time = "";
+		switch(timeslot){
+		case 9:  time="9AM";  break;
+		case 10: time="10AM"; break;
+		case 11: time="11AM"; break;
+		case 12: time="12NOON"; break;
+		case 13: time="1PM"; break;
+		case 14: time="2PM"; break;
+		case 15: time="3PM"; break;
+		case 16: time="4PM"; break;
+		case 17: time="5PM"; break;
+		}
+		return time;
+	}
+
 }
