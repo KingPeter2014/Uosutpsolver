@@ -2,6 +2,7 @@ package utpsolver;
 import java.util.Random;
 
 import utpsolver.ReadInputs;
+import utpsolver.Fitness;
 /**
  * 
  * @author petereze
@@ -9,15 +10,16 @@ import utpsolver.ReadInputs;
  *
  */
 public class Chromosomes {
-	private int numChromosomes = 20;
+	private int numChromosomes = 20, fitness=0;
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="";
 	private int [] rooms,modules;
 	private int freeChromosome=0,freeRoom=0,freeTimeslot=0;
 	private boolean consecutiveFreeGeneFound=false;
-	
 	ReadInputs read = new ReadInputs();
+	Fitness fit = null;
+	
 	public Chromosomes(){
 		lecturerCount=read.getLecturerCount();
 		rooms= read.getRoomIds();
@@ -27,7 +29,7 @@ public class Chromosomes {
 		chromosomes = new int[numChromosomes][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
 		this.initializePopulation();
-
+		 fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules);
 		
 	}
 	private void initializePopulation(){
@@ -90,6 +92,11 @@ public class Chromosomes {
 		}//End chromosomes loop	
 	}
 	
+	public int getFitnessOnAContraint(int chromosome){
+		this.fitness = fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		return this.fitness;
+		
+	}
 	//Look for any free gene space. That is genes whose content is zero. No module allocated to it.
 	private void findUnoccuppiedGene(int currentChromosome){
 		freeChromosome=currentChromosome;
