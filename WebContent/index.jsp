@@ -33,9 +33,11 @@
 <fieldset><legend>Run GA</legend>
 <button>Generate Timetable</button>
 <% 
-ReadInputs read = new ReadInputs();
-Chromosomes cr = new Chromosomes();
-	//String test = "Time Conversions:" + cr.generateRandomInteger(40);
+
+	ReadInputs read = new ReadInputs();
+	Chromosomes cr = new Chromosomes();
+	String test = "Lecture/Lab Hours:" + read.getLectureHoursPerWeek(7, "lecture");
+	out.println(test);
 	
 	int timeslots = 40;
 	int [][][] chromo = cr.chromosomes;
@@ -52,7 +54,6 @@ Chromosomes cr = new Chromosomes();
 		
 	}
 	
-
 %>
 </fieldset>
 </div>

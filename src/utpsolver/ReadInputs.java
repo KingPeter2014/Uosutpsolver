@@ -315,6 +315,41 @@ public class ReadInputs {
 		}
 		return moduleType;
 	}
+	//Get the number of weekly lecture hours for a module
+	public int getLectureHoursPerWeek(int moduleid, String moduleType){
+		int lecturehours = 0;
+		rst = db.executeQuery("SELECT lecturehours FROM courses WHERE id=" + moduleid);
+		try {
+			rst.first();
+			lecturehours= rst.getInt("lecturehours");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
+		return lecturehours;
+	}
+	
+	//Get the number of weekly lab hours for a module
+		public int getLabHoursPerWeek(int moduleid){
+			int labhours = 0;
+			rst = db.executeQuery("SELECT labhours FROM courses WHERE id=" + moduleid);
+			try {
+				rst.first();
+				labhours= rst.getInt("labhours");
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			finally{
+				db.closeConnection();
+			}
+			
+			return labhours;
+		}
 	//Get Courses for display in a select input for course allocation to lecturer
 	public String displayCourses(){
 		
