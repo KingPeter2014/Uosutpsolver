@@ -46,13 +46,21 @@
 	int i=0;
 	
 	
-	out.println("<br/><hr/>Chromosome Structure<hr/>");
+	out.println("<br/><hr/>Chromosome Structure[1]<hr/>");
 	for(int b=0; b< Chromosomes.roomCount; b++){
 		for(int a =0; a < timeslots; a++)
 			out.println(chromo[1][b][a] + "&nbsp&nbsp&nbsp");
 		out.println("<br/>");
 		
 	}
+	out.println("<br/><hr/>Chromosome Structure[19]<hr/>");
+	for(int b=0; b< Chromosomes.roomCount; b++){
+		for(int a =0; a < timeslots; a++)
+			out.println(chromo[19][b][a] + "&nbsp&nbsp&nbsp");
+		out.println("<br/>");
+		
+	}
+	
 	
 %>
 </fieldset>

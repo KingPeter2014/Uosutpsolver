@@ -144,10 +144,11 @@ public class Chromosomes {
 						}
 						
 					}
-					else
-						continue;
-					
+										
 				}
+				else
+					continue;
+
 			}
 					
 		}	
