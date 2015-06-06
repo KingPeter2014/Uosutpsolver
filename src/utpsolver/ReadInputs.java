@@ -16,6 +16,7 @@ public class ReadInputs {
 	private List<Integer> moduleids=new ArrayList<Integer>();
 	private List<Integer> moduleAllocationids=new ArrayList<Integer>();
 	private List<Integer> lecturerAllocationids=new ArrayList<Integer>();
+	private String dailySchedule="";
 	
 	int[] idsArray ;
 	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",
@@ -253,6 +254,28 @@ public class ReadInputs {
 			db.closeConnection();
 		}
 		return courseallocations;
+	}
+	
+	//Gets the names of lecturers to whom a module has been assigned to
+	public String getModuleLecturers(int moduleid){
+		String lecturers = "";
+		String query ="SELECT c.coursecode,c.coursetitle,c.coursetype, l.lecturername,ca.id FROM courses c INNER JOIN course_allocations ca on c.id = ca.course_id AND c.id =" + moduleid+ " INNER JOIN lecturers l on ca.lecturer_id = l.id";
+		
+		rst = db.executeQuery(query);
+		try {
+			while(rst.next()){
+				lecturers+=rst.getString("lecturername") + ",";
+				
+			}
+		} catch (SQLException e) {
+						e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		if(lecturers.equals(""))
+			lecturers="NONE";
+		return lecturers;
 	}
 
 	// Return room code for mapping from genotype to phenotype
@@ -599,4 +622,91 @@ public class ReadInputs {
 		return time;
 	}
 
+	//Returns course code,Room,day,time and lecturer for a lecture or lab
+	public String mapEventGeneToPhenotype(int time,int room,int module){
+		String phenotype = "";
+		phenotype += this.getModuleCode(module) + "(" + this.getModuleType(module) + ")" + "<br/>";
+		phenotype+= this.getRoomName(room) + "<br/>";
+		//phenotype+= this.getDayOfWeek(time) + "(" + this.get12HourTime(this.getTimeOfDay(time)) + ")<br/>";
+		phenotype+= this.getModuleLecturers(module) +"<br/>";
+		
+		return phenotype;
+	}
+	//Returns all lecture schedules for a particular day
+	public String getDailySchedule(int day, int[][][] population, int chromosome, int[] rooms, int[] modules){
+		this.dailySchedule="";
+		switch(day){
+			case 1: //Monday Timeslots 1-8
+				this.dailySchedule="<tr><td><b>MON</b></td>";
+				for(int b=0;b <8;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
+						}
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				break;
+			case 2: //Tuesday Timeslots 9-16
+				this.dailySchedule="<tr><td><b>TUE</b></td>";
+				for(int b=8;b <16;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
+						}
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;
+			case 3: //Wednesday Timeslots 17-24
+				this.dailySchedule="<tr><td><b>WED</b></td>";
+				for(int b=16;b <24;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
+						}
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;
+			case 4: //Thursdays Timeslots 25 - 32
+				this.dailySchedule="<tr><td><b>THUR</b></td>";
+				for(int b=24;b <32;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
+						}
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;
+			case 5://Friday Timeslots 33-40
+				this.dailySchedule="<tr><td><b>FRI</b></td>";
+				for(int b=32;b <40;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
+						}
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;
+			
+		}
+		return this.dailySchedule;
+	}
 }

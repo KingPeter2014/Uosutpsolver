@@ -37,7 +37,14 @@
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
 	String test = "Fitness test for Room Size:" + cr.getFitnessOnAContraint(1);
+	
 	out.println(test);
+	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
+	"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
+	"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
+	+ cr.displayGeneratedTimetable(1) + "</table>";
+	out.println("<br/>" + test1);
+
 	
 	int timeslots = 40;
 	int [][][] chromo = cr.chromosomes;

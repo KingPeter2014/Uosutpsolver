@@ -13,7 +13,7 @@ public class Chromosomes {
 	private int numChromosomes = 20, fitness=0;
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
-	private String roomType="";
+	private String roomType="",overallTimetable="";
 	private int [] rooms,modules;
 	private int freeChromosome=0,freeRoom=0,freeTimeslot=0;
 	private boolean consecutiveFreeGeneFound=false;
@@ -250,5 +250,13 @@ public class Chromosomes {
 		 rand = rn.nextInt((maxNumber-1)  + 1) +1;
 		return rand;
 	}
-
+	
+	//Display the best individual candidate after the the termination of GA
+	public String displayGeneratedTimetable(int chromosome){
+		for(int a = 1;a<=5;a++)
+			overallTimetable += read.getDailySchedule(a, chromosomes, chromosome, rooms, modules);
+		
+		return overallTimetable;
+		
+	}
 }
