@@ -43,8 +43,6 @@ body{
 }
 
 
-
-
 #maincontent{
 	min-height: 700px;
 	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
@@ -64,5 +62,8 @@ body{
 
 #rightdiv{
 	float: right;
+}
+.special{
+	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
 	
 }

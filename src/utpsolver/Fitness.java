@@ -29,8 +29,9 @@ public class Fitness{
 	/**
 	 * Computes the overall fitness for a given Chromosome
 	 */
-	private int computeOverallFitnessForAChromosome(int chromosome){
+	public int computeOverallFitnessForAChromosome(int chromosome){
 		chromosomeFitness=0;
+		chromosomeFitness += this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
 		
 		
 		return chromosomeFitness;
@@ -43,13 +44,10 @@ public class Fitness{
 		
 			for(int c=0; c < roomCount; c++){
 				for(int a =0;a <timeslot ; a++){
-					
 					if(chromosomes[chromosome][c][a]!=0){
-						//System.out.println("Room:" + rooms[c]);
-						iscorrect = this.checkIfClassIsHeldInCorrectRoomType(chromosome, rooms[c], a, chromosomes[chromosome][c][a]);
+						iscorrect = this.checkIfClassIsHeldInCorrectRoomType(chromosome, rooms[c], chromosomes[chromosome][c][a]);
 						if(iscorrect)
 							subfitness+=1;
-						//subfitness+=1;
 					}
 					
 				}
@@ -60,19 +58,32 @@ public class Fitness{
 	}
 	
 	//Computes fitness to Check if all the classes are held in correct Size for this individual chromosome
-		private int computeClassHeldInCorrectRoomSizeFitness(){
+		public int computeClassHeldInCorrectRoomSizeFitness(int chromosome){
 			subfitness = 0;
+			boolean iscorrect = false;
+			
+			for(int c=0; c < roomCount; c++){
+				for(int a =0;a <timeslot ; a++){
+					if(chromosomes[chromosome][c][a]!=0){
+						iscorrect = this.checkIfClassHeldInCorrectRoomSize(chromosome, rooms[c], chromosomes[chromosome][c][a]);
+						if(iscorrect)
+							subfitness+=1;
+					}
+					
+				}
+				
+			}
 			
 			
 			return subfitness;		
 		}
 	
 	//Check if class held in appropriate room type for a gene event in a chromosome
-	private boolean checkIfClassIsHeldInCorrectRoomType(int chromosome,int room,int timeslot, int module){
+	private boolean checkIfClassIsHeldInCorrectRoomType(int chromosome,int room, int module){
 		boolean isCorrect = false;
 		String roomType = read.getRoomType(room);
 		String moduleType = read.getModuleType(module);
-		System.out.println("Room Type:" + roomType + ",Module Type:" + moduleType);
+		
 		if(roomType.equals(moduleType)){
 			isCorrect = true;
 		}
@@ -85,7 +96,14 @@ public class Fitness{
 	
 	//Check if class held in appropriate room Size for a gene event in a chromosome
 	private boolean checkIfClassHeldInCorrectRoomSize(int chromosome,int room,int module){
+		int tolerance = -10; // A tolerance of 10 is when module size is more than room Capacity by only 10 students
 		boolean isCorrect = false;
+		int roomSize = read.getRoomCapacity(room);
+		int moduleSize = read.getModuleSize(module);
+		if(moduleSize <= roomSize || (roomSize - moduleSize)  >= tolerance)
+			isCorrect=true;
+		else
+			isCorrect=false;
 		
 		return isCorrect;
 	}

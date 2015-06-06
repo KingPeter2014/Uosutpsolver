@@ -74,8 +74,27 @@ public class Chromosomes {
 						this.consecutiveFreeGeneFound=false;
 					}
 					else{
-						//Split into one hour each and insert at different locations in th chromosome
+						//Split into one hour each and insert at different locations in the chromosome
+						//Find unoccupied space for first period
+						this.findUnoccuppiedGene(i);
+						if(freeRoom==0 &&freeTimeslot==0){
+							System.out.println("Not enough resources to host these lectures");
+							System.exit(0);	
+						}
+						
+						inserted = this.insertGene(i, freeRoom, freeTimeslot, modules[d]);
+						
+						//Find unoccupied space for second period
+						this.findUnoccuppiedGene(i);
+						if(freeRoom==0 &&freeTimeslot==0){
+							System.out.println("Not enough resources to host these lectures");
+							System.exit(0);	
+						}
+						
+						inserted = this.insertGene(i, freeRoom, freeTimeslot, modules[d]);
 					}
+					
+					
 				}
 				//Handle 3-hour Lecture or Lab per week
 				if(modulehours==3){
@@ -93,7 +112,7 @@ public class Chromosomes {
 	}
 	
 	public int getFitnessOnAContraint(int chromosome){
-		this.fitness = fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		this.fitness = fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		return this.fitness;
 		
 	}

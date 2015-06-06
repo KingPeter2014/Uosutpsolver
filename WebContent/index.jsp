@@ -36,7 +36,7 @@
 
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
-	String test = "Fitness tests:" + cr.getFitnessOnAContraint(1);
+	String test = "Fitness test for Room Size:" + cr.getFitnessOnAContraint(1);
 	out.println(test);
 	
 	int timeslots = 40;

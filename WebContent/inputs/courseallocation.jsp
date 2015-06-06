@@ -6,6 +6,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="../style.css">
+  <meta http-equiv="keywords" content="GA,UTP">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Course Allocation</title>
 </head>
@@ -18,12 +20,13 @@
 <div>
 <% 
 	ReadInputs read = new ReadInputs();
+	String allocations = read.getCourseAllocations();
  	String lecturers = read.displayLecturers();
  	String courses = read.displayCourses();
- 
+ 	
 %>
 <br/>
-<fieldset><legend>Add New Module</legend>
+<fieldset><legend>Allocate module to Lecturer</legend>
 		<form action="/utpsolver/AllocateModuleServlet" method="POST">
 			<table width="60%">
 				<tr>
@@ -32,9 +35,6 @@
 				<% out.println(courses); %>
 						</select></td>
 				</tr>
-				
-				
-				
 				
 				
 				<tr>
@@ -52,6 +52,16 @@
 	</table>
 	</form>
 	</fieldset>
+	<div id="courseallocations" class="special">
+	<h3>Existing Course Allocations</h3><hr/>
+	<table width="50%">	
+	<tr><th>Lecturer Name</th><th>Allocated Module</th><th>Module title</th><th>Actions</th></tr>
+	<%
+		out.println(allocations);
+	%>
+	</table>
+	
+	</div>
 </div>
 </div>
 </body>

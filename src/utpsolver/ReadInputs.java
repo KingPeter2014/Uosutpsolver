@@ -14,8 +14,12 @@ public class ReadInputs {
 	private int roomCapacity=0,studentsInModule=0,studentsInCohort=0;
 	private List<Integer> roomids=new ArrayList<Integer>();
 	private List<Integer> moduleids=new ArrayList<Integer>();
+	private List<Integer> moduleAllocationids=new ArrayList<Integer>();
+	private List<Integer> lecturerAllocationids=new ArrayList<Integer>();
+	
 	int[] idsArray ;
-	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",lecturers="";
+	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",
+			lecturers="",courseallocations="";
 	String dayOfWeek = "";
 	DBConnection db = null;
 	ResultSet rst = null;
@@ -43,10 +47,45 @@ public class ReadInputs {
 		
 		return convertIntegerListToIntegerArray(roomids);
 	}
+	//Get Lecturer ids from course allocation table
+	public int[] getLecturerIdsFromCourseAllocationTable(){
+		rst = db.executeQuery("SELECT lecturer_id FROM course_allocations");
+		try {
+			while(rst.next()){
+				lecturerAllocationids.add(rst.getInt("lecturer_id"));
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+					db.closeConnection();
+			}
+			
+		return convertIntegerListToIntegerArray(lecturerAllocationids);
+	}
+	
+		//Get Module/Course ids from course allocation table
+	public int[] getModuleIdsFromCourseAllocationTable(){
+		rst = db.executeQuery("SELECT course_id FROM course_allocations");
+		try {
+			while(rst.next()){
+				moduleAllocationids.add(rst.getInt("course_id"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(moduleAllocationids);
+	}
 	
 	//Converts an integer ArrayList to int Array
 	public int[] convertIntegerListToIntegerArray(List<Integer> list){
-		
 		idsArray = new int[list.size()];
 		Iterator<Integer> iter = list.iterator();
 		int i=0;
@@ -128,7 +167,7 @@ public class ReadInputs {
 	//Gets modules for listing, editing and deleting purposes
 	public String getModules(){
 		modules= "";
-		rst = db.executeQuery("SELECT * FROM courses");
+		ResultSet rst = db.executeQuery("SELECT * FROM courses");
 		
 		try {
 			while(rst.next()){
@@ -146,16 +185,20 @@ public class ReadInputs {
 		}
 		finally{
 			db.closeConnection();
+			try {
+				rst.close();
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
 		}
 		
 		return modules;
-		
 	}
-	
 	//Get lecturers for listing and editing purposes
 	public String getLecturers(){
 		lecturers= "";
-		rst = db.executeQuery("SELECT * FROM lecturers");
+		ResultSet rst = db.executeQuery("SELECT * FROM lecturers");
 		
 		try {
 			while(rst.next()){
@@ -173,10 +216,43 @@ public class ReadInputs {
 		}
 		finally{
 			db.closeConnection();
+			try {
+				rst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return lecturers;
 		
+	}
+	
+	//Return the modules assigned to lecturers
+	public String getCourseAllocations(){
+		courseallocations="";
+		
+		//int [] allocatedLecturer = this.getLecturerIdsFromCourseAllocationTable();
+		//int	[] allocatedModules = this.getModuleIdsFromCourseAllocationTable();
+		//int len = allocatedLecturer.length;
+		String query ="SELECT c.coursecode,c.coursetitle,c.coursetype, l.lecturername,ca.id FROM courses c INNER JOIN course_allocations ca on c.id = ca.course_id INNER JOIN lecturers l on ca.lecturer_id = l.id";
+		
+		rst = db.executeQuery(query);
+		try {
+			while(rst.next()){
+				
+				courseallocations += "<tr><td>" + rst.getString("lecturername") +"</td><td>" + rst.getString("coursecode") +"(" + rst.getString("coursetype")+")</td><td>" + 
+				rst.getString("coursetitle") +"</td><td>"  +
+						 "<td><a href=\"editallocation.jsp?id=" + rst.getInt("id") +"\"> Edit</a>|" 
+										+ "<a href=\"delete.jsp?id=" + rst.getInt("id") + "&what=allocation\"> Delete</a></td></tr>";
+				
+			}
+		} catch (SQLException e) {
+						e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return courseallocations;
 	}
 
 	// Return room code for mapping from genotype to phenotype
@@ -195,6 +271,42 @@ public class ReadInputs {
 		}
 		return roomName;
 	}
+	
+	// Return Lecturer Name for mapping from genotype to phenotype
+	public String getModuleCode(int moduleid){
+		String code="No Result found";
+		rst = db.executeQuery("SELECT coursecode FROM courses WHERE id=" + moduleid);
+		try {
+			rst.first();
+			code= rst.getString("coursecode");
+		} catch (SQLException e) {
+				
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return code;
+	}
+	
+	// Return Module code for mapping from genotype to phenotype
+		public String getLecturerName(int lecturerid){
+			String lecturerName="No Result found";
+			rst = db.executeQuery("SELECT lecturername FROM lecturers WHERE id=" + lecturerid);
+			try {
+				rst.first();
+				lecturerName= rst.getString("lecturername");
+			} catch (SQLException e) {
+					
+				e.printStackTrace();
+			}
+			finally{
+				db.closeConnection();
+			}
+			return lecturerName;
+		}
+		
+		
 	
 	//Returns lecture, lab or both depending on the type of room
 	public String getRoomType(int roomid){
@@ -315,6 +427,22 @@ public class ReadInputs {
 		}
 		return moduleType;
 	}
+	//Get number of students that registered in a module
+	public int getModuleSize(int moduleid){
+		rst = db.executeQuery("SELECT numstudents FROM courses WHERE id=" + moduleid);
+		int modulesize=0;
+		try {
+			rst.first();
+			modulesize= rst.getInt("numstudents");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return modulesize;
+	}
 	//Get the number of weekly lecture hours for a module
 	public int getLectureHoursPerWeek(int moduleid, String moduleType){
 		int lecturehours = 0;
@@ -350,6 +478,7 @@ public class ReadInputs {
 			
 			return labhours;
 		}
+		
 	//Get Courses for display in a select input for course allocation to lecturer
 	public String displayCourses(){
 		
@@ -357,7 +486,7 @@ public class ReadInputs {
 		rst = db.executeQuery("SELECT * FROM courses");
 		try {
 			while(rst.next()){
-				modules += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("coursecode") + "</option>";
+				modules += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("coursecode") + "(" + rst.getString("coursetype") + ")" + "</option>";
 			}
 		} catch (SQLException e) {
 		
