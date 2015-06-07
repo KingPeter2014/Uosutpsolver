@@ -173,7 +173,7 @@ public class ReadInputs {
 		try {
 			while(rst.next()){
 				
-				modules += "<tr><td>" + rst.getInt("id") +"</td><td>" + rst.getString("coursecode") + "</td><td>" + 
+				modules += "<tr><td>" + rst.getInt("id") +"</td><td>" + rst.getString("coursecode") +"(" + rst.getString("coursetype")+ ")</td><td>" + 
 						rst.getString("coursetitle") + "</td><td>" + rst.getInt("level") + "</td><td>"
 						+ "<a href=\"editmodule.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
 						+ "<a href=\"delete.jsp?id=" +rst.getInt("id") + "&what=module\"> Delete</a></td></tr>"

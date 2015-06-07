@@ -54,7 +54,7 @@
 	</fieldset>
 	<div id="courseallocations" class="special">
 	<h3>Existing Course Allocations</h3><hr/>
-	<table width="50%">	
+	<table width="70%">	
 	<tr><th>Lecturer Name</th><th>Allocated Module</th><th>Module title</th><th>Actions</th></tr>
 	<%
 		out.println(allocations);
