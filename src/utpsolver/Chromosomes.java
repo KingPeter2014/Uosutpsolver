@@ -10,7 +10,7 @@ import utpsolver.Fitness;
  *
  */
 public class Chromosomes {
-	private int numChromosomes = 20, fitness=0;
+	private int numChromosomes = 50, fitness=0;
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
@@ -32,6 +32,11 @@ public class Chromosomes {
 		 fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules);
 		
 	}
+	/**
+	 * Utilise the room, lecturer and other constraints defined to ensure that the initial population
+	 * has satisfied most or all of the hard constraints
+	 * Use randomization to allocate remaining events that has no special requirements
+	 */
 	private void initializePopulation(){
 		int time=0,rm=0;
 		boolean isLastHour=false, isOccupied=true,inserted=false;
@@ -111,6 +116,9 @@ public class Chromosomes {
 		}//End chromosomes loop	
 	}
 	
+	private void initializePopulationWithElitism(){
+		
+	}
 	public int getFitnessOnAContraint(int chromosome){
 		this.fitness = fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		return this.fitness;
