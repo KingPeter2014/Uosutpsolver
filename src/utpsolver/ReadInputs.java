@@ -525,6 +525,29 @@ public class ReadInputs {
 		
 	}
 	
+	//Get Courses for display in a select input for course allocation to lecturer
+		public String displayRooms(){
+			
+			String rooms= "";
+			rst = db.executeQuery("SELECT * FROM lecturerooms");
+			try {
+				while(rst.next()){
+					rooms += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("roomname") + "(" + rst.getString("code") + ")" + "</option>";
+				}
+			} catch (SQLException e) {
+			
+				e.printStackTrace();
+				rooms+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+
+			
+			return rooms;
+			
+		}
+	
 	//Get Lecturers to whom Courses could be assigned
 	public String displayLecturers(){
 		lecturers = "";

@@ -17,6 +17,7 @@ ReadInputs read = new ReadInputs();
 String allocations = read.getCourseAllocations();
 	String lecturers = read.displayLecturers();
 	String courses = read.displayCourses();
+	String rooms = read.displayRooms();
 	
 
 %>
@@ -27,9 +28,9 @@ String allocations = read.getCourseAllocations();
 	</div>
 	<br/>
 	<div class="left">
-	<fieldset><legend>Lecturer Constraints</legend>
-	Lecturer  i is available between time 1 and time 2 on day x
-	<form action="">
+	<fieldset><legend>Part-Time Lecturer Constraints</legend>
+	Partime Lecturer  i is available between time 1 and time 2 on day x
+	<form action="" method="post">
 	<table>
 	<tr>
 				<td><label>Lecturer:&nbsp;<em>*</em></label></td>
@@ -73,9 +74,26 @@ String allocations = read.getCourseAllocations();
 	</legend> Room i is NOT available between time1 and time2  on day y
 	</fieldset>
 	</div>
+	
 	<div class="left">
 	<fieldset><legend>Module Constraints</legend>
 	Module i must take place in room j
+	<form action="" method="post">
+	<table>
+		<tr>
+				<td><label>Module:&nbsp;<em>*</em></label></td>
+				<td><select name="module" id="module"><option value="0">Select</option>
+				<% out.println(courses); %>
+			</select>MUST TAKE PLACE IN
+		</td>
+		<td><label>Room:&nbsp;<em>*</em></label></td>
+				<td><select name="room" id="room"><option value="0">Select</option>
+				<% out.println(rooms); %>
+			</select>		</td>
+		
+		</tr>
+		</table>
+		</form>
 	</fieldset>
 	</div>
 	<div class="right">
