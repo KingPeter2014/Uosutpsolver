@@ -1,3 +1,8 @@
+#banner{
+
+}
+
+
 body{
 	background-color: white;
 	text-decoration: bold;
@@ -32,15 +37,18 @@ body{
 	text-decoration: none;
 	display: block;
 	padding: 4px 4px;
+	background: #000;
 	margin: 0;
 	-webkit-border-radius: 1.6em;
 	-moz-border-radius: 1.6em;
 	text-shadow: 0 1px 1px rgba(0,0,0,0.3);	
 }
 #menubar a:hover {
-	background: #000;
+	background: #ccc;
 	color: #fff;
 }
+
+
 
 
 #maincontent{
@@ -50,20 +58,60 @@ body{
 	margin-right: 50px;
 	
 }
-#leftdiv{
+.left{
 	float: left;
-	width: 68%;
+	width: 60%;
 }
 .right{
 	float: right;
+	width: 38%;
 	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
 	color: white;
 }
 
 #rightdiv{
 	float: right;
+	
+}
+.markout{
+	background: #ccd url(../images/gradient.png) repeat-x 0 -110px	
+}
+#publications{
+	float: left;
+	margin-left: 0px;
+}
+#publications fieldset{
+	margin-left: 0px;
+}
+.success{
+	background: green;
+}
+.error{
+	color: red;
+	background: black;
 }
 .special{
 	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
-	
+}
+select,input[type="text"],input[type="password"],input[type="search"],input[type="number"]{
+  width:  100%;
+  padding:  5px 15px;
+  background: #fff;
+  border: 0 none;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+tbody tr:nth-child(odd){
+	background: #aaa;
+}
+input[type="text"]:focus{
+  background-color: #fff;
+}
+input[type="submit"]{
+  color:  white;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  align:  right;
+  background:	blue;
 }

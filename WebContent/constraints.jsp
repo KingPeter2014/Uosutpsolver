@@ -1,12 +1,93 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="utpsolver.ReadInputs"%>
+ <%@page import="java.util.*" %>
+ <%@ page import="java.io.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="style.css">
 <title>GA Constraints</title>
 </head>
 <body>
+<%
+session.setAttribute("lecturerConstraint", "");
+ReadInputs read = new ReadInputs();
+String allocations = read.getCourseAllocations();
+	String lecturers = read.displayLecturers();
+	String courses = read.displayCourses();
+	
 
+%>
+<div class="maincontainer">
+	<div id="menubar">
+			<li> <a href="index.jsp">Home</a></li> 
+			
+	</div>
+	<br/>
+	<div class="left">
+	<fieldset><legend>Lecturer Constraints</legend>
+	Lecturer  i is available between time 1 and time 2 on day x
+	<form action="">
+	<table>
+	<tr>
+				<td><label>Lecturer:&nbsp;<em>*</em></label></td>
+				<td><select name="lecturer" id="lecturer"><option value="0">Select</option>
+				<% out.println(lecturers); %>
+					</select> is available</td>
+						<td>from <select name="from">
+						<%for(int a=9;a <=17;a++ ){
+							out.println("<option value=\"" + a +  "\">" +a +"</option>");
+							}
+							%>
+					</select> to
+					 <select name="to">
+						<%for(int a=10;a <=17;a++ ){
+							out.println("<option value=\"" + a +  "\">" +a +"</option>");
+							}
+							%>
+					</select>
+					ON
+					<select name="days">
+						<option value="1"> Mondays</option>
+						<option value="2"> Tuesdays</option>
+						<option value="3"> Wednesdays</option>
+						<option value="4"> Thursdays</option>
+						<option value="5"> Fridays</option>
+						
+					
+					</select>
+					
+						
+						</td>
+				</tr>
+				<tr><td colspan="2"><input type="button" name="lecturerconstraint" value="Submit Availability"></td></tr>
+	</table>
+	</form>
+	</fieldset>
+	</div>
+	
+	<div class="right">
+	<fieldset><legend>Room Constraints
+	</legend> Room i is NOT available between time1 and time2  on day y
+	</fieldset>
+	</div>
+	<div class="left">
+	<fieldset><legend>Module Constraints</legend>
+	Module i must take place in room j
+	</fieldset>
+	</div>
+	<div class="right">
+	<fieldset><legend>Time Constraints</legend>
+		<form action="constraint.jsp" method="post">
+		<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
+		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
+		<input type="button" name="timeconstraint" value="Sumit Time constraints">
+		</form>
+	</fieldset>
+	
+	</div>
+</div>
 </body>
 </html>
