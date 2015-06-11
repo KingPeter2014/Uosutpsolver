@@ -60,13 +60,14 @@ body{
 }
 .left{
 	float: left;
+	background: #aaa url(../images/gradient.png) repeat-x 0 -110px;
 	width: 60%;
 }
 .right{
 	float: right;
 	width: 38%;
-	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
-	color: white;
+	background: #aaa url(../images/gradient.png) repeat-x 0 -110px;
+	color: black;
 }
 
 #rightdiv{
@@ -91,7 +92,7 @@ body{
 	background: black;
 }
 .special{
-	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
+	background:  #aaa url(../images/gradient.png) repeat-x 0 -110px;
 }
 select,input[type="text"],input[type="password"],input[type="search"],input[type="number"]{
   width:  100%;

@@ -12,13 +12,14 @@
 </head>
 <body>
 <%
-session.setAttribute("lecturerConstraint", "");
-ReadInputs read = new ReadInputs();
-String allocations = read.getCourseAllocations();
+	session.setAttribute("lecturerConstraint", "");
+	session.setAttribute("moduleConstraint", "");
+	session.setAttribute("roomConstraint", "");
+	ReadInputs read = new ReadInputs();
+	String allocations = read.getCourseAllocations();
 	String lecturers = read.displayLecturers();
 	String courses = read.displayCourses();
 	String rooms = read.displayRooms();
-	
 
 %>
 <div class="maincontainer">
@@ -56,27 +57,28 @@ String allocations = read.getCourseAllocations();
 						<option value="3"> Wednesdays</option>
 						<option value="4"> Thursdays</option>
 						<option value="5"> Fridays</option>
-						
-					
 					</select>
-					
-						
-						</td>
-				</tr>
-				<tr><td colspan="2"><input type="button" name="lecturerconstraint" value="Submit Availability"></td></tr>
+				</td>
+			</tr>
+			<tr><td colspan="2"><input type="submit" name="lecturerconstraint" value="Submit Availability"></td></tr>
 	</table>
 	</form>
 	</fieldset>
 	</div>
 	
 	<div class="right">
-	<fieldset><legend>Room Constraints
-	</legend> Room i is NOT available between time1 and time2  on day y
+	<fieldset><legend>Generate Timetable
+	</legend> 
+	
+	<form action="/utpsolver/RunGA" method="post">
+	<input type="Submit" value="Generate Timetable" name="runGA">
+	</form>
+	
 	</fieldset>
 	</div>
 	
 	<div class="left">
-	<fieldset><legend>Module Constraints</legend>
+	<fieldset><legend>Special Module Constraints</legend>
 	Module i must take place in room j
 	<form action="" method="post">
 	<table>
@@ -92,6 +94,7 @@ String allocations = read.getCourseAllocations();
 			</select>		</td>
 		
 		</tr>
+		<tr><td colspan="3"><input type="submit" name="moduleconstraint" value="Submit"></td></tr>
 		</table>
 		</form>
 	</fieldset>
@@ -101,7 +104,7 @@ String allocations = read.getCourseAllocations();
 		<form action="constraint.jsp" method="post">
 		<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
 		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
-		<input type="button" name="timeconstraint" value="Sumit Time constraints">
+		<input type="submit" name="timeconstraint" value="Sumit Time constraints">
 		</form>
 	</fieldset>
 	

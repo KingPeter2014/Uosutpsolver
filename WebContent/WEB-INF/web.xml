@@ -62,4 +62,13 @@
   	<url-pattern>/AddRoomServlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>RunGA</servlet-name>
+  	<servlet-class>utpsolver.RunGA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>RunGA</servlet-name>
+  	<url-pattern>/RunGA</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
