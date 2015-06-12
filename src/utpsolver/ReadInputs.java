@@ -90,6 +90,28 @@ public class ReadInputs {
 
 		return belongsToLecturer;
 	}
+	
+	//Confirm if an event belongs to a Cohort of a particular level of study
+	public boolean confirmCohortEventAtALevelOfStudy(int module , int cohort, int level){
+		boolean belongsToCohort = false;
+		rst = db.executeQuery("SELECT * FROM modules_in_cohort WHERE course_id=" + module + " AND cohort_id=" + cohort + " AND level="+level);
+		
+		try {
+				if(rst.first())	
+					belongsToCohort= true;
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+
+		return belongsToCohort;
+		
+	}
 	//Get Lecturer ids from course allocation table
 	public int[] getLecturerIdsFromCourseAllocationTable(){
 		rst = db.executeQuery("SELECT lecturer_id FROM course_allocations");
@@ -183,17 +205,71 @@ public class ReadInputs {
 		return rooms;
 		
 	}
+	//Get array of the IDs of Cohorts registered in the system
+	public int[] getCohortIds(){
+		List<Integer> cohortids=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT * FROM cohorts");
+		try {
+			while(rst.next()){
+				cohortids.add(rst.getInt("id"));
+			}
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		
+		return convertIntegerListToIntegerArray(cohortids);
+	}
+	//Get the starting level for a cohort
+	public int getCohortStartingLevel(int cohortid){
+		int start=0;
+		rst = db.executeQuery("SELECT level_of_study FROM cohorts WHERE id=" + cohortid);
+		try {
+			rst.first();
+			start= rst.getInt("level_of_study");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return start;
+	}
+	//Get the number of years to finish a degree for a Cohort
+	public int getNumberOfYearsToGraduate(int cohortid){
+		int numyrs=0;
+		rst = db.executeQuery("SELECT number_of_years FROM cohorts WHERE id=" + cohortid);
+		try {
+			rst.first();
+			numyrs= rst.getInt("number_of_years");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return numyrs;
+		
+	}
 	//Gets cohorts for listing, editing and deleting purposes
 	public String getCohorts(){
 		cohorts = "";
+		
 		rst = db.executeQuery("SELECT * FROM cohorts");
 		
 		try {
 			while(rst.next()){
 				
-				cohorts += "<tr><td>" + rst.getInt("id") +"</td><td>" + rst.getString("cohortname") + "</td><td>" + 
-						rst.getString("numstudents") + "</td><td>" + rst.getInt("level_of_study") + "</td><td>"
-						+ "<a href=\"editcohort.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
+				cohorts += "<tr><td>" + rst.getInt("id") +"</td><td>" + rst.getString("cohortname") + "</td><td>" + rst.getString("numstudents")
+						+ "</td><td>" +rst.getInt("level_of_study") + "</td><td>" +  rst.getInt("number_of_years")+ "</td>"
+						+ "<td><a href=\"editcohort.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
 						+ "<a href=\"delete.jsp?id=" +rst.getInt("id") + "&what=cohort\"> Delete</a></td></tr>"
 						;
 			}
@@ -321,7 +397,7 @@ public class ReadInputs {
 	}
 	
 	//Gets the names of Cohorts to which a module has been assigned
-		public String getModuleCohorts(){
+	public String getModuleCohorts(){
 			String lecturers = "";
 			String query ="SELECT c.coursecode,c.coursetitle,c.coursetype,c.level, ch.cohortname,ca.id FROM courses c INNER JOIN modules_in_cohort ca on c.id = ca.course_id INNER JOIN cohorts ch on ca.cohort_id = ch.id";
 			
@@ -343,7 +419,7 @@ public class ReadInputs {
 			}			if(lecturers.equals(""))
 				lecturers="<tr><td colspan=\"4\"NONE</td></tr>";
 			return lecturers;
-		}
+	}
 
 	// Return room code for mapping from genotype to phenotype
 	public String getRoomName(int roomid){

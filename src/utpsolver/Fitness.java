@@ -14,7 +14,7 @@ public class Fitness{
 	private ReadInputs read = new ReadInputs();
 	private  int[][][] chromosomes = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
-	private int [] rooms,modules,lecturers;
+	private int [] rooms,modules,lecturers,cohorts;
 	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules ){
 		//this.chromosomes = new int[numChromosome][roomCount][timeslots];
 		this.chromosomes = chromosomes;
@@ -48,6 +48,26 @@ public class Fitness{
 				
 			}
 		}
+		return subfitness;
+	}
+	
+	//CONSTRAINT 3: Compute Fitness to Check if multiple modules belonging to same cohort are fixed at same time
+	public int computeMultipleScheduleForACohort(int chromosome){
+		subfitness = 0;
+		int numyears=0,startingLevel=0;
+		cohorts = read.getCohortIds();
+		int cohortCount = cohorts.length;
+		for(int i=0;i <cohortCount;i++){
+			numyears = read.getNumberOfYearsToGraduate(cohorts[i]);
+			startingLevel = read.getCohortStartingLevel(cohorts[i]);
+			for(int j=0; j <timeslot;j++){
+				for(int k = startingLevel; k <(startingLevel + numyears); k++){
+					if(!isMultipleScheduleForACohort(chromosome, j,cohorts[i],k))
+						subfitness +=1;
+				}
+			}
+		}
+		
 		return subfitness;
 	}
 	//Computes fitness to Check if all the classes are held in correct room type for this individual chromosome
@@ -90,8 +110,8 @@ public class Fitness{
 			
 			return subfitness;		
 		}
-	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
 		
+	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
 	private boolean checkMultipleScheduling(int chromosome,int timeslot, int lecturer){
 		boolean isMultiple = true, isLecturerEvent=false;
 		int countSchedules=0;
@@ -107,11 +127,36 @@ public class Fitness{
 		return isMultiple;
 		
 	}
+	//Checks if an event has been scheduled more than once for a Cohort at a given level of level of study
+	private boolean isMultipleScheduleForACohort(int chromosome, int timeslot,int cohort,int level){
+		//For each cohort, get the starting level and number of years
+		boolean isMultiple = true, isCohortEvent=false;
+		int countSchedules=0;
+		//For each level, check if there is clash of lecture
+		//For each cohort, for each timeslot and for each level, if there is no clash return a value
+
+		for(int i=0;i< roomCount;i++){
+			if(chromosomes[chromosome][i][timeslot]!=0){
+				isCohortEvent = checkCohortEvent(chromosomes[chromosome][i][timeslot], cohort,level);
+				if(isCohortEvent)
+					countSchedules +=1;
+			}
+		}
+		if(countSchedules <=1)
+			isMultiple = false;
+		return isMultiple;
+		
+	}
 	
 	//Check if a particular event belongs to a lecturer
 	private boolean checkLecturerEvent(int event, int lecturer){
 		return read.confirmEventBelongsToLecturer(event, lecturer);
 		
+	}
+	//Check if a particular event belongs to a Cohort of a particular Level
+	private boolean checkCohortEvent(int module , int cohort, int level){
+		
+		return read.confirmCohortEventAtALevelOfStudy(module, cohort, level);
 	}
 	
 	//Check if class held in appropriate room type for a gene event in a chromosome

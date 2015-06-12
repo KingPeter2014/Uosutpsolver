@@ -125,9 +125,10 @@ public class Chromosomes {
 	}
 	public String getFitnessOnAContraint(int chromosome){
 		String message ="";
-		message  += "Multiple Lecturer Scheduling: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
-		message += "<br/> Class held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
-		message += "<br/> Class held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		message  += "Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		message += "<br/>Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome);
+		message += "<br/> Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		message += "<br/> Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		
 		this.fitness = fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
 		return message;

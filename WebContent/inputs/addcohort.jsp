@@ -28,8 +28,12 @@
 					<td><input type="number" name="numstudent" id="numstudent" min="1" max="1000"  placeholder="How many students can it take?"/></td>
 				</tr>
 				<tr>
-					<td>Level of Study</td>
+					<td>Starting Level of Study</td>
 					<td><input type="number" name="level" id="level" min="1" max="10" placeholder="Eg. 2"/></td>
+				</tr>
+				<tr>
+					<td>Number of Years</td>
+					<td><input type="number" name="numyrs" id="numyrs" min="1" max="10" placeholder="Eg. 2"/></td>
 				</tr>
 				
 				<tr>

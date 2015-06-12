@@ -27,7 +27,7 @@
 <fieldset><legend>Listing Cohorts</legend>
 	<table width="100%"> 
 		<tr>
-			<th> id</th><th>Cohort Name</th><th>Number of Students</th><th>Level of Study</th><th>Actions</th>
+			<th> id</th><th>Cohort Name</th><th>Number of Students</th><th>Starting Level</th><th>Number of Years</th><th>Actions</th>
 		</tr>
 		<% 
 			
