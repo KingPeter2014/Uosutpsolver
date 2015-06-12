@@ -36,7 +36,7 @@
 
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
-	String test = "Fitness test for Room Size:" + cr.getFitnessOnAContraint(1);
+	String test = "Fitness test for Multiple Scheduling for a Lecturer:" + cr.getFitnessOnAContraint(1);
 	
 	out.println(test);
 	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+

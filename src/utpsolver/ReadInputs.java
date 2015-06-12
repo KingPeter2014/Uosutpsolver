@@ -13,6 +13,7 @@ public class ReadInputs {
 	private int roomCount=0,lecturerCount=0,moduleCount=0;
 	private int roomCapacity=0,studentsInModule=0,studentsInCohort=0;
 	private List<Integer> roomids=new ArrayList<Integer>();
+	private List<Integer>  lecturerids=new ArrayList<Integer>();
 	private List<Integer> moduleids=new ArrayList<Integer>();
 	private List<Integer> moduleAllocationids=new ArrayList<Integer>();
 	private List<Integer> lecturerAllocationids=new ArrayList<Integer>();
@@ -47,6 +48,47 @@ public class ReadInputs {
 			}
 		
 		return convertIntegerListToIntegerArray(roomids);
+	}
+	
+	//Get lecturer ids from lecturers' Table
+	public int[] getLecturerIds(){
+		rst = db.executeQuery("SELECT * FROM lecturers");
+		try {
+			while(rst.next()){
+				lecturerids.add(rst.getInt("id"));
+			}
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		
+		return convertIntegerListToIntegerArray(lecturerids);
+	}
+	//Confirm if an event belongs to a lecturer
+	public boolean confirmEventBelongsToLecturer(int event, int lecturer){
+		boolean belongsToLecturer = false;
+		rst = db.executeQuery("SELECT * FROM course_allocations WHERE course_id=" + event + " AND lecturer_id=" + lecturer);
+		try {
+				if(rst.first())	
+					belongsToLecturer= true;
+			
+			
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+
+		return belongsToLecturer;
 	}
 	//Get Lecturer ids from course allocation table
 	public int[] getLecturerIdsFromCourseAllocationTable(){

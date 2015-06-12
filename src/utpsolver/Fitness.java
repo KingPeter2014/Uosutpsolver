@@ -14,7 +14,7 @@ public class Fitness{
 	private ReadInputs read = new ReadInputs();
 	private  int[][][] chromosomes = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
-	private int [] rooms,modules;
+	private int [] rooms,modules,lecturers;
 	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules ){
 		//this.chromosomes = new int[numChromosome][roomCount][timeslots];
 		this.chromosomes = chromosomes;
@@ -36,7 +36,20 @@ public class Fitness{
 		
 		return chromosomeFitness;
 	}
-	
+	//CONSTRAINT 2: Compute Fitness to check if multiple modules taught by same lecturer are fixed at same time
+	public int computeMultipleScheduleForALecturerAtSameTime( int chromosome){
+		subfitness=0;
+		lecturers = read.getLecturerIds();
+		lecturerCount=lecturers.length;
+		for(int i=0;i<lecturerCount;i++){
+			for(int j=0;j<timeslot;j++){
+					if(!checkMultipleScheduling(chromosome,j,lecturers[i]))
+						subfitness+=1;
+				
+			}
+		}
+		return subfitness;
+	}
 	//Computes fitness to Check if all the classes are held in correct room type for this individual chromosome
 	public int computeClassHeldInCorrectRoomTypeFitness(int chromosome){
 		subfitness = 0;
@@ -77,6 +90,29 @@ public class Fitness{
 			
 			return subfitness;		
 		}
+	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
+		
+	private boolean checkMultipleScheduling(int chromosome,int timeslot, int lecturer){
+		boolean isMultiple = true, isLecturerEvent=false;
+		int countSchedules=0;
+		for(int i=0;i< roomCount;i++){
+			if(chromosomes[chromosome][i][timeslot]!=0){
+				isLecturerEvent = checkLecturerEvent(chromosomes[chromosome][i][timeslot], lecturer);
+				if(isLecturerEvent)
+					countSchedules +=1;
+			}
+		}
+		if(countSchedules <=1)
+			isMultiple = false;
+		return isMultiple;
+		
+	}
+	
+	//Check if a particular event belongs to a lecturer
+	private boolean checkLecturerEvent(int event, int lecturer){
+		return read.confirmEventBelongsToLecturer(event, lecturer);
+		
+	}
 	
 	//Check if class held in appropriate room type for a gene event in a chromosome
 	private boolean checkIfClassIsHeldInCorrectRoomType(int chromosome,int room, int module){

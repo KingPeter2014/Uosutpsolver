@@ -32,6 +32,10 @@ public class Chromosomes {
 		 fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules);
 		
 	}
+	
+	public void Chromosomes(int[] partimeLecturers,int[] startTimes, int [] stopTimes, int[] days){
+		
+	}
 	/**
 	 * Utilise the room, lecturer and other constraints defined to ensure that the initial population
 	 * has satisfied most or all of the hard constraints
@@ -120,7 +124,7 @@ public class Chromosomes {
 		
 	}
 	public int getFitnessOnAContraint(int chromosome){
-		this.fitness = fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		this.fitness = fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
 		return this.fitness;
 		
 	}
