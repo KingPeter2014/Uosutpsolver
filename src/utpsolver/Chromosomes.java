@@ -123,9 +123,14 @@ public class Chromosomes {
 	private void initializePopulationWithElitism(){
 		
 	}
-	public int getFitnessOnAContraint(int chromosome){
+	public String getFitnessOnAContraint(int chromosome){
+		String message ="";
+		message  += "Multiple Lecturer Scheduling: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		message += "<br/> Class held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		message += "<br/> Class held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		
 		this.fitness = fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
-		return this.fitness;
+		return message;
 		
 	}
 	//Look for any free gene space. That is genes whose content is zero. No module allocated to it.

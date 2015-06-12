@@ -319,6 +319,31 @@ public class ReadInputs {
 			lecturers="NONE";
 		return lecturers;
 	}
+	
+	//Gets the names of Cohorts to which a module has been assigned
+		public String getModuleCohorts(){
+			String lecturers = "";
+			String query ="SELECT c.coursecode,c.coursetitle,c.coursetype,c.level, ch.cohortname,ca.id FROM courses c INNER JOIN modules_in_cohort ca on c.id = ca.course_id INNER JOIN cohorts ch on ca.cohort_id = ch.id";
+			
+			rst = db.executeQuery(query);
+			try {
+				while(rst.next()){
+					
+					lecturers += "<tr><td>" + rst.getInt("id") +  "</td><td>" + rst.getString("cohortname") +"</td><td>" + rst.getString("coursecode") +"(" + rst.getString("coursetype")+")</td><td>" + 
+					rst.getString("coursetitle") +"</td><td>" + rst.getInt("level")+ "</td>"+
+							 "<td><a href=\"editmodulecohort.jsp?id=" + rst.getInt("id") +"\"> Edit</a>|" 
+											+ "<a href=\"delete.jsp?id=" + rst.getInt("id") + "&what=modulecohort\"> Delete</a></td></tr>";
+					
+				}
+			} catch (SQLException e) {
+							e.printStackTrace();
+			}
+			finally{
+				db.closeConnection();
+			}			if(lecturers.equals(""))
+				lecturers="<tr><td colspan=\"4\"NONE</td></tr>";
+			return lecturers;
+		}
 
 	// Return room code for mapping from genotype to phenotype
 	public String getRoomName(int roomid){

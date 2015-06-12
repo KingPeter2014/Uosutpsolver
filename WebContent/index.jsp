@@ -30,13 +30,13 @@
 <button>Generate Timetable</button>
 </div>
 
-<fieldset><legend>Run GA</legend>
-<button>Generate Timetable</button>
+<fieldset><legend>Randomly Generated Timetable</legend>
+
 <% 
 
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
-	String test = "Fitness test for Multiple Scheduling for a Lecturer:" + cr.getFitnessOnAContraint(1);
+	String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(1);
 	
 	out.println(test);
 	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+

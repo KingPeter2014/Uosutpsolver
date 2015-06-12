@@ -6,6 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="../style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Course Allocation</title>
 </head>
@@ -20,6 +21,7 @@
 	ReadInputs read = new ReadInputs();
  	String cohorts = read.displayCohorts();
  	String courses = read.displayCourses();
+ 	String moduleCohorts = read.getModuleCohorts();
  
 %>
 <br/>
@@ -51,6 +53,15 @@
 				</tr>
 	</table>
 	</form>
+	</fieldset><br/>
+	<fieldset><legend>Module-Cohort Assignments</legend>
+	<table width="70%">
+	<tr>
+		<th>ID</th><th>Cohort</th><th>Module Code</th><th> Module Title</th><th>Level of Study</th><th>Actions</th>
+	</tr>
+	<% out.println(moduleCohorts); %>
+	</table>
+	
 	</fieldset>
 </div>
 </div>
