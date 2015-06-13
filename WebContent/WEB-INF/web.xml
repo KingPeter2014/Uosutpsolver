@@ -71,4 +71,13 @@
   	<url-pattern>/RunGA</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>LecturerAvailabilityServlet</servlet-name>
+  	<servlet-class>utpsolver.LecturerAvailabilityServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>LecturerAvailabilityServlet</servlet-name>
+  	<url-pattern>/LecturerAvailabilityServlet</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

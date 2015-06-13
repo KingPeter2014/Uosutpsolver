@@ -31,7 +31,7 @@
 	<div class="left">
 	<fieldset><legend>Part-Time Lecturer Constraints</legend>
 	Partime Lecturer  i is available between time 1 and time 2 on day x
-	<form action="" method="post">
+	<form action="/utpsolver/LecturerAvailabilityServlet" method="post">
 	<table>
 	<tr>
 				<td><label>Lecturer:&nbsp;<em>*</em></label></td>
