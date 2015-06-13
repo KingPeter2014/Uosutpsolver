@@ -161,7 +161,101 @@ public class ReadInputs {
 		
 		return  idsArray;
 	}
-	
+	//Get ids of part time lecturers only
+	public int[] getPartimeLecturerIDs(){
+		List<Integer> partimeids=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT id FROM lecturers WHERE lecturer_type='partime'");
+		try {
+			while(rst.next()){
+				partimeids.add(rst.getInt("id"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(partimeids);
+	}
+	// Get ids of all modules allocated to a particular lecturer
+	public int [] getLecturerModules(int lecturer){
+		List<Integer> lecturerModules=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT course_id FROM course_allocations WHERE lecturer_id=" + lecturer);
+		try {
+			while(rst.next()){
+				lecturerModules.add(rst.getInt("course_id"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(lecturerModules);
+		
+	}
+	//Get start times for part time lecturers
+	public int[] partimeLecturerStartTimes(int lecturer){
+		List<Integer> startTimes=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT start_time FROM lecturer_availabilites WHERE lecturer_id=" + lecturer);
+		try {
+			while(rst.next()){
+				startTimes.add(rst.getInt("start_time"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(startTimes);
+		
+	}
+	//Get End times for part time lecturers
+	public int[] partimeLecturerEndTimes(int lecturer){
+		List<Integer> endTimes=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT end_time FROM lecturer_availabilites WHERE lecturer_id=" + lecturer);
+		try {
+			while(rst.next()){
+				endTimes.add(rst.getInt("end_time"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+			db.closeConnection();
+		}
+		return convertIntegerListToIntegerArray(endTimes);
+			
+	}
+	//Get corresponding availablibilty days for part time lecturers
+	public int[] partimeLecturerDays(int lecturer){
+			List<Integer> days=new ArrayList<Integer>();
+			rst = db.executeQuery("SELECT day FROM lecturer_availabilites WHERE lecturer_id=" + lecturer);
+			try {
+				while(rst.next()){
+					days.add(rst.getInt("day"));
+					}
+				}
+			catch (SQLException e) {				
+				e.printStackTrace();
+				message+=e.getMessage();
+				}
+			finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(days);
+				
+		}
+		
 	//Get Module ids for generating chromosome
 	public int[] getModuleIds(){
 		rst = db.executeQuery("SELECT * FROM courses");
@@ -455,7 +549,7 @@ public class ReadInputs {
 		return code;
 	}
 	
-	// Return Module code for mapping from genotype to phenotype
+	// Returns Name of Lecturer for mapping from genotype to phenotype
 		public String getLecturerName(int lecturerid){
 			String lecturerName="No Result found";
 			rst = db.executeQuery("SELECT lecturername FROM lecturers WHERE id=" + lecturerid);
@@ -733,6 +827,156 @@ public class ReadInputs {
 		return lecturers;
 	}
 	
+	//Converts start times of partime lecturers to timeslots between 1 and 40
+	public int[] getStartTimeGenesForPartTimeLecturers(int lecturer){
+		int count=1;
+		int [] startTimes = this.partimeLecturerStartTimes(lecturer);
+		count= startTimes.length;
+		int [] start = new int[count];
+		int [] days = this.partimeLecturerDays(lecturer);
+		for(int i=0;i<count;i++){
+			start[i] = this.convertDayTimeToTimeGene(days[i], startTimes[i]);
+		}
+		return start;
+		
+	}
+	//Converts End times of partime lecturers to timeslots between 1 and 40
+	public int[] getEndTimeGenesForPartTimeLecturers(int lecturer){
+		int count=1;
+		int [] endTimes = this.partimeLecturerEndTimes(lecturer);
+		count= endTimes.length;
+		int [] endTime = new int[count];
+		int [] days = this.partimeLecturerDays(lecturer);
+		for(int i=0;i<count;i++){
+			endTime[i] = this.convertDayTimeToTimeGene(days[i], endTimes[i]);
+		}
+		return endTime;		
+	}
+	//Given day and time, return an integer between 1 and 40 to indicate time index on a Chromosome
+	private int convertDayTimeToTimeGene(int day, int time){
+		int timeslot=0;
+			switch(day){
+				case 1:
+					
+					switch(time){
+					case 9:
+						timeslot=1;break;
+					case 10:
+						timeslot=2;break;
+					case 11:
+						timeslot=3;break;
+					case 12:
+						timeslot=4;break;
+					case 13:
+						timeslot = 5;break;
+					case 14:
+						timeslot=6;break;
+					case 15:
+						timeslot=7;break;
+					case 16:
+						timeslot=8;break;
+					case 17:
+						timeslot=8;break;
+					}
+					break;
+					
+				case 2:
+					switch(time){
+					case 9:
+						timeslot=9;break;
+					case 10:
+						timeslot=10;break;
+					case 11:
+						timeslot=11;break;
+					case 12:
+						timeslot=12;break;
+					case 13:
+						timeslot = 13;break;
+					case 14:
+						timeslot=14;break;
+					case 15:
+						timeslot=15;break;
+					case 16:
+						timeslot=16;break;
+					case 17:
+						timeslot=16;break;
+					}
+					break;
+					
+				case 3:
+					switch(time){
+					case 9:
+						timeslot=17;break;
+					case 10:
+						timeslot=18;break;
+					case 11:
+						timeslot=19;break;
+					case 12:
+						timeslot=20;break;
+					case 13:
+						timeslot = 21;break;
+					case 14:
+						timeslot=22;break;
+					case 15:
+						timeslot=23;break;
+					case 16:
+						timeslot=24;break;
+					case 17:
+						timeslot=24;break;
+					}
+					break;
+					
+				case 4:
+					switch(time){
+					case 9:
+						timeslot=25;break;
+					case 10:
+						timeslot=26;break;
+					case 11:
+						timeslot=27;break;
+					case 12:
+						timeslot=28;break;
+					case 13:
+						timeslot = 29;break;
+					case 14:
+						timeslot=30;break;
+					case 15:
+						timeslot=31;break;
+					case 16:
+						timeslot=32;break;
+					case 17:
+						timeslot=32;break;
+					}
+					break;
+					
+				case 5:
+					switch(time){
+					case 9:
+						timeslot=33;break;
+					case 10:
+						timeslot=34;break;
+					case 11:
+						timeslot=35;break;
+					case 12:
+						timeslot=36;break;
+					case 13:
+						timeslot = 37;break;
+					case 14:
+						timeslot=38;break;
+					case 15:
+						timeslot=39;break;
+					case 16:
+						timeslot=40;break;
+					case 17:
+						timeslot=40;break;
+					}
+					break;
+				default:	
+			}
+		
+		return timeslot;
+		
+	}
 	//Transform time genotype to day phenotype
 	public String getDayOfWeek(int timeslot){
 		dayOfWeek = "INVALID";

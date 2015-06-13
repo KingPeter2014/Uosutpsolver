@@ -14,7 +14,7 @@ public class Fitness{
 	private ReadInputs read = new ReadInputs();
 	private  int[][][] chromosomes = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
-	private int [] rooms,modules,lecturers,cohorts;
+	private int [] rooms,modules,lecturers,cohorts,startTime,endTime,days;
 	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules ){
 		//this.chromosomes = new int[numChromosome][roomCount][timeslots];
 		this.chromosomes = chromosomes;
@@ -69,6 +69,65 @@ public class Fitness{
 		}
 		
 		return subfitness;
+	}
+	
+	//CONSTRAINT 4: Compute the fitness to check scheduling lecture for part time lecturer only during his or her available time
+	public int computePartimeLecturerAvailablityScheduling(int chromosome){
+		subfitness  = 0;
+		int count=0;
+		int [] partTimeLecturers = read.getPartimeLecturerIDs();
+		int partimeLecturersCount = partTimeLecturers.length;
+		if (partimeLecturersCount==0)
+			return subfitness;//No part time lecture exists for this semester
+		
+		for(int i=0;i<partimeLecturersCount;i++){
+			int [] lecturerModules = read.getLecturerModules(partTimeLecturers[i]);
+			if(lecturerModules.length==0){
+				subfitness +=1;//A reward is given for a part-time lecturer with no module assigned for the semester
+				continue;
+			}
+			int [] startTimes = read.getStartTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
+			int [] endTimes = read.getEndTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
+			for(int j=0;j<lecturerModules.length;j++){
+				if(this.moduleScheduledWithinLecturerAvailableTime(chromosome, lecturerModules[j], startTimes, endTimes))
+					count+=1;	
+			}
+			
+			if(count==lecturerModules.length)
+				subfitness+=1;
+			count=0;
+		}
+		return subfitness;
+	}
+	/**
+	 * This method picks a particular module belonging to a part-time lecturer and determines if all of its schedule
+	 * is within the available time provided by the lecturer. It checks both lecture and lab classes
+	 * @param chromosome - The particular chromosome under consideration
+	 * @param module - module being checked within the chromosome
+	 * @param startTimes - Array of Start times that the lecturer is available for  days of week
+	 * @param endTimes - Array of End times that the lecturer is available for  days of week
+	 * @return - Returns true if module was scheduled with a part-time lecturer's available time
+	 */
+	private boolean moduleScheduledWithinLecturerAvailableTime(int chromosome, int module,int[] startTimes,int[] endTimes){
+		boolean isWithinTime=false;
+		 int matched=0;
+		for(int i=0;i<roomCount;i++){
+			for(int j=0;j<timeslot;j++){
+				if(chromosomes[chromosome][i][j]==module){
+					for(int k =0;k <startTimes.length;k++){
+						for(int l=startTimes[k];l<=endTimes[k];l++){
+							if(j==(l-1)){//We need to subtract 1 from l as it takes values from 1 to 40 instead of 0-39
+								matched +=1;
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		if(matched >0)
+			isWithinTime=true;
+		return isWithinTime;
 	}
 	//Computes fitness to Check if all the classes are held in correct room type for this individual chromosome
 	public int computeClassHeldInCorrectRoomTypeFitness(int chromosome){

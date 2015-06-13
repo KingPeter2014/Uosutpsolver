@@ -129,7 +129,7 @@ public class Chromosomes {
 		message += "<br/>Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome);
 		message += "<br/> Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
 		message += "<br/> Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
-		
+		message+= "<br/> Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome);
 		this.fitness = fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
 		return message;
 		
