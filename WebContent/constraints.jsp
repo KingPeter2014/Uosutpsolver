@@ -71,7 +71,9 @@
 	</legend> 
 	
 	<form action="/utpsolver/RunGA" method="post">
-	<input type="Submit" value="Generate Timetable" name="runGA">
+		<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
+		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
+		<input type="Submit" value="Generate Timetable" name="runGA">
 	</form>
 	
 	</fieldset>
@@ -94,20 +96,13 @@
 			</select>		</td>
 		
 		</tr>
-		<tr><td colspan="3"><input type="submit" name="moduleconstraint" value="Submit"></td></tr>
+		<tr><td colspan="3"><input type="submit" name="moduleconstraint" value="Submit Special module requirement"></td></tr>
 		</table>
 		</form>
 	</fieldset>
 	</div>
 	<div class="right">
-	<fieldset><legend>Time Constraints</legend>
-		<form action="constraint.jsp" method="post">
-		<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
-		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
-		<input type="submit" name="timeconstraint" value="Sumit Time constraints">
-		</form>
-	</fieldset>
-	
+			
 	</div>
 </div>
 </body>

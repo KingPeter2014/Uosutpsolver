@@ -170,6 +170,24 @@ public class UploadInputs extends ReadInputs {
 		}
 		
 		return count;
+	}
+	//Register the days and times that a lecturer (Part time) is available over the week
+	public int registerLecturerAvailability(int lecturer,int from, int to,int day){
+		int count =0;
+		String query = "INSERT INTO lecturer_availabilites(lecturer_id,day,start_time,end_time) VALUES(" + lecturer + "," + day + "," + from + "," + to+ ")";
+		//message=query;
+		try {
+			count=db.updateQuery(query);
+			message = count + "";
+		} catch (Exception e) {
+			
+			message += e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		
+		return count;
 		
 	}
 

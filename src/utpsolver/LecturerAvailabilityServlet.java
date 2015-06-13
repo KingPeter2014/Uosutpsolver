@@ -22,6 +22,7 @@ public class LecturerAvailabilityServlet extends HttpServlet {
 	 * 
 	 */
 	private String message="";
+	UploadInputs upload = null;
 	private int lecturerid=0,startime=0,endtime=0,day=0;
 	public LecturerAvailabilityServlet() {
 		super();
@@ -62,6 +63,15 @@ public class LecturerAvailabilityServlet extends HttpServlet {
 
 		}
 		day = Integer.parseInt(req.getParameter("days"));
+		upload = new UploadInputs();
+		int count = upload.registerLecturerAvailability(lecturerid, startime, endtime, day);
+		if(count >0){
+			out.println("Lecturer availability successfully recorded.");
+		}
+		else{
+			out.println("Error: Could not register Lecturer availability.");
+			
+		}
 	}
 
 }
