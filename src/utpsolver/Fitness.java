@@ -129,6 +129,29 @@ public class Fitness{
 			isWithinTime=true;
 		return isWithinTime;
 	}
+	//CONSTRAINT 5: Ensure all modules taught for the semester are scheduled in the timetable
+	public int computeToVerifyAllModulesWereScheduled(int chromosome){
+		subfitness=0;
+		int [] modules = read.getModuleIds();
+		int numModules = modules.length;
+		int count=0;
+		for(int a=0;a<numModules;a++){
+			for(int i=0;i<roomCount;i++){
+				for(int j=0;j<timeslot;j++){
+					if(chromosomes[chromosome][i][j]==modules[a]){
+						count+=1;
+					}
+				}
+				
+			}
+			if(count>0)
+				subfitness+=1;
+			count=0;//Reset counter for the next module to be checked
+		}
+		return subfitness;
+		
+	}
+	
 	//Computes fitness to Check if all the classes are held in correct room type for this individual chromosome
 	public int computeClassHeldInCorrectRoomTypeFitness(int chromosome){
 		subfitness = 0;

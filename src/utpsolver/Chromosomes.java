@@ -130,7 +130,7 @@ public class Chromosomes {
 		message += "<br/> Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
 		message += "<br/> Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		message+= "<br/> Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome);
-		this.fitness = fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		message += "<br/> All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome);
 		return message;
 		
 	}
