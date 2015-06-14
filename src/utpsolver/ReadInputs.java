@@ -763,7 +763,7 @@ public class ReadInputs {
 	}
 	
 	//Get Courses for display in a select input for course allocation to lecturer
-		public String displayRooms(){
+	public String displayRooms(){
 			
 			String rooms= "";
 			rst = db.executeQuery("SELECT * FROM lecturerooms");
@@ -851,6 +851,113 @@ public class ReadInputs {
 			endTime[i] = this.convertDayTimeToTimeGene(days[i], endTimes[i]);
 		}
 		return endTime;		
+	}
+	public int[] convertDayTimeToTimeGene(int [] days,int []time){
+		int count= days.length;
+		int [] timeGene = new int[count];
+		for(int i=0;i<count;i++){
+			timeGene[i] = this.convertDayTimeToTimeGene(days[i], time[i]);
+		}
+	
+		return timeGene;
+	}
+	//Returns an array of the start times for modules that must be held in a specific time and venue
+	public int[] getStartTimeForSpecialConstraintModules(){
+		List<Integer> startTimes=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT * FROM special_module_constraints");
+		try {
+			while(rst.next()){
+				startTimes.add(rst.getInt("start_time"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(startTimes);
+		
+	}
+	
+	//Returns an array of the end times for modules that must be held in a specific time and venue
+	public int[] getEndTimeForSpecialConstraintModules(){
+		List<Integer> endTimes=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT * FROM special_module_constraints");
+		try {
+			while(rst.next()){
+				endTimes.add(rst.getInt("end_time"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(endTimes);
+	}
+	
+	//Returns an array of the end times for modules that must be held in a specific time and venue
+	public int[] getDaysForSpecialConstraintModules(){
+		List<Integer> day=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT * FROM special_module_constraints");
+		try {
+			while(rst.next()){
+				day.add(rst.getInt("day"));
+				}
+			}
+		catch (SQLException e) {				
+			e.printStackTrace();
+			message+=e.getMessage();
+			}
+		finally{
+				db.closeConnection();
+			}
+			return convertIntegerListToIntegerArray(day);
+		}
+
+	//Get all modules with special constraint requirements
+	public int [] getModulesWithSpecialConstraints(){
+		List<Integer> moduleids=new ArrayList<Integer>();
+		rst = db.executeQuery("SELECT * FROM special_module_constraints");
+		try {
+			while(rst.next()){
+				moduleids.add(rst.getInt("module_id"));
+			}
+		}
+		catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	
+		return convertIntegerListToIntegerArray(moduleids);
+	}
+	//Get all rooms allocated to corresponding modules with special room constraints
+	public int [] getRoomsWithSpecialModuleConstraints(){
+			List<Integer> roomids=new ArrayList<Integer>();
+			rst = db.executeQuery("SELECT * FROM special_module_constraints");
+			try {
+				while(rst.next()){
+					roomids.add(rst.getInt("room_id"));
+				}
+			}
+			catch (SQLException e) {
+					
+					e.printStackTrace();
+					message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		
+			return convertIntegerListToIntegerArray(roomids);
 	}
 	//Given day and time, return an integer between 1 and 40 to indicate time index on a Chromosome
 	private int convertDayTimeToTimeGene(int day, int time){

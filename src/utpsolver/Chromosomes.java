@@ -125,12 +125,15 @@ public class Chromosomes {
 	}
 	public String getFitnessOnAContraint(int chromosome){
 		String message ="";
-		message  += "Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
-		message += "<br/>Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome);
-		message += "<br/> Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
-		message += "<br/> Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
-		message+= "<br/> Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome);
-		message += "<br/> All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome);
+		message  += "H2:Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome);
+		message+= "<br/> H4:Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome);
+		message += "<br/> H5:All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome);
+		message += "<br/> H6:Special Module allocated to room and time NOT violated:" + fit.computeSpecialModuleConstraintViolation(chromosome);
+		message += "<br/> H7:Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		message += "<br/>H8: Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+
+		
 		return message;
 		
 	}

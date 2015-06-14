@@ -191,9 +191,9 @@ public class UploadInputs extends ReadInputs {
 		
 	}
 	//Register special rooms where some special modules must take place
-	public int registerSpecialModuleConstraint(int module,int room){
+	public int registerSpecialModuleConstraint(int module,int room,int startime,int endtime,int day){
 		int count =0;
-		String query = "INSERT INTO special_module_constraints(module_id,room_id) VALUES(" + module + "," + room + ")";
+		String query = "INSERT INTO special_module_constraints(module_id,room_id,start_time,end_time,day) VALUES(" + module + "," + room + ","+startime + "," + endtime +"," + day+ ")";
 		try {
 			count=db.updateQuery(query);
 			message = count + "";

@@ -56,8 +56,8 @@ public class LecturerAvailabilityServlet extends HttpServlet {
 			return;
 		}
 		endtime = Integer.parseInt(req.getParameter("to"));
-		if(endtime < startime){
-			message+="Please, the starting time for availability cannot be more than the ending time.";
+		if(endtime <= startime){
+			message+="Please, the starting time for availability cannot be more than or equal to the ending time.";
 			out.println(message);
 			return;
 

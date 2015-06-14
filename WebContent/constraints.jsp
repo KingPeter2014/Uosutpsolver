@@ -30,7 +30,7 @@
 	<br/>
 	<div class="left">
 	<fieldset><legend>Part-Time Lecturer Constraints</legend>
-	Partime Lecturer  i is available between time 1 and time 2 on day x
+	
 	<form action="/utpsolver/LecturerAvailabilityServlet" method="post">
 	<table>
 	<tr>
@@ -81,7 +81,6 @@
 	
 	<div class="left">
 	<fieldset><legend>Special Module Constraints</legend>
-	Module i must take place in room j
 	<form action="/utpsolver/SpecialModuleConstraint" method="post">
 	<table>
 		<tr>
@@ -94,6 +93,27 @@
 				<td><select name="room" id="room"><option value="0">Select</option>
 				<% out.println(rooms); %>
 			</select>		</td>
+			<td>from <select name="from">
+						<%for(int a=9;a <=17;a++ ){
+							out.println("<option value=\"" + a +  "\">" +a +"</option>");
+							}
+							%>
+					</select> to
+					 <select name="to">
+						<%for(int a=10;a <=17;a++ ){
+							out.println("<option value=\"" + a +  "\">" +a +"</option>");
+							}
+							%>
+					</select>
+					ON
+					<select name="days">
+						<option value="1"> Mondays</option>
+						<option value="2"> Tuesdays</option>
+						<option value="3"> Wednesdays</option>
+						<option value="4"> Thursdays</option>
+						<option value="5"> Fridays</option>
+					</select>
+				</td>
 		
 		</tr>
 		<tr><td colspan="3"><input type="submit" name="moduleconstraint" value="Submit Special module requirement"></td></tr>

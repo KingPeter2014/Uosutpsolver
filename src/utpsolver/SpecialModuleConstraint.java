@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SpecialModuleConstraint extends HttpServlet {
 	private String message="";
-	private int module=0,room=0,start_time=0,end_time=0,day=0;
+	private int module=0,room=0,startime=0,endtime=0,day=0;
 	UploadInputs upload = null;
 
 	/**
@@ -52,9 +52,27 @@ public class SpecialModuleConstraint extends HttpServlet {
 			out.println(message);
 			return;
 		}
+		String ns = req.getParameter("from");
+		if(ns!=null && !ns.equals("")){
+			startime = Integer.parseInt(ns);
+		}
+		else
+		{
+			message+="Please, Select the starting time for availability";
+			out.println(message);
+			return;
+		}
+		endtime = Integer.parseInt(req.getParameter("to"));
+		if(endtime < startime){
+			message+="Please, the starting time for availability cannot be more than or equal to the ending time.";
+			out.println(message);
+			return;
+
+		}
+		day = Integer.parseInt(req.getParameter("days"));
 		//INSERT THE CONSTRAINTS INTO SPECIAL MODULE CONSTRAINTS
 		upload = new UploadInputs();
-		int count= upload.registerSpecialModuleConstraint(module, room);
+		int count= upload.registerSpecialModuleConstraint(module, room,startime,endtime,day);
 		if(count==0){
 			out.println("Error: Could not register this special module constraint");
 

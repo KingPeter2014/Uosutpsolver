@@ -151,48 +151,65 @@ public class Fitness{
 		return subfitness;
 		
 	}
-	
-	//Computes fitness to Check if all the classes are held in correct room type for this individual chromosome
-	public int computeClassHeldInCorrectRoomTypeFitness(int chromosome){
-		subfitness = 0;
-		boolean iscorrect = false;
+	//CONSTRAINT 6: Accommodate lectures and labs that must hold at a specific time and venue within the week
+	public int computeSpecialModuleConstraintViolation(int chromosome){
+		subfitness=0;
+		int count=0;
+		int [] specialModules = read.getModulesWithSpecialConstraints();
+		int specialModuleCount = specialModules.length;
+		int [] startTimes = read.getStartTimeForSpecialConstraintModules();
+		int [] endTimes = read.getEndTimeForSpecialConstraintModules();
+		int [] days = read.getDaysForSpecialConstraintModules();
+		int [] timeGenes = read.convertDayTimeToTimeGene(days,startTimes);
+		int [] rooms = read.getRoomsWithSpecialModuleConstraints();
+		if(specialModuleCount==0)
+			return subfitness;
 		
-			for(int c=0; c < roomCount; c++){
-				for(int a =0;a <timeslot ; a++){
-					if(chromosomes[chromosome][c][a]!=0){
-						iscorrect = this.checkIfClassIsHeldInCorrectRoomType(chromosome, rooms[c], chromosomes[chromosome][c][a]);
-						if(iscorrect)
-							subfitness+=1;
+		for(int a=0;a<specialModuleCount;a++){
+			for(int i=0;i<roomCount;i++){
+				for(int j=0;j<timeslot;j++){
+					if(chromosomes[chromosome][i][j]==specialModules[a] && j==timeGenes[a]-1 && rooms[a]==this.rooms[i]){
+						subfitness+=1;
 					}
-					
 				}
-				
+			
 			}
-		
-		return subfitness;		
+		}
+		return subfitness;
 	}
 	
-	//Computes fitness to Check if all the classes are held in correct Size for this individual chromosome
-		public int computeClassHeldInCorrectRoomSizeFitness(int chromosome){
-			subfitness = 0;
-			boolean iscorrect = false;
-			
-			for(int c=0; c < roomCount; c++){
-				for(int a =0;a <timeslot ; a++){
-					if(chromosomes[chromosome][c][a]!=0){
-						iscorrect = this.checkIfClassHeldInCorrectRoomSize(chromosome, rooms[c], chromosomes[chromosome][c][a]);
-						if(iscorrect)
-							subfitness+=1;
-					}
-					
-				}
-				
-			}
-			
-			
-			return subfitness;		
+	//CONSTRAINT 7: Computes fitness to Check if all the classes are held in correct Size for this individual chromosome
+	public int computeClassHeldInCorrectRoomSizeFitness(int chromosome){
+		subfitness = 0;
+		boolean iscorrect = false;			
+		for(int c=0; c < roomCount; c++){
+			for(int a =0;a <timeslot ; a++){
+				if(chromosomes[chromosome][c][a]!=0){
+					iscorrect = this.checkIfClassHeldInCorrectRoomSize(chromosome, rooms[c], chromosomes[chromosome][c][a]);
+					if(iscorrect)
+						subfitness+=1;
+				}		
+			}	
 		}
+		return subfitness;		
+	}
 		
+	//CONSTRAINT 8:Computes fitness to Check if all the classes are held in correct room type for this individual chromosome
+	public int computeClassHeldInCorrectRoomTypeFitness(int chromosome){
+		subfitness = 0;
+		boolean iscorrect = false;	
+		for(int c=0; c < roomCount; c++){
+			for(int a =0;a <timeslot ; a++){
+				if(chromosomes[chromosome][c][a]!=0){
+					iscorrect = this.checkIfClassIsHeldInCorrectRoomType(chromosome, rooms[c], chromosomes[chromosome][c][a]);
+					if(iscorrect)
+						subfitness+=1;
+				}		
+			}	
+		}
+			
+		return subfitness;		
+	}
 	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
 	private boolean checkMultipleScheduling(int chromosome,int timeslot, int lecturer){
 		boolean isMultiple = true, isLecturerEvent=false;
