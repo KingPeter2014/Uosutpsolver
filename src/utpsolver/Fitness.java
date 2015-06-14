@@ -210,6 +210,49 @@ public class Fitness{
 			
 		return subfitness;		
 	}
+	//CONSTRAINT 9: More than 4 hours of consecutive lectures per lecturer
+	public int computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(int chromosome){
+		subfitness=0;
+		boolean isLecturerModule=false,isLecturerModule2=false,found=false;
+		int [] lecturers = read.getLecturerIds();
+		int numLecturers = lecturers.length;
+		int count=0;
+		for(int b=0;b <numLecturers;b++){
+			for(int i=0;i<timeslot-1;i++){
+				isLecturerModule = this.lecturerHasEventAtGivenTime(chromosome,i, lecturers[b]);
+				isLecturerModule2 = this.lecturerHasEventAtGivenTime(chromosome,i+1, lecturers[b]);
+				if(isLecturerModule && isLecturerModule2)
+					count+=1;
+				else
+					count=0;
+				
+				if(count==4)
+					found=true;
+						
+						//reset counter before checking the next day
+						if(b==7||b==15||b==23||b==31)
+							count=0;
+					
+			}
+			if(!found)
+				subfitness+=1;//give a reward if not up to five consecutive events found
+			//Reset parameters before checking for the next lecturers
+			count=0;
+			found=false;
+		}
+		return subfitness;
+		
+	}
+	//Check if a lecturer has an event at a particular time in any of the rooms
+	private boolean lecturerHasEventAtGivenTime(int chromosome, int time,int lecturer){
+		boolean hasLecture=false;
+		for(int k=0;k<roomCount;k++){
+			hasLecture = this.checkLecturerEvent(chromosomes[chromosome][k][time], lecturer);
+			if(hasLecture)
+				return true;
+		}
+		return hasLecture;
+	}
 	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
 	private boolean checkMultipleScheduling(int chromosome,int timeslot, int lecturer){
 		boolean isMultiple = true, isLecturerEvent=false;

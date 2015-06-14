@@ -132,6 +132,7 @@ public class Chromosomes {
 		message += "<br/> H6:Special Module allocated to room and time NOT violated:" + fit.computeSpecialModuleConstraintViolation(chromosome);
 		message += "<br/> H7:Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		message += "<br/>H8: Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + fit.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
 
 		
 		return message;

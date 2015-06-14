@@ -52,6 +52,7 @@ public class ReadInputs {
 	
 	//Get lecturer ids from lecturers' Table
 	public int[] getLecturerIds(){
+		List<Integer>  lecturerids=new ArrayList<Integer>();
 		rst = db.executeQuery("SELECT * FROM lecturers");
 		try {
 			while(rst.next()){
