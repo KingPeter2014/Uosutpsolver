@@ -82,7 +82,7 @@
 	<div class="left">
 	<fieldset><legend>Special Module Constraints</legend>
 	Module i must take place in room j
-	<form action="" method="post">
+	<form action="/utpsolver/SpecialModuleConstraint" method="post">
 	<table>
 		<tr>
 				<td><label>Module:&nbsp;<em>*</em></label></td>

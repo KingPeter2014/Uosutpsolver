@@ -79,5 +79,13 @@
   	<servlet-name>LecturerAvailabilityServlet</servlet-name>
   	<url-pattern>/LecturerAvailabilityServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+  	<servlet-name>SpecialModuleConstraint</servlet-name>
+  	<servlet-class>utpsolver.SpecialModuleConstraint</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>SpecialModuleConstraint</servlet-name>
+  	<url-pattern>/SpecialModuleConstraint</url-pattern>
+  </servlet-mapping>
   
 </web-app>
