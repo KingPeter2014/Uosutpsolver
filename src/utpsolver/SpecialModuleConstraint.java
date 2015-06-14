@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SpecialModuleConstraint extends HttpServlet {
 	private String message="";
 	private int module=0,room=0,start_time=0,end_time=0,day=0;
+	UploadInputs upload = null;
 
 	/**
 	 * 
@@ -52,6 +53,15 @@ public class SpecialModuleConstraint extends HttpServlet {
 			return;
 		}
 		//INSERT THE CONSTRAINTS INTO SPECIAL MODULE CONSTRAINTS
+		upload = new UploadInputs();
+		int count= upload.registerSpecialModuleConstraint(module, room);
+		if(count==0){
+			out.println("Error: Could not register this special module constraint");
+
+		}
+		else
+			out.println("Success: Special Module Constraint registered");
+			
 		
 	}
 

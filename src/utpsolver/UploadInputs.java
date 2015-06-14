@@ -190,5 +190,22 @@ public class UploadInputs extends ReadInputs {
 		return count;
 		
 	}
+	//Register special rooms where some special modules must take place
+	public int registerSpecialModuleConstraint(int module,int room){
+		int count =0;
+		String query = "INSERT INTO special_module_constraints(module_id,room_id) VALUES(" + module + "," + room + ")";
+		try {
+			count=db.updateQuery(query);
+			message = count + "";
+		} catch (Exception e) {
+				
+			message += e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return count;
+			
+	}	
 
 }
