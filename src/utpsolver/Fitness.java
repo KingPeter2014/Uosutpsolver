@@ -286,7 +286,7 @@ public class Fitness{
 	//S11: Constraint to avoid fixing lectures or labs on Wednesday afternoon
 	public int computeWednesdayAfternoonEventConstraint(int chromosome){
 		subfitness=0;
-		for(int i=20;i<24;i++){
+		for(int i=19;i<24;i++){
 			if(!this.anyEventFixedWithinTimeslot(chromosome, i))
 				subfitness+=1;
 		}

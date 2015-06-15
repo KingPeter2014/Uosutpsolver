@@ -71,7 +71,7 @@
 	long a = cr.startTime/1000;
 	long b = cr.endTime/1000;
 	long runningTime = b-a;
-	out.println("<b><h2>It took "+ runningTime + " seconds to run this GA</h2></b>");
+	out.println("<b><h2>It took apprimately "+ runningTime + " seconds to run this GA</h2></b>");
 %>
 </fieldset>
 </div>
