@@ -10,7 +10,7 @@ import utpsolver.Fitness;
  *
  */
 public class Chromosomes {
-	private int numChromosomes = 50, fitness=0;
+	public int numChromosomes = 20, fitness=0;
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
@@ -141,6 +141,10 @@ public class Chromosomes {
 		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome +1) + " is: " + fit.computeOverallFitnessForAChromosome(chromosome) + " out of " + fit.maxPossibleFitnessValue() + "</span>";
 		return message;
 		
+	}
+	//Evaluate the fitness of entire population
+	public int[] evaluatePopulationFitness(){
+		return fit.computeFitnessOfEntirePopulation();
 	}
 	//Look for any free gene space. That is genes whose content is zero. No module allocated to it.
 	private void findUnoccuppiedGene(int currentChromosome){

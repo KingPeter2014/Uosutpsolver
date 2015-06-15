@@ -15,16 +15,26 @@ public class Fitness{
 	private  int[][][] chromosomes = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private int [] rooms,modules,lecturers,cohorts,startTime,endTime,days;
+	private int [] fitnessValues;
 	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules ){
 		//this.chromosomes = new int[numChromosome][roomCount][timeslots];
 		this.chromosomes = chromosomes;
 		this.numChromosome=numChromosome;
+		this.fitnessValues = new int[numChromosome];
 		this.timeslot= timeslots;
 		this.rooms = rooms;
 		this.modules=modules;
 		this.moduleCount = this.modules.length;
 		this.roomCount= this.rooms.length;
 		
+	}
+	//Compute ans save the fitness of all chromosomes in the population
+	public int[] computeFitnessOfEntirePopulation(){
+		for(int a=0; a<numChromosome;a++){
+			fitnessValues[a] = computeOverallFitnessForAChromosome(a);
+			
+		}
+		return fitnessValues;
 	}
 	/**
 	 * Computes the overall fitness for a given Chromosome
