@@ -19,6 +19,7 @@ public class Chromosomes {
 	private boolean consecutiveFreeGeneFound=false;
 	ReadInputs read = new ReadInputs();
 	Fitness fit = null;
+	public long startTime = System.currentTimeMillis(),endTime=0;
 	
 	public Chromosomes(){
 		lecturerCount=read.getLecturerCount();
@@ -125,16 +126,18 @@ public class Chromosomes {
 	}
 	public String getFitnessOnAContraint(int chromosome){
 		String message ="";
-		message  += "H2:Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome);
-		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome);
-		message+= "<br/> H4:Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome);
-		message += "<br/> H5:All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome);
-		message += "<br/> H6:Special Module allocated to room and time NOT violated:" + fit.computeSpecialModuleConstraintViolation(chromosome);
-		message += "<br/> H7:Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
-		message += "<br/>H8: Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
-		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + fit.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
-		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + fit.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome);
-		
+		message  += "H2:Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome) + " out of " +fit.getMaxH2Reward();
+		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome)+ " out of " +fit.getMaxH3Reward();
+		message+= "<br/> H4:Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome) + " out of " + fit.getMaxH4Reward();
+		message += "<br/> H5:All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome)+ " out of " + fit.getMaxH5Reward();
+		message += "<br/> H6:Special Module correctly allocated to preffered room and time:" + fit.computeSpecialModuleConstraintViolation(chromosome)+ " out of " +fit.getMaxH6Reward();
+		message += "<br/> H7:Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome)+ " out of " +fit.getMaxH7Reward();
+		message += "<br/>H8: Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome)+ " out of " +fit.getMaxH7Reward();
+		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + fit.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome)+ " out of "+fit.getMaxS9Reward();
+		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + fit.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome)+ " out of " + fit.getMaxS10Reward();
+		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + fit.computeWednesdayAfternoonEventConstraint(chromosome)+ " out of 5";
+		message += "<br/> S12: No lecture/Lab during Launch time: " + fit.computeAvoidLaunchTimeEvents(chromosome) + " out of 5";
+		endTime = System.currentTimeMillis();
 		return message;
 		
 	}

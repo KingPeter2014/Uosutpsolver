@@ -282,6 +282,36 @@ public class Fitness{
 		}
 		return subfitness;
 	}
+	
+	//S11: Constraint to avoid fixing lectures or labs on Wednesday afternoon
+	public int computeWednesdayAfternoonEventConstraint(int chromosome){
+		subfitness=0;
+		for(int i=20;i<24;i++){
+			if(!this.anyEventFixedWithinTimeslot(chromosome, i))
+				subfitness+=1;
+		}
+		return subfitness;
+	}
+	
+	//S12: Constraint to avoid launch time everyday
+	public int computeAvoidLaunchTimeEvents(int chromosome){
+		subfitness=0;
+		for(int i=4;i<37; i=i+8){
+			
+				if(!this.anyEventFixedWithinTimeslot(chromosome, i))
+					subfitness+=1;
+			}
+			return subfitness;
+	}
+	//Check if any event at all is scheduled within a particular time slot
+	private boolean anyEventFixedWithinTimeslot(int chromosome, int timeslot){
+		for(int j=0;j < roomCount;j++){
+			if(chromosomes[chromosome][j][timeslot]!=0){
+				return true;
+			}
+		}
+		return false;
+	}
 	//Check if a lecturer has an event at a particular time in any of the rooms
 	private boolean lecturerHasEventAtGivenTime(int chromosome, int time,int lecturer){
 		boolean hasLecture=false;
@@ -293,15 +323,16 @@ public class Fitness{
 		return hasLecture;
 	}
 	//Check if a cohort has an event at a particular time in any of the rooms
-		private boolean cohortHasEventAtGivenTime(int chromosome, int time,int cohort, int level){
-			boolean hasLecture=false;
-			for(int k=0;k<roomCount;k++){
-				hasLecture = this.checkCohortEvent(chromosomes[chromosome][k][time] , cohort,level);
-				if(hasLecture)
-					return true;
-			}
-			return hasLecture;
+	private boolean cohortHasEventAtGivenTime(int chromosome, int time,int cohort, int level){
+		boolean hasLecture=false;
+		for(int k=0;k<roomCount;k++){
+			hasLecture = this.checkCohortEvent(chromosomes[chromosome][k][time] , cohort,level);
+			if(hasLecture)
+				return true;
 		}
+		
+		return hasLecture;
+	}
 	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
 	private boolean checkMultipleScheduling(int chromosome,int timeslot, int lecturer){
 		boolean isMultiple = true, isLecturerEvent=false;
@@ -379,5 +410,57 @@ public class Fitness{
 		
 		return isCorrect;
 	}
-
+	//Return maximum reward for NOT fixing multiple lectures for a lecturer within time slot
+	public int getMaxH2Reward(){
+		return timeslot * read.getLecturerCount();
+	}
+	
+	//Returns maximum reward for NOT fixing multiple events for a cohort within a timeslot.
+	public int getMaxH3Reward(){
+		int [] cohorts = read.getCohortIds();
+		int numCohorts = cohorts.length;
+		int maxreward=0,numyears=0,startingLevel=0;
+		for(int c =0;c<numCohorts;c++){
+			numyears = read.getNumberOfYearsToGraduate(cohorts[c]);
+			startingLevel = read.getCohortStartingLevel(cohorts[c]);
+			for(int k = startingLevel; k <(startingLevel + numyears); k++){
+				maxreward +=1;
+			}
+		}
+		return maxreward = maxreward*timeslot;
+	}
+	
+	//Returns maximum reward for accomoodating time preferences of part time lecturers
+	public int getMaxH4Reward(){
+		return read.getPartimeLecturerIDs().length;
+	}
+	
+	//Returns maximum reward for ensuring that all lectures and labs are scheduled in the timetable.
+	public int getMaxH5Reward(){
+		return read.getmoduleCount();
+	}
+	//Returns maximum reward for events that must hold in specific rooms and time.
+	public int getMaxH6Reward(){
+		return read.getModulesWithSpecialConstraints().length;
+	}
+	
+	//Returns maximum reward for events that held in correct room size, Same as H8Max
+	public int getMaxH7Reward(){
+		int max=0;
+		for(int a=0;a <timeslot;a++){
+			for(int b=0;b <roomCount;b++){
+				if(chromosomes[0][b][a]!=0)
+					max+=1;
+			}
+		}
+		return max;
+	}
+	//Returns maximum reward for not more than 4-hour lecturer schedule
+	public int getMaxS9Reward(){
+		return read.getLecturerCount();
+	}
+	//Returns maximum reward for not more than 4-hour cohort schedule
+	public int getMaxS10Reward(){
+		return this.getMaxH3Reward()/timeslot;
+	}
 }
