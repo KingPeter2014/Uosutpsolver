@@ -138,6 +138,7 @@ public class Chromosomes {
 		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + fit.computeWednesdayAfternoonEventConstraint(chromosome)+ " out of 5";
 		message += "<br/> S12: No lecture/Lab during Launch time: " + fit.computeAvoidLaunchTimeEvents(chromosome) + " out of 5";
 		endTime = System.currentTimeMillis();
+		message += "<br/>Overall fitness for Chromosome " + (chromosome +1) + " is: " + fit.computeOverallFitnessForAChromosome(chromosome) + " out of " + fit.maxPossibleFitnessValue();
 		return message;
 		
 	}
