@@ -230,7 +230,7 @@ public class Fitness{
 					found=true;
 						
 						//reset counter before checking the next day
-						if(b==7||b==15||b==23||b==31)
+						if(i==7||i==15||i==23||i==31)
 							count=0;
 					
 			}
@@ -243,6 +243,45 @@ public class Fitness{
 		return subfitness;
 		
 	}
+	//CONSTRAINT 10: More than 4 hours of consecutive lectures per Cohort
+	public int computeMoreThan4HoursOfConsecutiveLecturesPerCohort(int chromosome){
+		subfitness=0;
+		int numyears=0,startingLevel=0;
+		boolean isCohortModule=false,isCohortModule2=false,found=false;
+		int [] cohorts = read.getCohortIds();
+		int numCohorts = cohorts.length;
+		int count=0;
+		for(int c =0;c<numCohorts;c++){
+			numyears = read.getNumberOfYearsToGraduate(cohorts[c]);
+			startingLevel = read.getCohortStartingLevel(cohorts[c]);
+			for(int k = startingLevel; k <(startingLevel + numyears); k++){
+				for(int i=0;i<timeslot-1;i++){
+					isCohortModule = this.cohortHasEventAtGivenTime(chromosome, i, cohorts[c], k);
+					isCohortModule2 = this.cohortHasEventAtGivenTime(chromosome, i+1, c, k);
+					if(isCohortModule && isCohortModule2)
+						count+=1;
+					else
+						count=0;
+					
+					if(count==4)
+						found=true;
+							
+					//reset counter before checking the next day
+					if(i==7||i==15||i==23||i==31)
+						count=0;
+					
+				}
+				if(!found)
+					subfitness+=1;//give a reward if not up to five consecutive events found
+				//Reset parameters before checking for the next lecturers
+				count=0;
+				found=false;
+				
+			}	
+			
+		}
+		return subfitness;
+	}
 	//Check if a lecturer has an event at a particular time in any of the rooms
 	private boolean lecturerHasEventAtGivenTime(int chromosome, int time,int lecturer){
 		boolean hasLecture=false;
@@ -253,6 +292,16 @@ public class Fitness{
 		}
 		return hasLecture;
 	}
+	//Check if a cohort has an event at a particular time in any of the rooms
+		private boolean cohortHasEventAtGivenTime(int chromosome, int time,int cohort, int level){
+			boolean hasLecture=false;
+			for(int k=0;k<roomCount;k++){
+				hasLecture = this.checkCohortEvent(chromosomes[chromosome][k][time] , cohort,level);
+				if(hasLecture)
+					return true;
+			}
+			return hasLecture;
+		}
 	//Checks if an event has been scheduled more than once for a lecturer in different room for an individual chromosome on a given timeslot
 	private boolean checkMultipleScheduling(int chromosome,int timeslot, int lecturer){
 		boolean isMultiple = true, isLecturerEvent=false;

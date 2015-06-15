@@ -133,7 +133,7 @@ public class Chromosomes {
 		message += "<br/> H7:Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		message += "<br/>H8: Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome);
 		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + fit.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
-
+		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + fit.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome);
 		
 		return message;
 		
