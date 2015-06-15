@@ -259,6 +259,7 @@ public class ReadInputs {
 		
 	//Get Module ids for generating chromosome
 	public int[] getModuleIds(){
+		List<Integer> moduleids=new ArrayList<Integer>();
 		rst = db.executeQuery("SELECT * FROM courses");
 		try {
 			while(rst.next()){

@@ -31,30 +31,53 @@ public class Fitness{
 	 */
 	public int computeOverallFitnessForAChromosome(int chromosome){
 		chromosomeFitness=0;
-		chromosomeFitness += this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
-		chromosomeFitness +=this.computeClassHeldInCorrectRoomSizeFitness(chromosome);
-		chromosomeFitness += this.computeAvoidLaunchTimeEvents(chromosome);
-		chromosomeFitness += this.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome);
-		chromosomeFitness += this.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
-		chromosomeFitness += this.computeMultipleScheduleForACohort(chromosome);
-		chromosomeFitness += this.computeMultipleScheduleForALecturerAtSameTime(chromosome);
-		chromosomeFitness += this.computePartimeLecturerAvailablityScheduling(chromosome);
-		chromosomeFitness += this.computeSpecialModuleConstraintViolation(chromosome);
-		chromosomeFitness += this.computeToVerifyAllModulesWereScheduled(chromosome);
-		chromosomeFitness += this.computeWednesdayAfternoonEventConstraint(chromosome);
-		
-		
-		
+		chromosomeFitness =this.getOverallRewardsOnHardConstraints(chromosome);
+		chromosomeFitness += this.getOverallRewardsOnSoftConstraints(chromosome);
 		return chromosomeFitness;
+	}
+	//Compute total hard constraints Rewards
+	public int getOverallRewardsOnHardConstraints(int chromosome){
+		int hsFitness = this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		hsFitness += this.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		hsFitness += this.computeMultipleScheduleForACohort(chromosome);
+		hsFitness += this.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		hsFitness += this.computePartimeLecturerAvailablityScheduling(chromosome);
+		hsFitness += this.computeSpecialModuleConstraintViolation(chromosome);
+		hsFitness += this.computeToVerifyAllModulesWereScheduled(chromosome);
+		
+		return hsFitness;
+	}
+	//Compute total soft constraint rewards
+	public int getOverallRewardsOnSoftConstraints(int chromosome){
+		int scFitness = this.computeAvoidLaunchTimeEvents(chromosome);
+		scFitness += this.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome);
+		scFitness += this.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
+		scFitness += this.computeWednesdayAfternoonEventConstraint(chromosome);
+		return scFitness;
+		
+		
 	}
 	//Compute maximum fitness possible for a chromosome
 	public int maxPossibleFitnessValue(){
 		int maxFitnessValue=0;
-		maxFitnessValue = this.getMaxH2Reward()+ this.getMaxH3Reward() + this.getMaxH4Reward() + this.getMaxH5Reward() ;
-		maxFitnessValue += this.getMaxH6Reward() + this.getMaxH7Reward() + this.getMaxH7Reward() + this.getMaxS9Reward();
-		maxFitnessValue += this.getMaxS10Reward() + 10;
+		maxFitnessValue = this.getMaximumPossibleHardConstraintFitnessValue() ;
+		maxFitnessValue += this.getMaximumPossibleSoftConstraintFitnessValue();
 		return maxFitnessValue;
 		
+	}
+	//Compute maximum fitness value possible for all hard constraints
+	public int getMaximumPossibleHardConstraintFitnessValue(){
+		int maxFitnessValue=0;
+		maxFitnessValue = this.getMaxH2Reward()+ this.getMaxH3Reward() + this.getMaxH4Reward() + this.getMaxH5Reward() ;
+		maxFitnessValue += this.getMaxH6Reward() + this.getMaxH7Reward() + this.getMaxH7Reward();
+		return maxFitnessValue;	
+	}
+	//Compute the maximum fitness value possible for all soft constraints
+	public int getMaximumPossibleSoftConstraintFitnessValue(){
+		int maxFitnessValue=0;
+		maxFitnessValue += this.getMaxS9Reward();
+		maxFitnessValue += this.getMaxS10Reward() + 10;
+		return maxFitnessValue;
 	}
 	//CONSTRAINT 2: Compute Fitness to check if multiple modules taught by same lecturer are fixed at same time
 	public int computeMultipleScheduleForALecturerAtSameTime( int chromosome){
