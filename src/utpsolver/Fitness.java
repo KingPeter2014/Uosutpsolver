@@ -310,7 +310,7 @@ public class Fitness{
 			for(int k = startingLevel; k <(startingLevel + numyears); k++){
 				for(int i=0;i<timeslot-1;i++){
 					isCohortModule = this.cohortHasEventAtGivenTime(chromosome, i, cohorts[c], k);
-					isCohortModule2 = this.cohortHasEventAtGivenTime(chromosome, i+1, c, k);
+					isCohortModule2 = this.cohortHasEventAtGivenTime(chromosome, i+1, cohorts[c], k);
 					if(isCohortModule && isCohortModule2)
 						count+=1;
 					else

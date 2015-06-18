@@ -18,6 +18,7 @@ public class Chromosomes {
 	private int freeChromosome=0,freeRoom=0,freeTimeslot=0;
 	private boolean consecutiveFreeGeneFound=false;
 	ReadInputs read = new ReadInputs();
+	private boolean exemptLunchTime=false,exemptWednesdayAfternoon=false;
 	Fitness fit = null;
 	public long startTime = System.currentTimeMillis(),endTime=0;
 	
@@ -29,12 +30,22 @@ public class Chromosomes {
 		moduleCount=modules.length;
 		chromosomes = new int[numChromosomes][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
-		this.initializePopulation();
+		//this.initializePopulation();
+		initializePopulationWithElitism();
 		 fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules);
 		
 	}
 	
-	public void Chromosomes(int[] partimeLecturers,int[] startTimes, int [] stopTimes, int[] days){
+	public void Chromosomes(boolean useLunchTime,boolean useWedAfternoon){
+		lecturerCount=read.getLecturerCount();
+		rooms= read.getRoomIds();
+		modules = read.getModuleIds();
+		roomCount= rooms.length;
+		moduleCount=modules.length;
+		chromosomes = new int[numChromosomes][roomCount][timeslot];
+		this.initialAllChromosomesToZero();
+		this.initializePopulationWithElitism();
+		
 		
 	}
 	/**
@@ -120,13 +131,120 @@ public class Chromosomes {
 			
 		}//End chromosomes loop	
 	}
-	
-	private void initializePopulationWithElitism(){
+	private void handleSpecificTwoHourModulesScheduling(int chromosome,int module,int startTime,String moduleType){
+		if(moduleType.equals("lab"))
+			this.findConsecutiveFreeLabRoomsFromStartTime(chromosome, startTime);
+		else
+			this.findConsecutiveFreeLectureRoomsFromStartTime(chromosome, startTime);
+		this.insertGene(chromosome, freeRoom, freeTimeslot, module);
+		this.insertGene(chromosome, freeRoom, freeTimeslot+1, module);
+		this.consecutiveFreeGeneFound=false;
 		
 	}
+	private void initializePopulationWithElitism(){
+		int time=0,rm=0;
+		boolean isLastHour=false, isOccupied=true,inserted=false;
+		String moduleType="";
+		int modulehours=0,assigned=0;
+		//Schedule special modules first to satisfy special room and time constraints (H6)
+		this.scheduleSpecialModules();
+		//Schedule lectures belonging to partime lecturers
+		this.schedulePartimeLecturerModules();
+		
+	}
+	
+	//Finds all modules with special room and time requirements and allocates them first(H6)
+	private void scheduleSpecialModules(){
+		int [] specialModules = read.getModulesWithSpecialConstraints();
+		int specialModuleCount = specialModules.length;
+		if(specialModuleCount<=0)
+			return;
+		int [] startTimes = read.getStartTimeForSpecialConstraintModules();
+		int [] endTimes = read.getEndTimeForSpecialConstraintModules();
+		int [] days = read.getDaysForSpecialConstraintModules();
+		int [] startTimeGenes = read.convertDayTimeToTimeGene(days,startTimes);
+		int [] endTimeGenes = read.convertDayTimeToTimeGene(days,endTimes);
+
+		int [] rooms = read.getRoomsWithSpecialModuleConstraints();
+		for(int n=0;n <numChromosomes; n++){
+			for(int a=0;a<specialModuleCount;a++){
+				for(int j=startTimeGenes[a]-1;j<endTimeGenes[a]-1;j++){
+					this.insertGene(n, this.getRoomIndex(rooms[a]), j, specialModules[a]);	
+				}	
+			}
+		}
+	}
+	//Allocate modules belonging to partime lecturers
+	private void schedulePartimeLecturerModules(){
+		boolean isScheduled=false;
+		String moduleType="";
+		int modulehours=0;
+		int [] partTimeLecturers = read.getPartimeLecturerIDs();
+		int partimeLecturersCount = partTimeLecturers.length;
+		if (partimeLecturersCount==0)
+			return ;//No part time lecture exists for this semester
+		
+		for(int i=0;i<partimeLecturersCount;i++){
+			int [] lecturerModules = read.getLecturerModules(partTimeLecturers[i]);
+			if(lecturerModules.length==0){
+				continue; //This lecturer has no modules allocated to him/her, so check next lecturer
+			}
+			int [] startTimes = read.getStartTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
+			int [] endTimes = read.getEndTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
+			for(int n=0; n<numChromosomes;n++){
+				for(int j=0;j<lecturerModules.length;j++){
+					//Check if current module has been allocated in chromosome
+					isScheduled = this.isScheduled(n, lecturerModules[j]);
+					if(!isScheduled){
+						moduleType = read.getModuleType(lecturerModules[j]);
+						if(moduleType.equals("lab")){
+							modulehours = read.getLabHoursPerWeek(lecturerModules[j]);
+							this.findFreeLabRoom(n);
+						}
+						else{
+							modulehours = read.getLectureHoursPerWeek(lecturerModules[j],"lecture");
+							this.findFreeLectureRoom(n);
+						}
+						if( modulehours==1 && freeRoom!=0){
+							//chromosomes[i][rm-1][time-1]=modules[d];
+							boolean inserted = this.insertGene(n, freeRoom, startTimes[0]-1, lecturerModules[j]);
+							
+						}
+						else if( modulehours==2){
+							this.handleSpecificTwoHourModulesScheduling(n, lecturerModules[j], startTimes[0]-1, moduleType);
+						}
+
+					}
+						
+				}
+			}
+			
+		}
+
+		
+	}
+	//Check if a particular module has been scheduled in a chromosome
+	private boolean isScheduled(int chromosome,int module){
+		for(int i=0;i<roomCount;i++){
+			for(int j=0;j<timeslot;j++){
+				if(chromosomes[chromosome][i][j]==module){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	//Get the index of a room from the chromosome representation array
+	int getRoomIndex(int roomid){
+		for(int i=0;i<roomCount;i++){
+			if(rooms[i]==roomid)
+				return i;
+		}
+		return 0;
+	}
 	public String getFitnessOnAContraint(int chromosome){
-		String message ="";
-		message  += "H2:Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome) + " out of " +fit.getMaxH2Reward();
+		String message ="H1: No multiple event at same venue and Time: Never violated due to chromosome representation method";
+		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome) + " out of " +fit.getMaxH2Reward();
 		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome)+ " out of " +fit.getMaxH3Reward();
 		message+= "<br/> H4:Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome) + " out of " + fit.getMaxH4Reward();
 		message += "<br/> H5:All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome)+ " out of " + fit.getMaxH5Reward();
@@ -154,14 +272,134 @@ public class Chromosomes {
 		for(int c=0; c < roomCount; c++){
 			for(int a =0;a <40 ; a++){
 				if(chromosomes[currentChromosome][c][a] ==0){
-					freeChromosome=currentChromosome;
 					freeRoom=c;
 					freeTimeslot=a;
+					return;
 				}
 			}
 					
 		}	
 	}
+	//Find free room of lecture type
+	private void findFreeLectureRoom(int currentChromosome){
+		freeChromosome=currentChromosome;
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lecture")){
+				for(int a =0;a <40 ; a++){
+					if(chromosomes[currentChromosome][c][a] ==0){
+						freeRoom=c;
+						freeTimeslot=a;
+						return;
+					}
+				}
+			}
+					
+		}	
+	}
+	private void findFreeLabRoom(int chromosome){
+		freeChromosome=chromosome;
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lab")){
+				for(int a =0;a <40 ; a++){
+					if(chromosomes[chromosome][c][a] ==0){
+						freeRoom=c;
+						freeTimeslot=a;
+						return;
+					}
+				}
+			}
+					
+		}	
+		
+	}
+	//Find consecutive timeslots in a laboratory room
+	private void findConsecutiveFreeLabRoom(int chromosome){
+		freeChromosome=chromosome;
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lab")){
+				for(int a =0;a <timeslot-1 ; a++){
+					if(chromosomes[chromosome][c][a] ==0 && chromosomes[chromosome][c][a+1] ==0){
+						freeRoom=c;
+						freeTimeslot=a;
+						this.consecutiveFreeGeneFound=true;
+						return;
+					}
+				}
+			}
+					
+		}	
+		
+	}
+	
+	//Find consecutive timeslots in a laboratory room
+	private void findConsecutiveFreeLectureRooms(int chromosome){
+		freeChromosome=chromosome;
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lecture")){
+				for(int a =0;a <timeslot-1 ; a++){
+					if(chromosomes[chromosome][c][a] ==0 && chromosomes[chromosome][c][a+1] ==0){
+						freeRoom=c;
+						freeTimeslot=a;
+						this.consecutiveFreeGeneFound=true;
+						return;
+					}
+				}
+			}
+						
+		}	
+			
+		}
+	//Find consecutive timeslots in a lecture room from a start time
+	private void findConsecutiveFreeLectureRoomsFromStartTime(int chromosome, int startTime){
+		freeChromosome=chromosome;
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lecture")){
+				for(int a =0;a <timeslot-1 ; a++){
+					if(chromosomes[chromosome][c][a] ==0 && chromosomes[chromosome][c][a+1] ==0 && a >=startTime){
+						freeRoom=c;
+						freeTimeslot=a;
+						this.consecutiveFreeGeneFound=true;
+						return;
+					}
+				}
+			}
+							
+		}	
+				
+	}
+	
+	//Find consecutive timeslots in a lab room from a start time
+		private void findConsecutiveFreeLabRoomsFromStartTime(int chromosome, int startTime){
+			freeChromosome=chromosome;
+			freeRoom=0;
+			freeTimeslot=0;
+			this.consecutiveFreeGeneFound=false;
+			for(int c=0; c < roomCount; c++){
+				if(read.getRoomType(rooms[c]).equals("lab")){
+					for(int a =0;a <timeslot-1 ; a++){
+						if(chromosomes[chromosome][c][a] ==0 && chromosomes[chromosome][c][a+1] ==0 && a >=startTime){
+							freeRoom=c;
+							freeTimeslot=a;
+							this.consecutiveFreeGeneFound=true;
+							return;
+						}
+					}
+				}
+								
+			}	
+					
+		}
+	
 	
 	private void findConsecutiveUnoccuppiedGene(int currentChromosome){
 		freeChromosome=currentChromosome;

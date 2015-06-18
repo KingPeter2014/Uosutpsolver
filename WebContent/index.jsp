@@ -27,13 +27,11 @@
 			<li> <a href="constraints.jsp"> Constraints</a> </li>
 		</div>
 <div>
-<button>Generate Timetable</button>
 </div>
 
 <fieldset><legend>Randomly Generated Timetable</legend>
 
 <% 
-
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
 	String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(1);
@@ -80,7 +78,7 @@
 	long a = cr.startTime/1000;
 	long b = cr.endTime/1000;
 	long runningTime = b-a;
-	out.println("<b><h2>It took apprimately "+ runningTime + " seconds to run this GA</h2></b>");
+	out.println("<b><h2>It took approximately "+ runningTime + " seconds to run this GA</h2></b>");
 	
 %>
 </fieldset>
