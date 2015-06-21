@@ -70,6 +70,46 @@ public class ReadInputs {
 		
 		return convertIntegerListToIntegerArray(lecturerids);
 	}
+	//Returns a string array of the module types corresponding to each module
+	public String[] getModuleTypeArray(){
+		List<String>  moduleTypeArray = new ArrayList<String>();
+		rst = db.executeQuery("SELECT coursetype FROM courses");
+		try {
+			while(rst.next()){
+				moduleTypeArray.add(rst.getString("coursetype"));
+			}
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		
+		return convertStringListToStringArray(moduleTypeArray);
+	}
+	//Returns a string array of room types corresponding to each room
+	public String[] getRoomTypeArray(){
+		List<String>  roomTypeArray = new ArrayList<String>();
+		rst = db.executeQuery("SELECT roomtype FROM lecturerooms");
+		try {
+			while(rst.next()){
+				roomTypeArray.add(rst.getString("roomtype"));
+			}
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		
+		return convertStringListToStringArray(roomTypeArray);
+	}
 	//Confirm if an event belongs to a lecturer
 	public boolean confirmEventBelongsToLecturer(int event, int lecturer){
 		boolean belongsToLecturer = false;
@@ -161,6 +201,18 @@ public class ReadInputs {
 		}
 		
 		return  idsArray;
+	}
+	//Converts an integer ArrayList to int Array
+	public String[] convertStringListToStringArray(List<String> list){
+		String[] stringArray = new String[list.size()];
+		Iterator<String> iter = list.iterator();
+		int i=0;
+		while(iter.hasNext()){
+			stringArray[i] = iter.next().toString();
+			i=i+1;
+		}
+			
+		return  stringArray;
 	}
 	//Get ids of part time lecturers only
 	public int[] getPartimeLecturerIDs(){

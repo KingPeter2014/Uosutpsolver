@@ -27,7 +27,7 @@
 <br/>
 <fieldset><legend>Assign Module to Cohort</legend>
 		<form action="/utpsolver/ModuleCohortServlet" method="POST">
-			<table width="60%">
+			<table width="100%">
 				<tr>
 					<td>Module:<em>*</em></td>
 					<td><select name="module" id="module"><option value="0">Select</option>

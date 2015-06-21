@@ -14,9 +14,16 @@ public class Fitness{
 	private ReadInputs read = new ReadInputs();
 	private  int[][][] chromosomes = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
-	private int [] rooms,modules,lecturers,cohorts,startTime,endTime,days;
+	private int [] rooms,modules,lecturers,cohorts,startTime,endTime;
 	private int [] fitnessValues;
-	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules ){
+	private int [] startTimes = read.getStartTimeForSpecialConstraintModules();
+	private int [] endTimes = read.getEndTimeForSpecialConstraintModules();
+	private int [] days = read.getDaysForSpecialConstraintModules();
+	private int [] timeGenes = read.convertDayTimeToTimeGene(days,startTimes);
+	private int [] specialRooms = read.getRoomsWithSpecialModuleConstraints();
+	private int [] specialModules = read.getModulesWithSpecialConstraints();
+	String [] moduleTypes, roomTypes;
+	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules, String[] moduleTypes, String[] roomTypes ){
 		//this.chromosomes = new int[numChromosome][roomCount][timeslots];
 		this.chromosomes = chromosomes;
 		this.numChromosome=numChromosome;
@@ -24,15 +31,23 @@ public class Fitness{
 		this.timeslot= timeslots;
 		this.rooms = rooms;
 		this.modules=modules;
+		this.moduleTypes = moduleTypes;
+		this.roomTypes = roomTypes;
 		this.moduleCount = this.modules.length;
 		this.roomCount= this.rooms.length;
+		lecturers = read.getLecturerIds();
+		lecturerCount=lecturers.length;
+		cohorts = read.getCohortIds();
 		
 	}
-	//Compute ans save the fitness of all chromosomes in the population
+	//Compute the fitness of each chromosome in the entire population
 	public int[] computeFitnessOfEntirePopulation(){
+		long st=0;
 		for(int a=0; a<numChromosome;a++){
+			st = System.currentTimeMillis();
+			System.out.println("Evaluating the fitness of entire population....,Chromo:" + (a+1));
 			fitnessValues[a] = computeOverallFitnessForAChromosome(a);
-			
+			System.out.println("Evaluation of chromosome " + (a+1) + " took: " + (System.currentTimeMillis() - st)/1000 + "Secs to execute");			
 		}
 		return fitnessValues;
 	}
@@ -56,6 +71,10 @@ public class Fitness{
 		hsFitness += this.computeToVerifyAllModulesWereScheduled(chromosome);
 		
 		return hsFitness;
+	}
+	// Get Moduletype locally
+	private String getModuleType(int moduleIndex){
+		return moduleTypes[moduleIndex];
 	}
 	//Compute total soft constraint rewards
 	public int getOverallRewardsOnSoftConstraints(int chromosome){
@@ -92,8 +111,6 @@ public class Fitness{
 	//CONSTRAINT 2: Compute Fitness to check if multiple modules taught by same lecturer are fixed at same time
 	public int computeMultipleScheduleForALecturerAtSameTime( int chromosome){
 		subfitness=0;
-		lecturers = read.getLecturerIds();
-		lecturerCount=lecturers.length;
 		for(int i=0;i<lecturerCount;i++){
 			for(int j=0;j<timeslot;j++){
 					if(!checkMultipleScheduling(chromosome,j,lecturers[i]))
@@ -108,7 +125,6 @@ public class Fitness{
 	public int computeMultipleScheduleForACohort(int chromosome){
 		subfitness = 0;
 		int numyears=0,startingLevel=0;
-		cohorts = read.getCohortIds();
 		int cohortCount = cohorts.length;
 		for(int i=0;i <cohortCount;i++){
 			numyears = read.getNumberOfYearsToGraduate(cohorts[i]);
@@ -208,20 +224,16 @@ public class Fitness{
 	public int computeSpecialModuleConstraintViolation(int chromosome){
 		subfitness=0;
 		int count=0;
-		int [] specialModules = read.getModulesWithSpecialConstraints();
+		
 		int specialModuleCount = specialModules.length;
-		int [] startTimes = read.getStartTimeForSpecialConstraintModules();
-		int [] endTimes = read.getEndTimeForSpecialConstraintModules();
-		int [] days = read.getDaysForSpecialConstraintModules();
-		int [] timeGenes = read.convertDayTimeToTimeGene(days,startTimes);
-		int [] rooms = read.getRoomsWithSpecialModuleConstraints();
+		
 		if(specialModuleCount==0)
 			return subfitness;
 		
 		for(int a=0;a<specialModuleCount;a++){
 			for(int i=0;i<roomCount;i++){
 				for(int j=0;j<timeslot;j++){
-					if(chromosomes[chromosome][i][j]==specialModules[a] && j==timeGenes[a]-1 && rooms[a]==this.rooms[i]){
+					if(chromosomes[chromosome][i][j]==specialModules[a] && j==this.timeGenes[a]-1 && this.specialRooms[a]==this.rooms[i]){
 						subfitness+=1;
 					}
 				}
@@ -301,7 +313,7 @@ public class Fitness{
 		subfitness=0;
 		int numyears=0,startingLevel=0;
 		boolean isCohortModule=false,isCohortModule2=false,found=false;
-		int [] cohorts = read.getCohortIds();
+		//int [] cohorts = read.getCohortIds();
 		int numCohorts = cohorts.length;
 		int count=0;
 		for(int c =0;c<numCohorts;c++){
@@ -470,7 +482,7 @@ public class Fitness{
 	
 	//Returns maximum reward for NOT fixing multiple events for a cohort within a timeslot.
 	public int getMaxH3Reward(){
-		int [] cohorts = read.getCohortIds();
+		//int [] cohorts = read.getCohortIds();
 		int numCohorts = cohorts.length;
 		int maxreward=0,numyears=0,startingLevel=0;
 		for(int c =0;c<numCohorts;c++){

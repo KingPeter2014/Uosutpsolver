@@ -28,7 +28,7 @@
 		</div>
 <div>
 </div>
-
+<br/>
 <fieldset><legend>Randomly Generated Timetable</legend>
 
 <% 
