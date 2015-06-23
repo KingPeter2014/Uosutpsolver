@@ -61,7 +61,7 @@ public class Fitness{
 		chromosomeFitness=0;
 		chromosomeFitness =this.getOverallRewardsOnHardConstraints(chromosome);
 		chromosomeFitness += this.getOverallRewardsOnSoftConstraints(chromosome);
-		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome ) + " is: " + chromosomeFitness + " out of " + this.maxPossibleFitnessValue() + "</span>";
+		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome ) + " is: " + chromosomeFitness + " out of " + Fitness.maxReward + "</span>";
 		return chromosomeFitness;
 	}
 	//Compute total hard constraints Rewards
@@ -83,7 +83,11 @@ public class Fitness{
 		message += "<br/> H6:Special Module correctly allocated to preffered room and time:" + h6 + " out of " + Fitness.maxH6;
 		message += "<br/> H7:Classes held in correct room size:" + h7+ " out of " + Fitness.maxH7;
 		message += "<br/>H8: Classes held in correct room type: " + h8 + " out of " + Fitness.maxH8;
-		
+		if(hsFitness == Fitness.maxHard)
+			message += "<br/><span class=\"success\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + " out of " + Fitness.maxHard + "</span>";
+		else
+			message += "<br/><span class=\"error\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + " out of " + Fitness.maxHard + "</span>";
+			
 		return hsFitness;
 	}
 	//Computes all maximum fitnesses immediately the fitness class is instantiated and saves them in static variables
@@ -117,6 +121,7 @@ public class Fitness{
 		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + s10 + " out of " + Fitness.maxS10;
 		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + s11 + " out of 5";
 		message += "<br/> S12: No lecture/Lab during Launch time: " + s12 + " out of 5";
+		message += "<br/><span class=\"success\">SOFT Constraint fitness for Chromosome " + (chromosome ) + " is: " + scFitness + " out of " + Fitness.maxSoft + "</span>";
 		return scFitness;
 		
 		

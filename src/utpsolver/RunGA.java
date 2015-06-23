@@ -54,13 +54,14 @@ public class RunGA extends HttpServlet {
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
 		
 		
-		String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(1);
+		String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(0);
 		out.println(test);
 		String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
 				"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
 				"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
-				+ cr.displayGeneratedTimetable(1) + "</table>";
+				+ cr.displayGeneratedTimetable(0) + "</table>";
 				out.println("<br/>" + test1);
+		this.disPlayChromosome(0);
 		this.disPlayChromosome(1);
 		this.doCrossover();
 		String child1 = cover.printChild();
@@ -80,7 +81,7 @@ public class RunGA extends HttpServlet {
 		out.println("<br/><hr/>Chromosome Structure[" + chromosome + "]<hr/>");
 		for(int b=0; b< Chromosomes.roomCount; b++){
 			for(int a =0; a < timeslots; a++)
-				out.println(chromo[chromosome-1][b][a] + "&nbsp&nbsp&nbsp");
+				out.println(chromo[chromosome][b][a] + "&nbsp&nbsp&nbsp");
 			out.println("<br/>");
 			
 		}
