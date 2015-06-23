@@ -21,9 +21,10 @@ public class Chromosomes {
 	ReadInputs read = new ReadInputs();
 	private boolean exemptLunchTime=false,exemptWednesdayAfternoon=false;
 	Fitness fit = null;
-	public long startTime = System.currentTimeMillis(),endTime=0;
+	public long startTime = 0,endTime=0;
 	
 	public Chromosomes(){
+		startTime=System.currentTimeMillis();
 		lecturerCount=read.getLecturerCount();
 		rooms= read.getRoomIds();
 		modules = read.getModuleIds();
