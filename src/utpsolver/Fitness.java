@@ -22,6 +22,8 @@ public class Fitness{
 	private int [] timeGenes = read.convertDayTimeToTimeGene(days,startTimes);
 	private int [] specialRooms = read.getRoomsWithSpecialModuleConstraints();
 	private int [] specialModules = read.getModulesWithSpecialConstraints();
+	public static int maxH2=0,maxH3=0,maxH4=0,maxH5=0,maxH6=0,maxH7=0,maxH8=0,maxS9=0,maxS10=0,maxS11=5,maxS12=5,maxSoft=0,maxHard=0,maxReward = 0;
+	public String message="";
 	String [] moduleTypes, roomTypes;
 	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules, String[] moduleTypes, String[] roomTypes ){
 		//this.chromosomes = new int[numChromosome][roomCount][timeslots];
@@ -38,7 +40,7 @@ public class Fitness{
 		lecturers = read.getLecturerIds();
 		lecturerCount=lecturers.length;
 		cohorts = read.getCohortIds();
-		
+		this.computeMaximumFitnesses();
 	}
 	//Compute the fitness of each chromosome in the entire population
 	public int[] computeFitnessOfEntirePopulation(){
@@ -55,22 +57,49 @@ public class Fitness{
 	 * Computes the overall fitness for a given Chromosome
 	 */
 	public int computeOverallFitnessForAChromosome(int chromosome){
+		message ="H1: No multiple event at same venue and Time: Never violated due to chromosome representation method";
 		chromosomeFitness=0;
 		chromosomeFitness =this.getOverallRewardsOnHardConstraints(chromosome);
 		chromosomeFitness += this.getOverallRewardsOnSoftConstraints(chromosome);
+		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome ) + " is: " + chromosomeFitness + " out of " + this.maxPossibleFitnessValue() + "</span>";
 		return chromosomeFitness;
 	}
 	//Compute total hard constraints Rewards
 	public int getOverallRewardsOnHardConstraints(int chromosome){
-		int hsFitness = this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
-		hsFitness += this.computeClassHeldInCorrectRoomSizeFitness(chromosome);
-		hsFitness += this.computeMultipleScheduleForACohort(chromosome);
-		hsFitness += this.computeMultipleScheduleForALecturerAtSameTime(chromosome);
-		hsFitness += this.computePartimeLecturerAvailablityScheduling(chromosome);
-		hsFitness += this.computeSpecialModuleConstraintViolation(chromosome);
-		hsFitness += this.computeToVerifyAllModulesWereScheduled(chromosome);
+		int hsFitness=0;
+		int h8 = this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		int h7 =  this.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		int h3= this.computeMultipleScheduleForACohort(chromosome);
+		int h2 = this.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		int h4 = this.computePartimeLecturerAvailablityScheduling(chromosome);
+		int h6 = this.computeSpecialModuleConstraintViolation(chromosome);
+		int h5 = this.computeToVerifyAllModulesWereScheduled(chromosome);
+		hsFitness = h2 + h3 + h4 + h5+ h6 + h7+h8;
+		
+		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + h2 + " out of " + Fitness.maxH2;
+		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + h3+ " out of " + Fitness.maxH3;
+		message+= "<br/> H4:Part-time Lecturer availability observed:" + h4 + " out of " + Fitness.maxH4;
+		message += "<br/> H5:All modules Scheduled:" + h5 + " out of " + Fitness.maxH5;
+		message += "<br/> H6:Special Module correctly allocated to preffered room and time:" + h6 + " out of " + Fitness.maxH6;
+		message += "<br/> H7:Classes held in correct room size:" + h7+ " out of " + Fitness.maxH7;
+		message += "<br/>H8: Classes held in correct room type: " + h8 + " out of " + Fitness.maxH8;
 		
 		return hsFitness;
+	}
+	//Computes all maximum fitnesses immediately the fitness class is instantiated and saves them in static variables
+	private void computeMaximumFitnesses(){
+		this.maxH2 = this.getMaxH2Reward();
+		this.maxH3 = this.getMaxH3Reward();
+		this.maxH4 = this.getMaxH4Reward();
+		this.maxH5 = this.getMaxH5Reward();
+		this.maxH6 = this.getMaxH6Reward();
+		this.maxH7 = this.getMaxH7Reward();
+		this.maxH8 = this.maxH7;
+		this.maxS9 = this.getMaxS9Reward();
+		this.maxS10 = this.getMaxS10Reward();
+		this.maxSoft = this.getMaximumPossibleSoftConstraintFitnessValue();
+		this.maxHard = this.getMaximumPossibleHardConstraintFitnessValue();
+		this.maxReward = this.maxPossibleFitnessValue();
 	}
 	// Get Moduletype locally
 	private String getModuleType(int moduleIndex){
@@ -78,10 +107,16 @@ public class Fitness{
 	}
 	//Compute total soft constraint rewards
 	public int getOverallRewardsOnSoftConstraints(int chromosome){
-		int scFitness = this.computeAvoidLaunchTimeEvents(chromosome);
-		scFitness += this.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome);
-		scFitness += this.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
-		scFitness += this.computeWednesdayAfternoonEventConstraint(chromosome);
+		int scFitness = 0;
+		int s12 = this.computeAvoidLaunchTimeEvents(chromosome);
+		int s10 = this.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome);
+		int s9 = this.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
+		int s11 = this.computeWednesdayAfternoonEventConstraint(chromosome);
+		scFitness = s9 + s10 + s11 + s12;
+		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + s9 + " out of "+ Fitness.maxS9;
+		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + s10 + " out of " + Fitness.maxS10;
+		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + s11 + " out of 5";
+		message += "<br/> S12: No lecture/Lab during Launch time: " + s12 + " out of 5";
 		return scFitness;
 		
 		

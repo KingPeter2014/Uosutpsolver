@@ -14,7 +14,7 @@ public class Chromosomes {
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
-	private int [] rooms,modules;
+	public int [] rooms,modules;
 	String [] moduleTypes, roomTypes;
 	private int freeChromosome=0,freeRoom=0,freeTimeslot=0;
 	private boolean consecutiveFreeGeneFound=false;
@@ -211,15 +211,6 @@ public class Chromosomes {
 						inserted = this.insertGene(i, rm-1, time-1, modules[d]);
 						
 					}
-					else if(isOccupied && modulehours==1){
-						//Find unoccupied space
-						this.findUnoccuppiedGene(i);
-						if(freeRoom==0 &&freeTimeslot==0){
-							System.out.println("Not enough resources to host these lectures");
-							System.exit(0);	
-						}
-						
-					}
 					
 					//Handle 2-hour Lecture or Lab
 					if(modulehours==2){
@@ -374,21 +365,10 @@ public class Chromosomes {
 		return roomTypes[roomIndex];
 	}
 	public String getFitnessOnAContraint(int chromosome){
-		String message ="H1: No multiple event at same venue and Time: Never violated due to chromosome representation method";
-		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + fit.computeMultipleScheduleForALecturerAtSameTime(chromosome) + " out of " +fit.getMaxH2Reward();
-		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + fit.computeMultipleScheduleForACohort(chromosome)+ " out of " +fit.getMaxH3Reward();
-		message+= "<br/> H4:Part-time Lecturer availability observed:" + fit.computePartimeLecturerAvailablityScheduling(chromosome) + " out of " + fit.getMaxH4Reward();
-		message += "<br/> H5:All modules Scheduled:" + fit.computeToVerifyAllModulesWereScheduled(chromosome)+ " out of " + fit.getMaxH5Reward();
-		message += "<br/> H6:Special Module correctly allocated to preffered room and time:" + fit.computeSpecialModuleConstraintViolation(chromosome)+ " out of " +fit.getMaxH6Reward();
-		message += "<br/> H7:Classes held in correct room size:" + fit.computeClassHeldInCorrectRoomSizeFitness(chromosome)+ " out of " +fit.getMaxH7Reward();
-		message += "<br/>H8: Classes held in correct room type: " + fit.computeClassHeldInCorrectRoomTypeFitness(chromosome)+ " out of " +fit.getMaxH7Reward();
-		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + fit.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome)+ " out of "+fit.getMaxS9Reward();
-		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + fit.computeMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome)+ " out of " + fit.getMaxS10Reward();
-		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + fit.computeWednesdayAfternoonEventConstraint(chromosome)+ " out of 5";
-		message += "<br/> S12: No lecture/Lab during Launch time: " + fit.computeAvoidLaunchTimeEvents(chromosome) + " out of 5";
+		fit.computeOverallFitnessForAChromosome(chromosome);
+				
 		endTime = System.currentTimeMillis();
-		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome +1) + " is: " + fit.computeOverallFitnessForAChromosome(chromosome) + " out of " + fit.maxPossibleFitnessValue() + "</span>";
-		return message;
+		return fit.message;
 		
 	}
 	//Evaluate the fitness of entire population

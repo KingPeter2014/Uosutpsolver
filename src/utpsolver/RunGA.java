@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import utpsolver.ReadInputs;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,11 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import utpsolver.DBConnection;
+import utpsolver.Crossover;
 
 public class RunGA extends HttpServlet {
 	//The index of the best and worst chromosome is maintained here
 	private int bestChromosome=0,worstChromosome=0;
-	
+	ReadInputs read = new ReadInputs();
+	Crossover cover;
 	//The current parents and Children in the current generation are maintained here
 	private int parent1=0,parent2=0,child1=0,child2=0;
 	
@@ -27,6 +31,8 @@ public class RunGA extends HttpServlet {
 	
 	private int currentGeneration=0, MaximumGeneration = 450;
 	private String message="";
+	Chromosomes cr = new Chromosomes();
+	PrintWriter out;
 	
 	private List<String> cohortTimetable,lecturerTimetable,roomTimetable;
 	
@@ -38,18 +44,59 @@ public class RunGA extends HttpServlet {
 			throws ServletException, IOException {
 
 		// Prepare HTML page for output
-		PrintWriter out;
+		
 		res.setContentType("text/html");
 		out = res.getWriter();
-		ServletContext context = req.getServletContext();
+		
 		
 		message = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
 		out.println(message);
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
 		
+		
+		String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(1);
+		out.println(test);
+		String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
+				"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
+				"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
+				+ cr.displayGeneratedTimetable(1) + "</table>";
+				out.println("<br/>" + test1);
+		this.disPlayChromosome(1);
+		this.doCrossover();
+		String child1 = cover.printChild();
+		out.println("<br/>" + child1);
+		long a = cr.startTime/1000;
+		long b = cr.endTime/1000;
+		long runningTime = b-a;
+		out.println("<b><h2>It took approximately "+ runningTime + " seconds to run this GA</h2></b>");
+
+		
 	}
-	
-	public void displayTimetable(){
+	public void disPlayChromosome(int chromosome){
+
+		int timeslots = 40;
+		int [][][] chromo = cr.chromosomes;
+		
+		out.println("<br/><hr/>Chromosome Structure[" + chromosome + "]<hr/>");
+		for(int b=0; b< Chromosomes.roomCount; b++){
+			for(int a =0; a < timeslots; a++)
+				out.println(chromo[chromosome-1][b][a] + "&nbsp&nbsp&nbsp");
+			out.println("<br/>");
+			
+		}
+		
+	}
+	public void doCrossover(){
+		 
+		 cover = new Crossover(0,1,cr.chromosomes,cr.numChromosomes,cr.timeslot,cr.rooms,cr.modules,cr.moduleTypes,cr.roomTypes);
+		
+	}
+	public void displayGeneralTimetable(int chromosome){
+		String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
+				"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
+				"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
+				+ cr.displayGeneratedTimetable(chromosome-1) + "</table>";
+				out.println("<br/>" + test1);
 		
 	}
 	public List<String> getCohortTimetable(int cohortid){
