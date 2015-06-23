@@ -26,6 +26,7 @@ public class Crossover {
 		this.createParents();
 		this.initiaizeOffSpringToZero();
 		this.createChildOne();
+		this.createChildTwo();
 		
 		
 	}
@@ -67,7 +68,7 @@ public class Crossover {
 			}
 		}
 		
-	//Finally copy the other elements outside the chosen segment from parent 1 into corresponding positions in child1
+	//Finally copy the other elements outside the chosen segment from parent 2 into corresponding positions in child1
 		for(int i=0;i < this.rooms.length;i++){
 			for(int j=0;j< timeslots;j++ ){
 				//check if each element in corresponding  cell in parent2 has been copied into child1
@@ -247,9 +248,65 @@ public class Crossover {
 		}
 		// Next copy the uncopied elements from chosen segment of parent1 into corresponding positions in child2
 		
+				for(int i=0;i < this.rooms.length;i++){
+					for(int j=this.startCrossoverPoint;j< this.stopCrossoverPoint;j++ ){
+						//check if each element in corresponding segment cell in parent2 has been copied
+						if(parent1[i][j] !=0){
+							boolean isNotCopied = this.elementNotCopied(1, parent1[i][j],this.startCrossoverPoint,this.stopCrossoverPoint);
+							if(isNotCopied){
+								//Check if the corresponding position in child one is free
+								boolean isOccupied = this.correspondingPositionIsOccupied(1, i, j);
+								if(!isOccupied){
+									//Insert the gene here
+									child2[i][j] = parent1[i][j];
+								}
+								else{
+									//Get the position of child2[i][j] in parent1[i][j]
+									this.getPositionOfChildElementInFosterParent(child2[i][j], 1);
+									
+									isOccupied = this.correspondingPositionIsOccupied(2, this.fosterRoom, this.fosterTime);
+									//Insert parent1[i][j] into the found position in parent1[i][j] but into child2[][]
+									if(isNotCopied && this.fosterRoom !=0 && this.fosterTime!=0){
+										child2[this.fosterRoom][this.fosterTime] = parent1[i][j];
+										this.fosterRoom=0;this.fosterTime=0;
+									}
+								}
+								
+							}
+						}
+					}
+				}
 		
-		//Finally copy the other elements outside the chosen segment from parent 2 into corresponding positions in child2
-				
+		
+		//Finally copy the other elements outside the chosen segment from parent 1 into corresponding positions in child2
+				for(int i=0;i < this.rooms.length;i++){
+					for(int j=0;j< timeslots;j++ ){
+						//check if each element in corresponding  cell in parent1 has been copied into child2
+						if(parent2[i][j] !=0){
+							boolean isNotCopied = this.elementNotCopied(1, parent1[i][j],0,timeslots);
+							if(isNotCopied){
+								//Check if the corresponding position in child two is free
+								boolean isOccupied = this.correspondingPositionIsOccupied(2, i, j);
+								if(!isOccupied){
+									//Insert the gene here
+									child2[i][j] = parent1[i][j];
+								}
+								else{
+									//Get the position of child2[i][j] in parent1[i][j],stored
+									//in fosterRoom and fosterTime class attributes
+									this.getPositionOfChildElementInFosterParent(child2[i][j], 1);
+									isOccupied = this.correspondingPositionIsOccupied(2, this.fosterRoom, this.fosterTime);
+									//Insert parent1[i][j] into the found position in parent1[i][j] but into child2[][]
+									if(isNotCopied && this.fosterRoom !=0 && this.fosterTime!=0){
+										child2[this.fosterRoom][this.fosterTime] = parent1[i][j];
+										this.fosterRoom=0;this.fosterTime=0;
+									}
+								}
+								
+							}
+						}
+					}
+				}
 		
 	}
 	
@@ -280,13 +337,19 @@ public class Crossover {
 		}
 		
 	}
-	public String printChild(){
-		int timeslots = 40;
+	public String printChildren(){
 		
 		String c = "<br/><hr/> Child1 after Crossover(PMX):<br/>";
 		for(int b=0; b< Chromosomes.roomCount; b++){
 			for(int a =0; a < timeslots; a++)
 				c+=child1[b][a] + "&nbsp&nbsp&nbsp ";
+			c+="<br/>";
+			
+		}
+		c+="<br/><hr/> Child2 after Crossover(PMX):<br/>";
+		for(int b=0; b< Chromosomes.roomCount; b++){
+			for(int a =0; a < timeslots; a++)
+				c+=child2[b][a] + "&nbsp&nbsp&nbsp ";
 			c+="<br/>";
 			
 		}

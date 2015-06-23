@@ -15,7 +15,7 @@ public class Fitness{
 	private  int[][][] chromosomes = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private int [] rooms,modules,lecturers,cohorts,startTime,endTime;
-	private int [] fitnessValues;
+	public int [] fitnessValues,hardFitnesses,softFitness;
 	private int [] startTimes = read.getStartTimeForSpecialConstraintModules();
 	private int [] endTimes = read.getEndTimeForSpecialConstraintModules();
 	private int [] days = read.getDaysForSpecialConstraintModules();
@@ -30,6 +30,8 @@ public class Fitness{
 		this.chromosomes = chromosomes;
 		this.numChromosome=numChromosome;
 		this.fitnessValues = new int[numChromosome];
+		this.hardFitnesses = new int[numChromosome];
+		this.softFitness = new int[numChromosome];
 		this.timeslot= timeslots;
 		this.rooms = rooms;
 		this.modules=modules;
@@ -75,7 +77,7 @@ public class Fitness{
 		int h6 = this.computeSpecialModuleConstraintViolation(chromosome);
 		int h5 = this.computeToVerifyAllModulesWereScheduled(chromosome);
 		hsFitness = h2 + h3 + h4 + h5+ h6 + h7+h8;
-		
+		this.hardFitnesses[chromosome] = hsFitness;
 		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + h2 + " out of " + Fitness.maxH2;
 		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + h3+ " out of " + Fitness.maxH3;
 		message+= "<br/> H4:Part-time Lecturer availability observed:" + h4 + " out of " + Fitness.maxH4;
@@ -117,6 +119,7 @@ public class Fitness{
 		int s9 = this.computeMoreThan4HoursOfConsecutiveLecturesPerLecturer(chromosome);
 		int s11 = this.computeWednesdayAfternoonEventConstraint(chromosome);
 		scFitness = s9 + s10 + s11 + s12;
+		this.softFitness[chromosome]=scFitness;
 		message += "<br/>S9: Not more than 4-hr consecutive Events for Lecturer:" + s9 + " out of "+ Fitness.maxS9;
 		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + s10 + " out of " + Fitness.maxS10;
 		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + s11 + " out of 5";

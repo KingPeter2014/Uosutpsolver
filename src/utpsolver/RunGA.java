@@ -64,7 +64,7 @@ public class RunGA extends HttpServlet {
 		this.disPlayChromosome(0);
 		this.disPlayChromosome(1);
 		this.doCrossover();
-		String child1 = cover.printChild();
+		String child1 = cover.printChildren();
 		out.println("<br/>" + child1);
 		long a = cr.startTime/1000;
 		long b = cr.endTime/1000;
