@@ -19,18 +19,18 @@ public class ReadInputs {
 	private List<Integer> lecturerAllocationids=new ArrayList<Integer>();
 	private String dailySchedule="";
 	
-	int[] idsArray ;
+	int[] idsArray,lecturerIds ;
 	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",
 			lecturers="",courseallocations="";
 	//Equivalence of Database data
-	int [][] cohortDB=null;//nx3,0=cohortid,1=start_level,2=number of years
-	int [][] modulesDB = null;//nx3,0=moduleid,1= numstudents,2=lab/lecturehours
-	int [][] courseAllocationsDB = null;//nx2,0=lecturerid,1=courseid
-	int [][] lectureroomsDB = null;//nx2,0=roomid,0=roomcapacity
-	String [] roomTypes,moduleTypes;
-	int [][] lecturerAvailabilitiesDB = null;//nx4,0=lecturerid,1=day,2=startime,3=endtime
-	int [][] modulesInCohort = null;//nx3,0=cohortid,1=courseid,2=level
-	int [][] specialmoduleConstraints;//nx5,0=moduleid,1=roomid,2=day,3=startime,4=endtime
+	public static int [][] cohortDB=null;//nx3,0=cohortid,1=start_level,2=number of years
+	public static int [][] modulesDB = null;//nx3,0=moduleid,1= numstudents,2=lab/lecturehours
+	public static int [][] courseAllocationsDB = null;//nx2,0=lecturerid,1=courseid
+	public static int [][] lectureroomsDB = null;//nx2,0=roomid,0=roomcapacity
+	public static String [] roomTypes,moduleTypes;
+	public static int [][] lecturerAvailabilitiesDB = null;//nx4,0=lecturerid,1=day,2=startime,3=endtime
+	public static int [][] modulesInCohort = null;//nx3,0=cohortid,1=courseid,2=level
+	public static int [][] specialmoduleConstraints;//nx5,0=moduleid,1=roomid,2=day,3=startime,4=endtime
 	String dayOfWeek = "";
 	DBConnection db = null;
 	ResultSet rst = null;
@@ -54,33 +54,178 @@ public class ReadInputs {
 		int [] specialStart = this.getDaysForSpecialConstraintModules();
 		specialmoduleConstraints = new int[specialStart.length][5];
 		
-		
-		
-		
-		
+		//Read Database Tables into the initialised arrays
+		this.getCohortTableFromDB();
+		this.getCourseTableFromDB();
+		this.getCourseAllocationTableFromDB();
+		this.getLectureRoomsTableFromDB();
+		this.getAllLecturerIds();
+		this.getPartTimeLecturerAvailabilitiesTableFromDB();
+		this.getModulesInCohortsTableFromDB();
+		this.getSpecialModuleConstraintsTableFromDB();
+	}
+	
+	//Read Course allocation table to courseAllocationsDB Array
+	private void getLectureRoomsTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM lecturerooms");
+		int count=0;
+		try {
+			while(rst.next()){
+				lectureroomsDB[count][0]=rst.getInt("id");
+				lectureroomsDB[count][1]=rst.getInt("capacity");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	}
+	//Read Part time lecturer availability table to lecturerAvailabilitiesDB Array
+	private void getPartTimeLecturerAvailabilitiesTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM lecturer_availabilites");
+		int count=0;
+		try {
+			while(rst.next()){
+				lecturerAvailabilitiesDB[count][0]=rst.getInt("lecturer_id");
+				lecturerAvailabilitiesDB[count][1]=rst.getInt("day");
+				lecturerAvailabilitiesDB[count][2]=rst.getInt("start_time");
+				lecturerAvailabilitiesDB[count][3]=rst.getInt("end_time");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	}
+	//Reads special module constraints from DB into array
+	private void getSpecialModuleConstraintsTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM special_module_constraints");
+		int count=0;
+		try {
+			while(rst.next()){
+				specialmoduleConstraints[count][0]=rst.getInt("module_id");
+				specialmoduleConstraints[count][1]=rst.getInt("room_id");
+				specialmoduleConstraints[count][2]=rst.getInt("day");
+				specialmoduleConstraints[count][3]=rst.getInt("start_time");
+				specialmoduleConstraints[count][4]=rst.getInt("end_time");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	}
+	//Read Modules in Cohorts table to modulesInCohort Array
+	private void getModulesInCohortsTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM modules_in_cohort");
+		int count=0;
+		try {
+			while(rst.next()){
+				modulesInCohort[count][0]=rst.getInt("cohort_id");
+				modulesInCohort[count][1]=rst.getInt("course_id");
+				modulesInCohort[count][2]=rst.getInt("level");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	}
+	//Read lecturerooms table to courseAllocationsDB Array
+	private void getCourseAllocationTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM course_allocations");
+		int count=0;
+		try {
+			while(rst.next()){
+				courseAllocationsDB[count][0]=rst.getInt("lecturer_id");
+				courseAllocationsDB[count][1]=rst.getInt("course_id");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	}
+	//Read Courses/Modules table to modulesDB Array
+	private void getCourseTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM courses");
+		int count=0;
+		try {
+			while(rst.next()){
+				modulesDB[count][0]=rst.getInt("id");
+				modulesDB[count][1]=rst.getInt("numstudents");
+				if(rst.getString("coursetype").equals("lecture"))
+				modulesDB[count][2]=rst.getInt("lecturehours");
+				else
+					modulesDB[count][2]=rst.getInt("labhours");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+	}
+	//Read CourseAllocations table to cohortDB Array
+	private void getCohortTableFromDB(){
+		rst = db.executeQuery("SELECT * FROM cohorts");
+		int count=0;
+		try {
+			while(rst.next()){
+				cohortDB[count][0]=rst.getInt("id");
+				cohortDB[count][1]=rst.getInt("level_of_study");
+				cohortDB[count][2]=rst.getInt("number_of_years");
+				count+=1;
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+			message+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
 	}
 	//Get list of all the room ids for generating chromosome
 	public int[] getRoomIds(){
-		rst = db.executeQuery("SELECT * FROM lecturerooms");
-		try {
-			while(rst.next()){
-				roomids.add(rst.getInt("id"));
-			}
-			}
-			catch (SQLException e) {
-				
-				e.printStackTrace();
-				message+=e.getMessage();
-			}
-			finally{
-				db.closeConnection();
-			}
+		int l =this.lectureroomsDB.length;
+		int [] rmids = new int[l];
+		for(int i=0;i <l;i++){
+			rmids[i] = lectureroomsDB[i][0];
+		}
 		
-		return convertIntegerListToIntegerArray(roomids);
+		return rmids;
 	}
 	
 	//Get lecturer ids from lecturers' Table
 	public int[] getLecturerIds(){
+		return this.lecturerIds;
+	}
+	//Get lecturer ids from lecturers' Table
+	private void getAllLecturerIds(){
 		List<Integer>  lecturerids=new ArrayList<Integer>();
 		rst = db.executeQuery("SELECT * FROM lecturers");
 		try {
@@ -97,7 +242,7 @@ public class ReadInputs {
 				db.closeConnection();
 			}
 		
-		return convertIntegerListToIntegerArray(lecturerids);
+		this.lecturerIds= convertIntegerListToIntegerArray(lecturerids);
 	}
 	//Returns a string array of the module types corresponding to each module
 	public String[] getModuleTypeArray(){
