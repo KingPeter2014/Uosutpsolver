@@ -14,7 +14,7 @@ public class Chromosomes {
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
-	public int [] rooms,modules;
+	public int [] rooms,modules,cohorts;
 	String [] moduleTypes, roomTypes;
 	private int freeChromosome=0,freeRoom=0,freeTimeslot=0;
 	private boolean consecutiveFreeGeneFound=false;
@@ -28,6 +28,7 @@ public class Chromosomes {
 		lecturerCount=read.getLecturerCount();
 		rooms= read.getRoomIds();
 		modules = read.getModuleIds();
+		cohorts = read.getCohortIds();
 		roomCount= rooms.length;
 		moduleCount=modules.length;
 		moduleTypes = read.getModuleTypeArray();
@@ -169,29 +170,91 @@ public class Chromosomes {
 		this.consecutiveFreeGeneFound=false;
 			
 		}
+	//Schedule two hour lecture or lab for general purposes
+	private void handleTwoHourUnclashingCohortModulesScheduling(int chromosome,int module,String moduleType, int cohort,int level){
+		boolean isOccupied1 = this.isMultipleScheduleForACohort(chromosome, freeTimeslot, cohort, level);
+		boolean isOccupied2 = this.isMultipleScheduleForACohort(chromosome, freeTimeslot+1, cohort, level);
+		if(!isOccupied1  && !isOccupied2){
+			this.insertGene(chromosome, freeRoom, freeTimeslot, module);
+			this.insertGene(chromosome, freeRoom, freeTimeslot+1, module);
+			
+			return;
+		}
+				
+		if(moduleType.equals("lab"))
+			this.findConsecutiveFreeCohortLabRoom(chromosome,cohort,level);
+		else
+			this.findConsecutiveFreeCohortLectureRooms(chromosome,cohort,level);
+		this.insertGene(chromosome, freeRoom, freeTimeslot, module);
+		this.insertGene(chromosome, freeRoom, freeTimeslot+1, module);
+		this.consecutiveFreeGeneFound=false;
+
+			}
 
 	private void initializePopulationWithElitism(){
-		int time=0,rm=0;
-		boolean isLastHour=false, isOccupied=true,inserted=false;
-		String moduleType="";
-		int modulehours=0,assigned=0;
+		
 		//Schedule special modules first to satisfy special room and time constraints (H6)
 		this.scheduleSpecialModules();
 		//Schedule lectures belonging to partime lecturers
 		this.schedulePartimeLecturerModules();
+		
 		//Do some random scheduling
 		this.scheduleRandomly();
+		//Scheduling for cohorts to avoid clashing for each cohort at a given level
+		this.scheduleForCohortsWithoutClashing();
 		
 		//Schedule other remaining modules
 		this.scheduleRemainingModules();
 		
 	}
+	//Schedule modules for cohorts without clashing
+	private void scheduleForCohortsWithoutClashing(){
+		int numyears=0,startingLevel=0,modulehours=0;
+		String moduleType="";
+		boolean inserted=false;
+		int [] cohortsAssignedTo = null;
+		int cohortCount = cohorts.length;
+		for(int i=0;i<this.numChromosomes;i++){
+			for(int d=0; d < moduleCount; d++){
+				if(!this.isScheduled(i, this.modules[d])){
+					cohortsAssignedTo = read.getModuleCohort(this.modules[d]);
+					
+					moduleType= this.getModuleType(d);
+					if(moduleType.equals("lab")){
+						modulehours = read.getLabHoursPerWeek(modules[d]);
+						this.findFreeLabRoom(i);
+					}
+					else{
+						modulehours = read.getLectureHoursPerWeek(modules[d],"lecture");
+						this.findFreeLectureRoom(i);
+					}
+					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
+					
+					boolean isMultiple = this.isMultipleScheduleForACohort(i, this.freeTimeslot, cohortsAssignedTo[0], level);
+					if( modulehours==1 && freeRoom!=0){
+						
+						if(!isMultiple)
+							inserted = this.insertGene(i, freeRoom, freeTimeslot, modules[d]);
+						
+					}
+					else if( modulehours==2){
+						
+						this.handleTwoHourUnclashingCohortModulesScheduling(i, modules[d], moduleType,cohortsAssignedTo[0], level);
+					}
+					
+				}
+				
+			}
+			
+		}
+	}
 	//Randomize some schedules to introduce some diversity
 	private void scheduleRandomly(){
 		int time=0,rm=0;
-		boolean isLastHour=false, isOccupied=true,inserted=false;
+		boolean isLastHour=false, isOccupied=true,inserted=false,isMultiple=false;
 		String moduleType="";
 		int modulehours=0,assigned=0;
+		int [] cohortsAssignedTo = null;
 		
 		for(int i=0; i <numChromosomes;i++){
 			for(int d=0; d < moduleCount; d++){
@@ -206,16 +269,31 @@ public class Chromosomes {
 						modulehours = read.getLectureHoursPerWeek(modules[d],"lecture");
 					isLastHour = this.isLastDayTimeSlot(time);
 					isOccupied = this.isOccupied(i, rm-1, time-1);
+					cohortsAssignedTo = read.getModuleCohort(this.modules[d]);
+					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
+					isMultiple = this.isMultipleScheduleForACohort(i, time-1, cohortsAssignedTo[0], level);
+					
 					//Handle 1-hour Lecture or Lab genes
-					if(!isOccupied && modulehours==1 && moduleType.equals(this.getRoomType(rm-1))){
+					if(!isOccupied && !isMultiple && modulehours==1 && moduleType.equals(this.getRoomType(rm-1))){
 						
 						inserted = this.insertGene(i, rm-1, time-1, modules[d]);
+						System.out.println("Single random scheduling for Room: " + (rm-1) + " Module:" + modules[d]);
 						
 					}
 					
 					//Handle 2-hour Lecture or Lab
 					if(modulehours==2){
-						this.handleRandomTwoHourModulesScheduling(i, modules[d], time-1, moduleType);
+						if(time==this.timeslot)
+							continue;
+						boolean isMultiple2 = this.isMultipleScheduleForACohort(i, time, cohortsAssignedTo[0], level);
+					
+						if( !isMultiple && !isMultiple2 && moduleType.equals(this.getRoomType(rm-1))){
+							inserted = this.insertGene(i, rm-1, time-1, modules[d]);
+							inserted = this.insertGene(i, rm-1, time, modules[d]);
+							
+						//this.handleRandomTwoHourModulesScheduling(i, modules[d], time-1, moduleType);
+						System.out.println("Double random scheduling for Room: " + (rm-1) + " Module:" + modules[d]);
+						}
 						
 						
 					}
@@ -311,26 +389,38 @@ public class Chromosomes {
 		boolean isLastHour=false, isOccupied=true,inserted=false;
 		int modulehours=0,assigned=0;
 		String moduleType="";
+		int []cohortsAssignedTo=null;
 		for(int i=0; i <numChromosomes;i++){
 			for(int d=0; d < moduleCount; d++){
 				//check if a module has not been scheduled first before trying to schedule it
 				if(!this.isScheduled(i, this.modules[d])){
+					cohortsAssignedTo = read.getModuleCohort(this.modules[d]);
 					moduleType= this.getModuleType(d);
+					
+					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
 					if(moduleType.equals("lab")){
 						modulehours = read.getLabHoursPerWeek(modules[d]);
-						this.findFreeLabRoom(i);
+						//this.findFreeLabRoom(i);
+						this.findFreeCohortLabRoom(i, cohortsAssignedTo[0], level);
+						
 					}
 					else{
 						modulehours = read.getLectureHoursPerWeek(modules[d],"lecture");
-						this.findFreeLectureRoom(i);
+						//this.findFreeLectureRoom(i);
+						this.findFreeCohortLectureRoom(i, cohortsAssignedTo[0], level);
+
 					}
-					if( modulehours==1 && freeRoom!=0){
+					
+					if( modulehours==1 && freeRoom!=-1){
 						//chromosomes[i][rm-1][time-1]=modules[d];
 						inserted = this.insertGene(i, freeRoom, freeTimeslot, modules[d]);
+						freeRoom=-1;
+						freeTimeslot=-1;
 						
 					}
 					else if( modulehours==2){
-						this.handleTwoHourModulesScheduling(i, modules[d], freeTimeslot, moduleType);
+						//this.handleTwoHourModulesScheduling(i, modules[d], freeTimeslot, moduleType);
+						this.handleTwoHourUnclashingCohortModulesScheduling(i, modules[d], moduleType, cohortsAssignedTo[0], level);
 					}
 					
 				}
@@ -410,6 +500,8 @@ public class Chromosomes {
 					
 		}	
 	}
+	
+		
 	private void findFreeLabRoom(int chromosome){
 		freeChromosome=chromosome;
 		freeRoom=0;
@@ -448,7 +540,95 @@ public class Chromosomes {
 		}	
 		
 	}
+	//Set free lab room without clash for a cohort
+	private void findConsecutiveFreeCohortLabRoom(int chromosome,int cohort,int level){
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lab")){
+				for(int a =0;a <timeslot-1 ; a++){
+					if(chromosomes[chromosome][c][a] ==0 && chromosomes[chromosome][c][a+1] ==0){
+						boolean isOccupied1 = this.isMultipleScheduleForACohort(chromosome, a, cohort, level);
+						boolean isOccupied2 = this.isMultipleScheduleForACohort(chromosome, a+1, cohort, level);
+						if(!isOccupied1  && !isOccupied2){
+							freeRoom=c;
+							freeTimeslot=a;
+							this.consecutiveFreeGeneFound=true;
+							return;
+						}
+					}
+				}
+			}
+					
+		}	
 	
+	}
+	//Set free lab room without clash for a cohort
+	private void findFreeCohortLabRoom(int chromosome,int cohort,int level){
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=roomCount-1; c >=0; c--){
+			if(read.getRoomType(rooms[c]).equals("lab")){
+				for(int a =0;a <timeslot-1 ; a++){
+					if(chromosomes[chromosome][c][a] ==0){
+						boolean isNotMultiple = this.isMultipleScheduleForACohort(chromosome, a, cohort, level);
+						if(!isNotMultiple){
+							freeRoom=c;
+							freeTimeslot=a;
+							return;
+						}
+					}
+				}
+			}
+						
+		}	
+		
+	}
+	//Set free lecture room without clash for a cohort
+		private void findFreeCohortLectureRoom(int chromosome,int cohort,int level){
+			freeRoom=0;
+			freeTimeslot=0;
+			for(int c=roomCount-1; c >=0; c--){
+				if(read.getRoomType(rooms[c]).equals("lab")){
+					for(int a =0;a <timeslot-1 ; a++){
+						if(chromosomes[chromosome][c][a] ==0){
+							boolean isNotMultiple = this.isMultipleScheduleForACohort(chromosome, a, cohort, level);
+							if(!isNotMultiple){
+								freeRoom=c;
+								freeTimeslot=a;
+								return;
+							}
+						}
+					}
+				}
+							
+			}	
+			
+		}
+	//Set free lecture room without clash for a cohort
+	private void findConsecutiveFreeCohortLectureRooms(int chromosome,int cohort,int level){
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=0; c < roomCount; c++){
+			if(read.getRoomType(rooms[c]).equals("lecture")){
+				for(int a =0;a <timeslot-1 ; a++){
+					if(chromosomes[chromosome][c][a] ==0 && chromosomes[chromosome][c][a+1] ==0){
+						boolean isOccupied1 = this.isMultipleScheduleForACohort(chromosome, a, cohort, level);
+						boolean isOccupied2 = this.isMultipleScheduleForACohort(chromosome, a+1, cohort, level);
+						if(!isOccupied1  && !isOccupied2){
+							freeRoom=c;
+							freeTimeslot=a;
+							this.consecutiveFreeGeneFound=true;
+							return;
+						}
+					}
+				}
+			}
+						
+		}	
+	
+	}
+
 	//Find consecutive timeslots in a laboratory room
 	private void findConsecutiveFreeLectureRooms(int chromosome){
 		freeChromosome=chromosome;
@@ -619,6 +799,22 @@ public class Chromosomes {
 		
 	}
 		
+	public void evaluateChildren(int [][][]children){
+		fit.evaluateFitnessOfChildren(children);
+		
+	}
+	public int[] getOveralFitnessOfChildren(){
+		return fit.childrenfitnessValues;
+	}
+	public int[] getHardFitnessOfChildren(){
+		return fit.childrenhardFitnesses;
+	}
+	public int[] getSoftFitnessOfChildren(){
+		return fit.childrensoftFitness;
+	}
+	public String getCurrentFitnessMessage(){
+		return fit.message;
+	}
 	public int generateRandomInteger(int maxNumber){
 		
 		// nextInt is normally exclusive of the top value,
@@ -639,4 +835,24 @@ public class Chromosomes {
 		return overallTimetable;
 		
 	}
+	//Checks if an event has been scheduled more than once for a Cohort at a given level of level of study
+		public boolean isMultipleScheduleForACohort(int chromosome, int timeslot,int cohort,int level){
+			//For each cohort, get the starting level and number of years
+			boolean isMultiple = true, isCohortEvent=false;
+			int countSchedules=0;
+			//For each level, check if there is clash of lecture
+			//For each cohort, for each timeslot and for each level, if there is no clash return a value
+
+			for(int i=0;i< roomCount;i++){
+				if(chromosomes[chromosome][i][timeslot]!=0){
+					isCohortEvent = read.confirmCohortEventAtALevelOfStudy(chromosomes[chromosome][i][timeslot], cohort,level);
+					if(isCohortEvent)
+						countSchedules +=1;
+				}
+			}
+			if(countSchedules <=0)
+				isMultiple = false;
+			return isMultiple;
+			
+		}
 }

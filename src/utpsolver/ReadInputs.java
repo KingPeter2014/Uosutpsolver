@@ -602,7 +602,49 @@ public class ReadInputs {
 		}
 		return code;
 	}
-	
+	//Returns the ids of the cohorts to which a module belongs
+	public int[] getModuleCohort(int moduleid){
+		rst = db.executeQuery("SELECT cohort_id FROM modules_in_cohort WHERE course_id=" + moduleid);
+		List<Integer> cohortids=new ArrayList<Integer>();
+		try {
+			while(rst.next()){
+				cohortids.add(rst.getInt("cohort_id"));
+			}
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		return convertIntegerListToIntegerArray(cohortids);
+
+		
+	}
+	//Returns the level  in which a module is offered
+		public int getModuleCohortLevel(int moduleid,int cohortid){
+			int level=0;
+			rst = db.executeQuery("SELECT level FROM modules_in_cohort WHERE course_id=" + moduleid + " AND cohort_id=" + cohortid);
+			List<Integer> levels=new ArrayList<Integer>();
+			try {
+				rst.first();
+					level=rst.getInt("level");
+				
+				}
+				catch (SQLException e) {
+					
+					e.printStackTrace();
+					message+=e.getMessage();
+				}
+				finally{
+					db.closeConnection();
+				}
+			return level;
+
+			
+		}
 	// Returns Name of Lecturer for mapping from genotype to phenotype
 		public String getLecturerName(int lecturerid){
 			String lecturerName="No Result found";

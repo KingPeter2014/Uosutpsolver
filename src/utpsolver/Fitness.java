@@ -13,9 +13,11 @@ public class Fitness{
 	private int subfitness = 0,chromosomeFitness=0;
 	private ReadInputs read = new ReadInputs();
 	private  int[][][] chromosomes = null;
+	private  int[][][] chidren = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private int [] rooms,modules,lecturers,cohorts,startTime,endTime;
 	public int [] fitnessValues,hardFitnesses,softFitness;
+	public int [] childrenfitnessValues,childrenhardFitnesses,childrensoftFitness;
 	private int [] startTimes = read.getStartTimeForSpecialConstraintModules();
 	private int [] endTimes = read.getEndTimeForSpecialConstraintModules();
 	private int [] days = read.getDaysForSpecialConstraintModules();
@@ -458,7 +460,7 @@ public class Fitness{
 		
 	}
 	//Checks if an event has been scheduled more than once for a Cohort at a given level of level of study
-	private boolean isMultipleScheduleForACohort(int chromosome, int timeslot,int cohort,int level){
+	public boolean isMultipleScheduleForACohort(int chromosome, int timeslot,int cohort,int level){
 		//For each cohort, get the starting level and number of years
 		boolean isMultiple = true, isCohortEvent=false;
 		int countSchedules=0;
@@ -475,6 +477,30 @@ public class Fitness{
 		if(countSchedules <=1)
 			isMultiple = false;
 		return isMultiple;
+		
+	}
+	public void evaluateFitnessOfChildren(int [][][] children){
+		//Save statistics for parents
+		int [][][] saveChromosome=null;
+		saveChromosome= this.chromosomes;
+		int saveNumChromosome = this.numChromosome;
+		this.chromosomes = children;
+		this.numChromosome = 2;
+		int [] tempfitnessValues,temphardFitnesses,tempsoftFitness;
+		tempfitnessValues = this.fitnessValues;
+		temphardFitnesses = this.hardFitnesses;
+		tempsoftFitness = this.softFitness;
+		//Compute fitness of children
+		this.computeFitnessOfEntirePopulation();
+		this.childrenfitnessValues = this.fitnessValues;
+		this.childrenhardFitnesses = this.hardFitnesses;
+		this.childrensoftFitness = this.softFitness;
+		//Put back the fitness of parents to old values
+		this.chromosomes = saveChromosome;
+		this.numChromosome = saveNumChromosome;
+		this.fitnessValues = tempfitnessValues;
+		this.hardFitnesses = temphardFitnesses;
+		this.softFitness = tempsoftFitness;
 		
 	}
 	

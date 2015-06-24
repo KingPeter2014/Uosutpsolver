@@ -1,7 +1,7 @@
 package utpsolver;
 
 public class Crossover {
-	private double crossover_probability=0.5,startpoint=0.25,endpoint=0.75;
+	private double crossover_probability=0.5,startpoint=0.5,endpoint=0.75;
 	private int startCrossoverPoint=0,stopCrossoverPoint=0;
 	private int [][] parent1,parent2,child1,child2;
 	private int [] rooms,modules;
@@ -242,20 +242,20 @@ public class Crossover {
 	private void createChildTwo(){
 		//Start by copying segment 25th percentile to 75th percentile to child2 from parent1
 		for(int i=0;i < this.rooms.length;i++){
-			for(int j=this.startCrossoverPoint;j< this.stopCrossoverPoint;j++ ){
+			for(int j=this.startCrossoverPoint;j< this.timeslots;j++ ){
 				child2[i][j]= parent2[i][j];
 				}
 		}
 		// Next copy the uncopied elements from chosen segment of parent1 into corresponding positions in child2
 		
 				for(int i=0;i < this.rooms.length;i++){
-					for(int j=this.startCrossoverPoint;j< this.stopCrossoverPoint;j++ ){
-						//check if each element in corresponding segment cell in parent2 has been copied
+					for(int j=this.startCrossoverPoint;j< this.timeslots;j++ ){
+						//check if each element in corresponding segment cell in parent1 has been copied
 						if(parent1[i][j] !=0){
-							boolean isNotCopied = this.elementNotCopied(1, parent1[i][j],this.startCrossoverPoint,this.stopCrossoverPoint);
+							boolean isNotCopied = this.elementNotCopied(1, parent1[i][j],this.startCrossoverPoint,this.timeslots);
 							if(isNotCopied){
-								//Check if the corresponding position in child one is free
-								boolean isOccupied = this.correspondingPositionIsOccupied(1, i, j);
+								//Check if the corresponding position in child two is free
+								boolean isOccupied = this.correspondingPositionIsOccupied(2, i, j);
 								if(!isOccupied){
 									//Insert the gene here
 									child2[i][j] = parent1[i][j];
@@ -312,6 +312,7 @@ public class Crossover {
 	
 	private void compareOffspring(){
 		
+		
 	}
 	//Copy parents from the chromosome population to Parent1 and Parent 2
 	private void createParents(){
@@ -336,6 +337,12 @@ public class Crossover {
 			}
 		}
 		
+	}
+	public int[][] getFirstChild(){
+		return this.child1;
+	}
+	public int[][] getSecondChild(){
+		return this.child2;
 	}
 	public String printChildren(){
 		
