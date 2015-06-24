@@ -284,15 +284,12 @@ public class Chromosomes {
 					//Handle 2-hour Lecture or Lab
 					if(modulehours==2){
 						if(time==this.timeslot)
-							continue;
+							continue;//As two-hour module cannot start 4pm on Friday, which is timeslot 40
+						
 						boolean isMultiple2 = this.isMultipleScheduleForACohort(i, time, cohortsAssignedTo[0], level);
-					
 						if( !isMultiple && !isMultiple2 && moduleType.equals(this.getRoomType(rm-1))){
 							inserted = this.insertGene(i, rm-1, time-1, modules[d]);
 							inserted = this.insertGene(i, rm-1, time, modules[d]);
-							
-						//this.handleRandomTwoHourModulesScheduling(i, modules[d], time-1, moduleType);
-						System.out.println("Double random scheduling for Room: " + (rm-1) + " Module:" + modules[d]);
 						}
 						
 						

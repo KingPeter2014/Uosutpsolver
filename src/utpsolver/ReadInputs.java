@@ -22,12 +22,41 @@ public class ReadInputs {
 	int[] idsArray ;
 	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",
 			lecturers="",courseallocations="";
+	//Equivalence of Database data
+	int [][] cohortDB=null;//nx3,0=cohortid,1=start_level,2=number of years
+	int [][] modulesDB = null;//nx3,0=moduleid,1= numstudents,2=lab/lecturehours
+	int [][] courseAllocationsDB = null;//nx2,0=lecturerid,1=courseid
+	int [][] lectureroomsDB = null;//nx2,0=roomid,0=roomcapacity
+	String [] roomTypes,moduleTypes;
+	int [][] lecturerAvailabilitiesDB = null;//nx4,0=lecturerid,1=day,2=startime,3=endtime
+	int [][] modulesInCohort = null;//nx3,0=cohortid,1=courseid,2=level
+	int [][] specialmoduleConstraints;//nx5,0=moduleid,1=roomid,2=day,3=startime,4=endtime
 	String dayOfWeek = "";
 	DBConnection db = null;
 	ResultSet rst = null;
 	PreparedStatement pst = null;
+	
 	public ReadInputs(){
 		db = new DBConnection();
+		
+		//Initialise all arrays that will be used to cache the DB while algorithm runs.
+		roomCount = this.getRoomCount();
+		lectureroomsDB = new int[roomCount][2];
+		roomTypes = this.getRoomTypeArray();
+		moduleTypes = this.getModuleTypeArray();
+		modulesDB = new int[moduleTypes.length][3];
+		int [] c = this.getCohortIds();
+		cohortDB = new int[c.length][3];
+		int [] d = this.getModuleIdsFromCourseAllocationTable();
+		courseAllocationsDB = new int[d.length][2];
+		lecturerAvailabilitiesDB = new int[this.getLecturerAvailabilityCount()][4];
+		modulesInCohort= new int[this.getModulesInCohortCount()][3];
+		int [] specialStart = this.getDaysForSpecialConstraintModules();
+		specialmoduleConstraints = new int[specialStart.length][5];
+		
+		
+		
+		
 		
 	}
 	//Get list of all the room ids for generating chromosome
@@ -270,6 +299,24 @@ public class ReadInputs {
 			return convertIntegerListToIntegerArray(startTimes);
 		
 	}
+	//Get the total number of lecture rooms and labs available
+	private int getLecturerAvailabilityCount(){
+			int numava=0;
+			rst = db.executeQuery("SELECT count(id) AS numavailable FROM lecturer_availabilites");
+			try {
+				rst.first();
+				numava= rst.getInt("numavailable");
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			finally{
+				db.closeConnection();
+			}
+			
+			return numava;
+		}
+		
 	//Get End times for part time lecturers
 	public int[] partimeLecturerEndTimes(int lecturer){
 		List<Integer> endTimes=new ArrayList<Integer>();
@@ -373,6 +420,23 @@ public class ReadInputs {
 		
 		return convertIntegerListToIntegerArray(cohortids);
 	}
+	//Get the total number of moules in cohort asignnments in the DB
+	private int getModulesInCohortCount(){
+		int modeincohort=0;
+		rst = db.executeQuery("SELECT count(id) AS numodules FROM modules_in_cohort");
+		try {
+			rst.first();
+			modeincohort= rst.getInt("numodules");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally{
+			db.closeConnection();
+		}
+		return modeincohort;
+	}
+
 	//Get the starting level for a cohort
 	public int getCohortStartingLevel(int cohortid){
 		int start=0;
@@ -623,6 +687,7 @@ public class ReadInputs {
 
 		
 	}
+	
 	//Returns the level  in which a module is offered
 		public int getModuleCohortLevel(int moduleid,int cohortid){
 			int level=0;
