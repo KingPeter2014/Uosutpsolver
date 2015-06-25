@@ -325,6 +325,7 @@ public class ReadInputs {
 	//Confirm if an event belongs to a Cohort of a particular level of study
 	public boolean confirmCohortEventAtALevelOfStudy(int module , int cohort, int level){
 		boolean belongsToCohort = false;
+		/*
 		rst = db.executeQuery("SELECT * FROM modules_in_cohort WHERE course_id=" + module + " AND cohort_id=" + cohort + " AND level="+level);
 		
 		try {
@@ -339,6 +340,15 @@ public class ReadInputs {
 			finally{
 				db.closeConnection();
 			}
+			*/
+		int l = ReadInputs.modulesInCohort.length;
+		for(int i=0;i<l;i++){
+			if(ReadInputs.modulesInCohort[i][0]==cohort && ReadInputs.modulesInCohort[i][1]==module && ReadInputs.modulesInCohort[i][2]==level){
+				belongsToCohort= true;
+				return belongsToCohort;
+			}
+
+		}
 
 		return belongsToCohort;
 		
