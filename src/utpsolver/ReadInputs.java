@@ -26,7 +26,7 @@ public class ReadInputs {
 	public static int [][] cohortDB=null;//nx3,0=cohortid,1=start_level,2=number of years
 	public static int [][] modulesDB = null;//nx3,0=moduleid,1= numstudents,2=lab/lecturehours
 	public static int [][] courseAllocationsDB = null;//nx2,0=lecturerid,1=courseid
-	public static int [][] lectureroomsDB = null;//nx2,0=roomid,0=roomcapacity
+	public static int [][] lectureroomsDB = null;//nx2,0=roomid,1=roomcapacity
 	public static String [] roomTypes,moduleTypes;
 	public static int [][] lecturerAvailabilitiesDB = null;//nx4,0=lecturerid,1=day,2=startime,3=endtime
 	public static int [][] modulesInCohort = null;//nx3,0=cohortid,1=courseid,2=level
@@ -45,7 +45,7 @@ public class ReadInputs {
 		ReadInputs.roomTypes = this.getRoomTypesArray();
 		moduleTypes = this.getModuleTypesArray();
 		modulesDB = new int[moduleTypes.length][3];
-		int [] c = this.getCohortIds();
+		int [] c = this.getAllCohortIds();
 		cohortDB = new int[c.length][3];
 		int [] d = this.getModuleIdsFromCourseAllocationTable();
 		courseAllocationsDB = new int[d.length][2];
@@ -313,7 +313,7 @@ public class ReadInputs {
 		*/
 		int l = ReadInputs.courseAllocationsDB.length;
 		for(int i=0;i<l;i++){
-			if(ReadInputs.courseAllocationsDB[i][0]==event && ReadInputs.courseAllocationsDB[i][1]==lecturer){
+			if(ReadInputs.courseAllocationsDB[i][0]==lecturer && ReadInputs.courseAllocationsDB[i][1]==event){
 				belongsToLecturer= true;
 				return belongsToLecturer;
 			}
@@ -435,6 +435,7 @@ public class ReadInputs {
 	// Get ids of all modules allocated to a particular lecturer
 	public int [] getLecturerModules(int lecturer){
 		List<Integer> lecturerModules=new ArrayList<Integer>();
+		/*
 		rst = db.executeQuery("SELECT course_id FROM course_allocations WHERE lecturer_id=" + lecturer);
 		try {
 			while(rst.next()){
@@ -448,12 +449,22 @@ public class ReadInputs {
 		finally{
 				db.closeConnection();
 			}
+		*/
+		int l = ReadInputs.courseAllocationsDB.length;
+		for(int i=0;i<l;i++){
+			if( ReadInputs.courseAllocationsDB[i][0]==lecturer){
+				lecturerModules.add(ReadInputs.courseAllocationsDB[i][1]);
+				
+			}
+
+		}
 			return convertIntegerListToIntegerArray(lecturerModules);
 		
 	}
 	//Get start times for part time lecturers
 	public int[] partimeLecturerStartTimes(int lecturer){
 		List<Integer> startTimes=new ArrayList<Integer>();
+		/*
 		rst = db.executeQuery("SELECT start_time FROM lecturer_availabilites WHERE lecturer_id=" + lecturer);
 		try {
 			while(rst.next()){
@@ -467,6 +478,15 @@ public class ReadInputs {
 		finally{
 				db.closeConnection();
 			}
+		*/
+		int l = ReadInputs.lecturerAvailabilitiesDB.length;
+		for(int i=0;i<l;i++){
+			if( ReadInputs.lecturerAvailabilitiesDB[i][0]==lecturer){
+				startTimes.add(ReadInputs.lecturerAvailabilitiesDB[i][2]);
+				
+			}
+
+		}
 			return convertIntegerListToIntegerArray(startTimes);
 		
 	}
@@ -491,6 +511,7 @@ public class ReadInputs {
 	//Get End times for part time lecturers
 	public int[] partimeLecturerEndTimes(int lecturer){
 		List<Integer> endTimes=new ArrayList<Integer>();
+		/**
 		rst = db.executeQuery("SELECT end_time FROM lecturer_availabilites WHERE lecturer_id=" + lecturer);
 		try {
 			while(rst.next()){
@@ -504,12 +525,23 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
+		**/
+		int l = ReadInputs.lecturerAvailabilitiesDB.length;
+		for(int i=0;i<l;i++){
+			if( ReadInputs.lecturerAvailabilitiesDB[i][0]==lecturer){
+				endTimes.add(ReadInputs.lecturerAvailabilitiesDB[i][3]);
+				
+			}
+
+		}
+		
 		return convertIntegerListToIntegerArray(endTimes);
 			
 	}
 	//Get corresponding availablibilty days for part time lecturers
 	public int[] partimeLecturerDays(int lecturer){
 			List<Integer> days=new ArrayList<Integer>();
+			/**
 			rst = db.executeQuery("SELECT day FROM lecturer_availabilites WHERE lecturer_id=" + lecturer);
 			try {
 				while(rst.next()){
@@ -523,12 +555,22 @@ public class ReadInputs {
 			finally{
 				db.closeConnection();
 			}
+			**/
+			int l = ReadInputs.lecturerAvailabilitiesDB.length;
+			for(int i=0;i<l;i++){
+				if( ReadInputs.lecturerAvailabilitiesDB[i][0]==lecturer){
+					days.add(ReadInputs.lecturerAvailabilitiesDB[i][1]);
+					
+				}
+
+			}
 			return convertIntegerListToIntegerArray(days);
 				
 		}
 		
 	//Get Module ids for generating chromosome
 	public int[] getModuleIds(){
+		/*
 		List<Integer> moduleids=new ArrayList<Integer>();
 		rst = db.executeQuery("SELECT * FROM courses");
 		try {
@@ -545,6 +587,14 @@ public class ReadInputs {
 				db.closeConnection();
 			}
 		return convertIntegerListToIntegerArray(moduleids);
+		*/
+		int l =ReadInputs.modulesDB.length;
+		int [] courseids = new int[l];
+		for(int i=0;i <l;i++){
+			courseids[i] = modulesDB[i][0];
+		}
+		return courseids;
+		
 	}
 	//Returns a list of all the room types available
 	public String getRooms(){
@@ -572,24 +622,37 @@ public class ReadInputs {
 		
 	}
 	//Get array of the IDs of Cohorts registered in the system
+	//Get array of the IDs of Cohorts registered in the system
+	private int[] getAllCohortIds(){
+			
+			List<Integer> cohortids=new ArrayList<Integer>();
+			rst = db.executeQuery("SELECT * FROM cohorts");
+			try {
+				while(rst.next()){
+					cohortids.add(rst.getInt("id"));
+				}
+				}
+				catch (SQLException e) {
+					
+					e.printStackTrace();
+					message+=e.getMessage();
+				}
+				finally{
+					db.closeConnection();
+				}
+			
+			return convertIntegerListToIntegerArray(cohortids);
+		}
+	//Get Cohort ids from local array Table
 	public int[] getCohortIds(){
-		List<Integer> cohortids=new ArrayList<Integer>();
-		rst = db.executeQuery("SELECT * FROM cohorts");
-		try {
-			while(rst.next()){
-				cohortids.add(rst.getInt("id"));
-			}
-			}
-			catch (SQLException e) {
-				
-				e.printStackTrace();
-				message+=e.getMessage();
-			}
-			finally{
-				db.closeConnection();
-			}
 		
-		return convertIntegerListToIntegerArray(cohortids);
+		int l =ReadInputs.cohortDB.length;
+		int [] cohortids = new int[l];
+		for(int i=0;i <l;i++){
+			cohortids[i] = cohortDB[i][0];
+		}
+		return cohortids;
+
 	}
 	//Get the total number of moules in cohort asignnments in the DB
 	private int getModulesInCohortCount(){
@@ -611,6 +674,7 @@ public class ReadInputs {
 	//Get the starting level for a cohort
 	public int getCohortStartingLevel(int cohortid){
 		int start=0;
+		/*
 		rst = db.executeQuery("SELECT level_of_study FROM cohorts WHERE id=" + cohortid);
 		try {
 			rst.first();
@@ -622,21 +686,27 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
+		*/
+		int l =ReadInputs.cohortDB.length;
+		int [] cohortids = new int[l];
+		for(int i=0;i <l;i++){
+			if(cohortDB[i][0]==cohortid){
+				start = cohortDB[i][1];
+				return start;
+			}
+		}
 		return start;
 	}
 	//Get the number of years to finish a degree for a Cohort
 	public int getNumberOfYearsToGraduate(int cohortid){
 		int numyrs=0;
-		rst = db.executeQuery("SELECT number_of_years FROM cohorts WHERE id=" + cohortid);
-		try {
-			rst.first();
-			numyrs= rst.getInt("number_of_years");
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-		finally{
-			db.closeConnection();
+		int l =ReadInputs.cohortDB.length;
+		int [] cohortids = new int[l];
+		for(int i=0;i <l;i++){
+			if(cohortDB[i][0]==cohortid){
+				numyrs = cohortDB[i][2];
+				return numyrs;
+			}
 		}
 		return numyrs;
 		
@@ -839,8 +909,10 @@ public class ReadInputs {
 	}
 	//Returns the ids of the cohorts to which a module belongs
 	public int[] getModuleCohort(int moduleid){
-		rst = db.executeQuery("SELECT cohort_id FROM modules_in_cohort WHERE course_id=" + moduleid);
 		List<Integer> cohortids=new ArrayList<Integer>();
+		/**
+		rst = db.executeQuery("SELECT cohort_id FROM modules_in_cohort WHERE course_id=" + moduleid);
+		
 		try {
 			while(rst.next()){
 				cohortids.add(rst.getInt("cohort_id"));
@@ -854,6 +926,15 @@ public class ReadInputs {
 			finally{
 				db.closeConnection();
 			}
+			**/
+		int l =ReadInputs.modulesInCohort.length;
+		
+		for(int i=0;i <l;i++){
+			if(modulesInCohort[i][1]==moduleid){
+				cohortids.add(modulesInCohort[i][0]);
+				
+			}
+		}
 		return convertIntegerListToIntegerArray(cohortids);
 
 		
@@ -862,8 +943,9 @@ public class ReadInputs {
 	//Returns the level  in which a module is offered
 		public int getModuleCohortLevel(int moduleid,int cohortid){
 			int level=0;
+			/*
 			rst = db.executeQuery("SELECT level FROM modules_in_cohort WHERE course_id=" + moduleid + " AND cohort_id=" + cohortid);
-			List<Integer> levels=new ArrayList<Integer>();
+			
 			try {
 				rst.first();
 					level=rst.getInt("level");
@@ -877,6 +959,14 @@ public class ReadInputs {
 				finally{
 					db.closeConnection();
 				}
+				*/
+			int l =ReadInputs.modulesInCohort.length;
+			
+			for(int i=0;i <l;i++){
+				if(modulesInCohort[i][1]==moduleid && modulesInCohort[i][0]==cohortid){
+					return modulesInCohort[i][2];//Returns level a module is studied by a cohort
+				}
+			}
 			return level;
 
 			
@@ -902,6 +992,8 @@ public class ReadInputs {
 	
 	//Returns lecture, lab or both depending on the type of room
 	public String getRoomType(int roomid){
+		String roomType="";
+		/*
 		rst = db.executeQuery("SELECT roomtype FROM lecturerooms WHERE id=" + roomid);
 		try {
 			rst.first();
@@ -913,6 +1005,12 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
+		*/
+		for(int i=0;i<this.roomCount;i++){
+			if(this.lectureroomsDB[i][0]==roomid)
+			return	roomType= ReadInputs.roomTypes[i];
+		}
+		
 		return roomType;
 	}
 	
@@ -936,6 +1034,7 @@ public class ReadInputs {
 	
 	//Get the number of students that a room can take
 	public int getRoomCapacity(int roomid){
+		/*
 		rst = db.executeQuery("SELECT capacity FROM lecturerooms WHERE id=" + roomid);
 		try {
 			rst.first();
@@ -946,6 +1045,11 @@ public class ReadInputs {
 		}
 		finally{
 			db.closeConnection();
+		}
+		*/
+		for(int i=0;i<this.roomCount;i++){
+			if(this.lectureroomsDB[i][0]==roomid)
+			return	roomCapacity= lectureroomsDB[i][1];
 		}
 		
 		return roomCapacity;
@@ -985,6 +1089,7 @@ public class ReadInputs {
 	
 	//Return the number of students registered in a module
 	public int getStudentsInModule(int moduleid){
+		/*
 		rst = db.executeQuery("SELECT numstudents FROM courses WHERE id=" + moduleid);
 		try {
 			rst.first();
@@ -996,6 +1101,11 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
+		*/
+		for(int i=0;i<this.moduleCount;i++){
+			if(this.modulesDB[i][0]==moduleid)
+			return	studentsInModule= modulesDB[i][1];
+		}
 		return studentsInModule;
 	}
 	
@@ -1006,6 +1116,9 @@ public class ReadInputs {
 	 */
 	
 	public String getModuleType(int moduleid){
+		moduleType="";
+		//CONFIRM THIS ALGORITHM FROM TIMETABLE OUTPUT
+		/**
 		rst = db.executeQuery("SELECT coursetype FROM courses WHERE id=" + moduleid);
 		try {
 			rst.first();
@@ -1017,6 +1130,13 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
+		**/
+		for(int i=0;i<this.modulesDB.length;i++){
+			if(this.modulesDB[i][0]==moduleid)
+			return	moduleType= ReadInputs.moduleTypes[i];
+		}
+	
+		
 		return moduleType;
 	}
 	//Get number of students that registered in a module

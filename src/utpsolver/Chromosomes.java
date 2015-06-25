@@ -10,7 +10,7 @@ import utpsolver.Fitness;
  *
  */
 public class Chromosomes {
-	public int numChromosomes = 20, fitness=0;
+	public int numChromosomes = 50, fitness=0;
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
@@ -824,6 +824,7 @@ public class Chromosomes {
 	
 	//Display the best individual candidate after the the termination of GA
 	public String displayGeneratedTimetable(int chromosome){
+		overallTimetable="";
 		for(int a = 1;a<=5;a++)
 			overallTimetable += read.getDailySchedule(a, chromosomes, chromosome, rooms, modules);
 		
