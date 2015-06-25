@@ -42,8 +42,8 @@ public class ReadInputs {
 		//Initialise all arrays that will be used to cache the DB while algorithm runs.
 		roomCount = this.getRoomCount();
 		lectureroomsDB = new int[roomCount][2];
-		roomTypes = this.getRoomTypeArray();
-		moduleTypes = this.getModuleTypeArray();
+		ReadInputs.roomTypes = this.getRoomTypesArray();
+		moduleTypes = this.getModuleTypesArray();
 		modulesDB = new int[moduleTypes.length][3];
 		int [] c = this.getCohortIds();
 		cohortDB = new int[c.length][3];
@@ -216,7 +216,6 @@ public class ReadInputs {
 		for(int i=0;i <l;i++){
 			rmids[i] = lectureroomsDB[i][0];
 		}
-		
 		return rmids;
 	}
 	
@@ -246,6 +245,9 @@ public class ReadInputs {
 	}
 	//Returns a string array of the module types corresponding to each module
 	public String[] getModuleTypeArray(){
+		return ReadInputs.moduleTypes;
+	}
+	private String[] getModuleTypesArray(){
 		List<String>  moduleTypeArray = new ArrayList<String>();
 		rst = db.executeQuery("SELECT coursetype FROM courses");
 		try {
@@ -262,10 +264,11 @@ public class ReadInputs {
 				db.closeConnection();
 			}
 		
-		return convertStringListToStringArray(moduleTypeArray);
+		this.moduleTypes= convertStringListToStringArray(moduleTypeArray);
+		return this.moduleTypes;
 	}
 	//Returns a string array of room types corresponding to each room
-	public String[] getRoomTypeArray(){
+	private String[] getRoomTypesArray(){
 		List<String>  roomTypeArray = new ArrayList<String>();
 		rst = db.executeQuery("SELECT roomtype FROM lecturerooms");
 		try {
@@ -281,12 +284,17 @@ public class ReadInputs {
 			finally{
 				db.closeConnection();
 			}
-		
-		return convertStringListToStringArray(roomTypeArray);
+			
+			ReadInputs.roomTypes= convertStringListToStringArray(roomTypeArray);
+			return ReadInputs.roomTypes;
+		}
+	public String[] getRoomTypeArray(){
+				return ReadInputs.roomTypes;
 	}
 	//Confirm if an event belongs to a lecturer
 	public boolean confirmEventBelongsToLecturer(int event, int lecturer){
 		boolean belongsToLecturer = false;
+		/*
 		rst = db.executeQuery("SELECT * FROM course_allocations WHERE course_id=" + event + " AND lecturer_id=" + lecturer);
 		try {
 				if(rst.first())	
@@ -302,7 +310,15 @@ public class ReadInputs {
 			finally{
 				db.closeConnection();
 			}
+		*/
+		int l = ReadInputs.courseAllocationsDB.length;
+		for(int i=0;i<l;i++){
+			if(ReadInputs.courseAllocationsDB[i][0]==event && ReadInputs.courseAllocationsDB[i][1]==lecturer){
+				belongsToLecturer= true;
+				return belongsToLecturer;
+			}
 
+		}
 		return belongsToLecturer;
 	}
 	

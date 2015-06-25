@@ -34,8 +34,8 @@
 <% 
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
-	String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(1);
-	//int[] allFitness = cr.evaluatePopulationFitness();
+	String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(0);
+	int[] allFitness = cr.evaluatePopulationFitness();
 	
 	out.println(test);
 	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
@@ -52,7 +52,7 @@
 	int i=0;
 	
 	
-	out.println("<br/><hr/>Chromosome Structure[5]<hr/>");
+	out.println("<br/><hr/>Chromosome Structure[0]<hr/>");
 	for(int b=0; b< Chromosomes.roomCount; b++){
 		for(int a =0; a < timeslots; a++)
 			out.println(chromo[0][b][a] + "&nbsp&nbsp&nbsp");
@@ -60,7 +60,7 @@
 		
 	}
 	
-	out.println("<br/><hr/>Chromosome Structure[19]<hr/>");
+	out.println("<br/><hr/>Chromosome Structure[1]<hr/>");
 	for(int b=0; b< Chromosomes.roomCount; b++){
 		for(int a =0; a < timeslots; a++)
 			out.println(chromo[1][b][a] + "&nbsp&nbsp&nbsp");
@@ -69,12 +69,12 @@
 	}
 	
 	
-	/**
+	
 	for(i=0;i<cr.numChromosomes;i++){
 		out.println("Fitness of chromosome" + (i+1) + ":" +allFitness[i] + "<br/>");
 		
 	}
-	**/
+	
 	long a = cr.startTime/1000;
 	long b = cr.endTime/1000;
 	long runningTime = b-a;

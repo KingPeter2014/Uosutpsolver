@@ -277,8 +277,6 @@ public class Chromosomes {
 					if(!isOccupied && !isMultiple && modulehours==1 && moduleType.equals(this.getRoomType(rm-1))){
 						
 						inserted = this.insertGene(i, rm-1, time-1, modules[d]);
-						System.out.println("Single random scheduling for Room: " + (rm-1) + " Module:" + modules[d]);
-						
 					}
 					
 					//Handle 2-hour Lecture or Lab
