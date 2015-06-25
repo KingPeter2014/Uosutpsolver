@@ -36,6 +36,7 @@
 	Chromosomes cr = new Chromosomes();
 	String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(0);
 	int[] allFitness = cr.evaluatePopulationFitness();
+	int[] sortedIndices = cr.getSortedChromosomeIndices();
 	
 	out.println(test);
 	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
@@ -71,7 +72,7 @@
 	
 	
 	for(i=0;i<cr.numChromosomes;i++){
-		out.println("Fitness of chromosome" + (i+1) + ":" +allFitness[i] + "<br/>");
+		out.println("Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +allFitness[i] + "<br/>");
 		
 	}
 	

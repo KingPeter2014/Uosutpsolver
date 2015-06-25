@@ -16,7 +16,7 @@ public class Fitness{
 	private  int[][][] chidren = null;
 	private int numChromosome,timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private int [] rooms,modules,lecturers,cohorts,startTime,endTime;
-	public int [] fitnessValues,hardFitnesses,softFitness;
+	public int [] fitnessValues,hardFitnesses,softFitness,chromosomeIndices;
 	public int [] childrenfitnessValues,childrenhardFitnesses,childrensoftFitness;
 	private int [] startTimes = read.getStartTimeForSpecialConstraintModules();
 	private int [] endTimes = read.getEndTimeForSpecialConstraintModules();
@@ -33,6 +33,7 @@ public class Fitness{
 		this.numChromosome=numChromosome;
 		this.fitnessValues = new int[numChromosome];
 		this.hardFitnesses = new int[numChromosome];
+		this.chromosomeIndices = new int[numChromosome];
 		this.softFitness = new int[numChromosome];
 		this.timeslot= timeslots;
 		this.rooms = rooms;
@@ -55,6 +56,7 @@ public class Fitness{
 			fitnessValues[a] = computeOverallFitnessForAChromosome(a);
 			System.out.println("Evaluation of chromosome " + (a+1) + " took: " + (System.currentTimeMillis() - st)/1000 + "Secs to execute");			
 		}
+		fitnessValues = this.sortFitnessDescending(fitnessValues);
 		return fitnessValues;
 	}
 	/**
@@ -112,6 +114,10 @@ public class Fitness{
 	// Get Moduletype locally
 	private String getModuleType(int moduleIndex){
 		return moduleTypes[moduleIndex];
+	}
+	//Get the indices for the chromosomes arranged in descending order of fitness
+	public int [] getSortedChromosomeIndices(){
+		return this.chromosomeIndices;
 	}
 	//Compute total soft constraint rewards
 	public int getOverallRewardsOnSoftConstraints(int chromosome){
@@ -596,5 +602,27 @@ public class Fitness{
 	//Returns maximum reward for not more than 4-hour cohort schedule
 	public int getMaxS10Reward(){
 		return this.getMaxH3Reward()/timeslot;
+	}
+	public int[] sortFitnessDescending(int [] fitnessValues){
+		int len = fitnessValues.length;
+		for( int i=0;i<len;i++)
+			this.chromosomeIndices[i]=i;
+			
+		int temp = 0;
+		for(int i=0;i<len;i++){
+			for(int j=0;j<len-1;j++){
+				if(fitnessValues[j]<fitnessValues[j+1]){
+					temp=fitnessValues[j];
+					fitnessValues[j] = fitnessValues[j+1];
+					fitnessValues[j+1]=temp;
+					temp=this.chromosomeIndices[j];
+					this.chromosomeIndices[j]=this.chromosomeIndices[j+1];
+					this.chromosomeIndices[j+1]=temp;
+					
+				}
+			}
+		}
+		
+		return fitnessValues;
 	}
 }

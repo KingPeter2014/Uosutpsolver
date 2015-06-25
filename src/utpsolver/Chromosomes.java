@@ -10,7 +10,7 @@ import utpsolver.Fitness;
  *
  */
 public class Chromosomes {
-	public int numChromosomes = 50, fitness=0;
+	public  int numChromosomes = 50, fitness=0;
 	public  int[][][] chromosomes = null;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
@@ -850,5 +850,8 @@ public class Chromosomes {
 				isMultiple = false;
 			return isMultiple;
 			
+		}
+		public int [] getSortedChromosomeIndices(){
+			return fit.getSortedChromosomeIndices();
 		}
 }
