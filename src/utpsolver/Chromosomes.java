@@ -312,6 +312,7 @@ public class Chromosomes {
 	private void scheduleSpecialModules(){
 		int [] specialModules = read.getModulesWithSpecialConstraints();
 		int specialModuleCount = specialModules.length;
+		
 		if(specialModuleCount<=0)
 			return;
 		int [] startTimes = read.getStartTimeForSpecialConstraintModules();
@@ -344,6 +345,7 @@ public class Chromosomes {
 			if(lecturerModules.length==0){
 				continue; //This lecturer has no modules allocated to him/her, so check next lecturer
 			}
+			boolean isMultiple=false;
 			int [] startTimes = read.getStartTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
 			int [] endTimes = read.getEndTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
 			for(int n=0; n<numChromosomes;n++){
@@ -351,22 +353,43 @@ public class Chromosomes {
 					//Check if current module has been allocated in chromosome
 					isScheduled = this.isScheduled(n, lecturerModules[j]);
 					if(!isScheduled){
+						
 						moduleType = read.getModuleType(lecturerModules[j]);
 						if(moduleType.equals("lab")){
 							modulehours = read.getLabHoursPerWeek(lecturerModules[j]);
-							this.findFreeLabRoom(n);
+							for(int a=startTimes[0];a <endTimes[0];a++){
+								this.findFreeLecturerLabRoomOnATimeslot(n, partTimeLecturers[i], a-1);
+								if(this.freeRoom!=0 && this.freeTimeslot!=0)
+									break;
+								
+							}
+							//this.findFreeLabRoom(n);
+							
+							
 						}
 						else{
 							modulehours = read.getLectureHoursPerWeek(lecturerModules[j],"lecture");
-							this.findFreeLectureRoom(n);
+							for(int a=startTimes[0];a <endTimes[0];a++){
+								this.findFreeLecturerLectureRoomOnATimeslot(n, partTimeLecturers[i], a-1);
+								if(this.freeRoom!=0 && this.freeTimeslot!=0)
+									break;
+								
+							}
+							//k
+							//this.findFreeLectureRoom(n);
 						}
 						if( modulehours==1 && freeRoom!=0){
 							//chromosomes[i][rm-1][time-1]=modules[d];
-							boolean inserted = this.insertGene(n, freeRoom, startTimes[0]-1, lecturerModules[j]);
+							boolean inserted = this.insertGene(n, freeRoom, this.freeTimeslot, lecturerModules[j]);
+							this.freeRoom=0;this.freeTimeslot=0;
 							
 						}
 						else if( modulehours==2){
-							this.handleSpecificTwoHourModulesScheduling(n, lecturerModules[j], startTimes[0]-1, moduleType);
+							boolean inserted = this.insertGene(n, freeRoom, this.freeTimeslot, lecturerModules[j]);
+							 inserted = this.insertGene(n, freeRoom, this.freeTimeslot+1, lecturerModules[j]);
+							this.freeRoom=0;this.freeTimeslot=0;
+							
+							//this.handleSpecificTwoHourModulesScheduling(n, lecturerModules[j], this.freeTimeslot, moduleType);
 						}
 
 					}
@@ -579,6 +602,46 @@ public class Chromosomes {
 		}	
 		
 	}
+	//Set free lab room without clash for a lecturer on a single time period 
+	private void findFreeLecturerLabRoomOnATimeslot(int chromosome,int lecturer,int time){
+		freeRoom=0;
+		freeTimeslot=0;
+		for(int c=roomCount-1; c >=0; c--){
+			if(read.getRoomType(rooms[c]).equals("lab")){
+					if(chromosomes[chromosome][c][time] ==0){
+						boolean isMultiple = this.isMultipleScheduleForALecturer(chromosome, time, lecturer);
+						if(!isMultiple){
+							freeRoom=c;
+							freeTimeslot=time;
+							return;
+						}
+					}
+				
+			}
+						
+		}	
+		
+	}
+	//Set free lecture room without clash for a lecturer on a single time period 
+		private void findFreeLecturerLectureRoomOnATimeslot(int chromosome,int lecturer,int time){
+			freeRoom=0;
+			freeTimeslot=0;
+			for(int c=roomCount-1; c >=0; c--){
+				if(read.getRoomType(rooms[c]).equals("lecture")){
+						if(chromosomes[chromosome][c][time] ==0){
+							boolean isMultiple = this.isMultipleScheduleForALecturer(chromosome, time, lecturer);
+							if(!isMultiple){
+								freeRoom=c;
+								freeTimeslot=time;
+								return;
+							}
+						}
+					
+				}
+							
+			}	
+			
+		}
 	//Set free lecture room without clash for a cohort
 		private void findFreeCohortLectureRoom(int chromosome,int cohort,int level){
 			freeRoom=0;
@@ -851,7 +914,25 @@ public class Chromosomes {
 			return isMultiple;
 			
 		}
+		//Check if there already A SCHEDULE FOR A LECTURER IN A TIME SLOT
+		private boolean isMultipleScheduleForALecturer(int chromosome, int time, int lecturer){
+			boolean isMultiple = true,isLecturerEvent=false;
+			int countSchedules=0;
+			for(int i=0;i< roomCount;i++){
+				if(chromosomes[chromosome][i][time]!=0){
+					isLecturerEvent = read.confirmEventBelongsToLecturer(chromosomes[chromosome][i][time], lecturer);
+					if(isLecturerEvent)
+						countSchedules +=1;
+				}
+			}
+			if(countSchedules <=0)
+				isMultiple = false;
+			return isMultiple;
+			
+
+		}
 		public int [] getSortedChromosomeIndices(){
 			return fit.getSortedChromosomeIndices();
 		}
+		
 }

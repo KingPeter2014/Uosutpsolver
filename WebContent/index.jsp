@@ -32,12 +32,14 @@
 <fieldset><legend>Randomly Generated Timetable</legend>
 
 <% 
+	long start = System.currentTimeMillis()/1000;
+
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
-	String test = "<br/><b>Fitness Unit Tests:</b><hr/>" + cr.getFitnessOnAContraint(0);
+	
 	int[] allFitness = cr.evaluatePopulationFitness();
 	int[] sortedIndices = cr.getSortedChromosomeIndices();
-	
+	String test = "<br/><b>Fitness of Best Chromosome["+(sortedIndices[0] +1)+"]:</b><hr/>" + cr.getFitnessOnAContraint(sortedIndices[0]);
 	out.println(test);
 	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
 	"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
@@ -52,34 +54,34 @@
 	int numModules = moduleIdsArray.length;
 	int i=0;
 	
-	
-	out.println("<br/><hr/>Chromosome Structure[0]<hr/>");
+	/**
+	out.println("<br/><hr/>Best Chromosome Structure[" + (sortedIndices[0]+1)+ "]<hr/>");
 	for(int b=0; b< Chromosomes.roomCount; b++){
 		for(int a =0; a < timeslots; a++)
-			out.println(chromo[0][b][a] + "&nbsp&nbsp&nbsp");
+			out.println(chromo[sortedIndices[0]][b][a] + "&nbsp&nbsp&nbsp");
 		out.println("<br/>");
 		
 	}
 	
-	out.println("<br/><hr/>Chromosome Structure[1]<hr/>");
+	out.println("<br/><hr/>Worst Chromosome Structure["+(sortedIndices[cr.numChromosomes-1]+1)+"]<hr/>");
 	for(int b=0; b< Chromosomes.roomCount; b++){
 		for(int a =0; a < timeslots; a++)
-			out.println(chromo[1][b][a] + "&nbsp&nbsp&nbsp");
+			out.println(chromo[sortedIndices[cr.numChromosomes-1]][b][a] + "&nbsp&nbsp&nbsp");
 		out.println("<br/>");
 		
 	}
 	
-	
+	**/
 	
 	for(i=0;i<cr.numChromosomes;i++){
 		out.println("Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +allFitness[i] + "<br/>");
 		
 	}
 	
-	long a = cr.startTime/1000;
-	long b = cr.endTime/1000;
-	long runningTime = b-a;
-	out.println("<b><h2>It took approximately "+ runningTime + " seconds to run this GA</h2></b>");
+	
+	long b = System.currentTimeMillis()/1000;
+	long runningTime = b-start;
+	out.println("<b><h2>It took approximately "+ runningTime + " second(s) to run this GA</h2></b>");
 	
 %>
 </fieldset>
