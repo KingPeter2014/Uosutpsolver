@@ -11,7 +11,7 @@ import utpsolver.Fitness;
  */
 public class Chromosomes {
 	public  int numChromosomes = 50, fitness=0;
-	public  int[][][] chromosomes = null;
+	public  int[][][] chromosomes = null,bestChromosome,worstChromosome;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
 	public int [] rooms,modules,cohorts;
@@ -34,6 +34,8 @@ public class Chromosomes {
 		moduleTypes = read.getModuleTypeArray();
 		roomTypes = read.getRoomTypeArray();
 		chromosomes = new int[numChromosomes][roomCount][timeslot];
+		this.bestChromosome = new int[1][roomCount][timeslot];
+		this.worstChromosome = new int[1][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
 		//this.initializePopulation();
 		initializePopulationWithElitism();
@@ -931,6 +933,20 @@ public class Chromosomes {
 			
 
 		}
+		//Check if a module is being scheduled in correct room size or not
+		private boolean roomSizeMatchedModuleSize(int module,int room){
+			int roomSize = read.getRoomCapacity(room);
+			int moduleSize = read.getModuleSize(module);
+			int tolerance = -10; // A tolerance of 10 is when module size is more than room Capacity by only 10 students
+			boolean isMatched = false;
+			
+			if(moduleSize <= roomSize || (roomSize - moduleSize)  >= tolerance)
+				isMatched=true;
+			else
+				isMatched=false;
+			
+			return isMatched;
+			}
 		public int [] getSortedChromosomeIndices(){
 			return fit.getSortedChromosomeIndices();
 		}

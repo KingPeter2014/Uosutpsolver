@@ -84,6 +84,7 @@
 	out.println("<b><h2>It took approximately "+ runningTime + " second(s) to run this GA</h2></b>");
 	
 %>
+<!--  <a rel='nofollow' href='http://www.qrcode-generator.de' border='0' style='cursor:default'><img src='https://chart.googleapis.com/chart?cht=qr&chl=www.kingrock.com.ng&chs=180x180&choe=UTF-8&chld=L|2' alt=''></a> -->
 </fieldset>
 </div>
 </body>
