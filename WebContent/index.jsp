@@ -7,6 +7,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<script type="text/javascript">
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $("#best").click(function(){
+        $("#statistics").toggle("slow");
+        
+    });
+    
+    $("#chromo").click(function(){
+       
+        $("#allchromosomes").toggle("slow");
+    });
+});
+</script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UoSTimetabler</title>
 <link rel="stylesheet" type="text/css" href="style.css">
@@ -39,7 +57,7 @@
 	
 	int[] allFitness = cr.evaluatePopulationFitness();
 	int[] sortedIndices = cr.getSortedChromosomeIndices();
-	String test = "<br/><b>Fitness of Best Chromosome["+(sortedIndices[0] +1)+"]:</b><hr/>" + cr.getFitnessOnAContraint(sortedIndices[0]);
+	String test = "<br/><button id=\"best\"><b>Click to Display/Hide the Fitness of Best Chromosome</button>["+(sortedIndices[0] +1)+"]:</b><hr/><div id=\"statistics\">" + cr.getFitnessOnAContraint(sortedIndices[0]) + "</div>";
 	out.println(test);
 	String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
 	"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
@@ -72,12 +90,12 @@
 	}
 	
 	**/
-	
+	out.println("<button id=\"chromo\"> Hide/Show all Chromosome Fitness</button><div id=\"allchromosomes\">");
 	for(i=0;i<cr.numChromosomes;i++){
 		out.println("Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +allFitness[i] + "<br/>");
 		
 	}
-	
+	out.println("</div>");
 	
 	long b = System.currentTimeMillis()/1000;
 	long runningTime = b-start;
