@@ -11,6 +11,7 @@ import utpsolver.Fitness;
  */
 public class Chromosomes {
 	public  int numChromosomes = 100, fitness=0;
+	public double hardWeight =100,softWeight=20;
 	public  int[][][] chromosomes = null,bestChromosome,worstChromosome;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";

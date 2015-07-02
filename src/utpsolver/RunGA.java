@@ -34,7 +34,7 @@ public class RunGA extends HttpServlet {
 	//The maximum number of rooms, modules, cohort and lecturers respectively
 	private int roomCount =0, moduleCount=0,cohortCount=0,lecturerCount=0;
 	int[] allFitness,sortedIndices;
-	private int currentGeneration=0, MaximumGeneration = 200;
+	private int currentGeneration=0, MaximumGeneration = 100;
 	private int maxreward=0,maxHard=0,maxSoft=0;
 	private String message="";
 	Chromosomes cr = null;
@@ -80,6 +80,7 @@ public class RunGA extends HttpServlet {
 			int hardFitness = cr.getOverallHardConstraintRewards(this.worstChromosome);
 			//Get overall fitness of best child after crossover
 			int overallFitnessOfBestChild = this.overallFitness[this.betterChild-1];
+			out.println("<br/>Best Chromosome fitness : " + cr.getOverallFintnessValue(this.bestChromosome) +", BestChild Fitness: " + overallFitnessOfBestChild + " in generation:" + this.currentGeneration);
 			
 			if(overallFitnessOfBestChild > allFitness[this.worstChromosome] && this.hardFitness[this.betterChild-1] >=hardFitness){
 				cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
@@ -90,7 +91,6 @@ public class RunGA extends HttpServlet {
 				this.bestChromosome = sortedIndices[0];
 				this.worstChromosome = sortedIndices[cr.numChromosomes-1];
 			}
-			out.println("<br/>Best Chromosome fitness : " + cr.getOverallFintnessValue(this.bestChromosome) +", BestChild Fitness: " + overallFitnessOfBestChild + " in generation:" + this.currentGeneration);
 			
 		}
 		String test = "<br/><button id=\"best\"><b>Click to Display/Hide the Fitness of Best Chromosome</button><hr/>" + cr.getFitnessOnAContraint(this.bestChromosome);
@@ -175,6 +175,16 @@ private void getFitnessOfChildren(){
 	//out.println("<br/>Hard fitness of child 1 is  :" + this.hardFitness[0] + " out of " + this.maxHard);
 	
 	//out.println("<br/>Overall fitness of best child is  :" + this.overallFitness[this.betterChild-1]);
+}
+//Mutation by swaping modules in a given room between two timeslots
+private void MutateChromosome(int[][][] chromosome,int chromoIndex){
+	int t1 = this.generateRandomInteger(cr.timeslot-1);
+	int t2 = this.generateRandomInteger(cr.timeslot-1);
+	int room = this.generateRandomInteger(cr.roomCount-1);
+	int temp = chromosome[chromoIndex][room][t1];
+	chromosome[chromoIndex][room][t1]=chromosome[chromoIndex][room][t2];
+	chromosome[chromoIndex][room][t2]=temp;
+			
 }
 private int generateRandomInteger(int maxNumber){
 	

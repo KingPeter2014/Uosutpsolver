@@ -10,6 +10,7 @@ public class Crossover {
 	int fosterRoom=0,fosterTime=0;
 	private int timeslots=0,p1,p2; //p1 and p2 are the chromosome indices of selected parents for crossover
 	private int [][][] chromosomes;
+	ReadInputs read = new ReadInputs();
 	
 	
 	public Crossover(int p1,int p2,int[][][] chromosomes,int numChromosome,int timeslots,int [] rooms,int[] modules, String[] moduleTypes, String[] roomTypes){
@@ -31,6 +32,11 @@ public class Crossover {
 		this.initiaizeOffSpringToZero();
 		this.createChildOne();
 		this.createChildTwo();
+		this.mutateChromosomeByTime(child1);
+		this.mutateChromosomeByTime(child2);
+		this.mutateChromosomeByRoom(child1);
+		this.mutateChromosomeByRoom(child2);
+		
 		
 		
 	}
@@ -365,6 +371,48 @@ public class Crossover {
 			
 		}
 		return c;
+	}
+	//Mutation by swaping modules in a given room between two timeslots
+	private void mutateChromosomeByTime(int[][] child){
+		int probability = (int)(rooms.length*0.25);
+		int room=0,t1=-1,t2=0;
+		for(int i=0;i<=probability;i++){
+			 room = this.generateRandomInteger(rooms.length-1);
+			 t1 = this.findModuleOccupiedTimeInRoom(room, child);
+			 t2 = this.generateRandomInteger(this.timeslots-1);
+			if(t1!=-1 && t1 !=t2){
+				int temp = child[room][t1];
+				child[room][t1]=child[room][t2];
+				child[room][t2]=temp;
+				System.out.println("Mutattion: " + i + " for Room " + room+ " from Time " + t1 + " to "+ t2);
+			}
+		}
+	}
+	private int findModuleOccupiedTimeInRoom(int room, int [][]child){
+		for(int i=0;i<this.timeslots;i++){
+			if(child[room][i]!=0)
+				return i;
+		}
+		return -1;
+	}
+	//Mutate by swapping modules between rooms of the same type
+	private void  mutateChromosomeByRoom(int [][] child){
+		
+		int probability = (int)(this.timeslots*0.25);
+		int temp=0;
+		for(int i=0;i<=probability;i++){
+			int rm1 = this.generateRandomInteger(rooms.length-1);
+			int rm2= this.generateRandomInteger(rooms.length-1);
+			if(rm1 != rm2 &&  read.getRoomType(rm1).equals(read.getRoomType(rm2))){
+				for(int j=0;j <this.timeslots;j++){
+					temp=child[rm1][j];
+					child[rm1][j] = child[rm2][j];
+					child[rm2][j] = temp;
+					
+				}
+				
+			}
+		}
 	}
 	private int generateRandomInteger(int maxNumber){
 		
