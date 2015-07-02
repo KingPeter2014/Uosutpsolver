@@ -89,7 +89,7 @@ body{
 }
 .error{
 	color: red;
-	background: black;
+	background: #aaa;
 }
 .special{
 	background:  #aaa url(../images/gradient.png) repeat-x 0 -110px;

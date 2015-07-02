@@ -1,7 +1,9 @@
 package utpsolver;
 
+import java.util.Random;
+
 public class Crossover {
-	private double crossover_probability=0.5,startpoint=0.5,endpoint=0.75;
+	private double crossover_probability=0.5,startpoint=0.25,endpoint=0.5;
 	private int startCrossoverPoint=0,stopCrossoverPoint=0;
 	private int [][] parent1,parent2,child1,child2;
 	private int [] rooms,modules;
@@ -14,7 +16,9 @@ public class Crossover {
 		this.chromosomes = chromosomes;
 		this.p1=p1;
 		this.p2=p2;
+		this.startpoint = this.generateRandomInteger(5) *0.1;
 		this.startCrossoverPoint = (int)(timeslots * startpoint);
+		this.endpoint = this.startpoint + this.crossover_probability;
 		this.stopCrossoverPoint = (int)(timeslots * endpoint);
 		parent1 = new int[rooms.length][timeslots];
 		parent2 = new int[rooms.length][timeslots];
@@ -242,17 +246,17 @@ public class Crossover {
 	private void createChildTwo(){
 		//Start by copying segment 25th percentile to 75th percentile to child2 from parent1
 		for(int i=0;i < this.rooms.length;i++){
-			for(int j=this.startCrossoverPoint;j< this.timeslots;j++ ){
+			for(int j=this.startCrossoverPoint;j< this.stopCrossoverPoint;j++ ){
 				child2[i][j]= parent2[i][j];
 				}
 		}
 		// Next copy the uncopied elements from chosen segment of parent1 into corresponding positions in child2
 		
 				for(int i=0;i < this.rooms.length;i++){
-					for(int j=this.startCrossoverPoint;j< this.timeslots;j++ ){
+					for(int j=this.startCrossoverPoint;j< this.stopCrossoverPoint;j++ ){
 						//check if each element in corresponding segment cell in parent1 has been copied
 						if(parent1[i][j] !=0){
-							boolean isNotCopied = this.elementNotCopied(1, parent1[i][j],this.startCrossoverPoint,this.timeslots);
+							boolean isNotCopied = this.elementNotCopied(1, parent1[i][j],this.startCrossoverPoint,this.stopCrossoverPoint);
 							if(isNotCopied){
 								//Check if the corresponding position in child two is free
 								boolean isOccupied = this.correspondingPositionIsOccupied(2, i, j);
@@ -361,6 +365,17 @@ public class Crossover {
 			
 		}
 		return c;
+	}
+	private int generateRandomInteger(int maxNumber){
+		
+		// nextInt is normally exclusive of the top value,
+	    // so add 1 to make it inclusive
+	    //int randomNum = rand.nextInt((max - min) + 1) + min;
+
+		int rand=0;
+		 Random rn= new Random();
+		 rand = rn.nextInt((maxNumber)  + 1) ;
+		return rand;
 	}
 	
 }

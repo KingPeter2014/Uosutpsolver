@@ -52,9 +52,9 @@ public class Fitness{
 		long st=0;
 		for(int a=0; a<numChromosome;a++){
 			st = System.currentTimeMillis();
-			System.out.println("Evaluating the fitness of entire population....,Chromo:" + (a+1));
+			//System.out.println("Evaluating the fitness of entire population....,Chromo:" + (a+1));
 			fitnessValues[a] = computeOverallFitnessForAChromosome(a);
-			System.out.println("Evaluation of chromosome " + (a+1) + " took: " + (System.currentTimeMillis() - st)/1000 + "Secs to execute");			
+			//System.out.println("Evaluation of chromosome " + (a+1) + " took: " + (System.currentTimeMillis() - st)/1000 + "Secs to execute");			
 		}
 		fitnessValues = this.sortFitnessDescending(fitnessValues);
 		return fitnessValues;
@@ -74,7 +74,11 @@ public class Fitness{
 	public int getOverallRewardsOnHardConstraints(int chromosome){
 		int hsFitness=0;
 		int h8 = this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
+		if(h8 > this.maxH8)
+			h8=maxH8;
 		int h7 =  this.computeClassHeldInCorrectRoomSizeFitness(chromosome);
+		if(h7 > this.maxH7)
+			h8=maxH7;
 		int h3= this.computeMultipleScheduleForACohort(chromosome);
 		int h2 = this.computeMultipleScheduleForALecturerAtSameTime(chromosome);
 		int h4 = this.computePartimeLecturerAvailablityScheduling(chromosome);
