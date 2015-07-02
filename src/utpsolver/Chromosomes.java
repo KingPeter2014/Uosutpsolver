@@ -11,12 +11,13 @@ import utpsolver.Fitness;
  */
 public class Chromosomes {
 	public  int numChromosomes = 100, fitness=0;
-	public double hardWeight =100,softWeight=20;
+	public static int hardWeight =100,softWeight=20;
 	public  int[][][] chromosomes = null,bestChromosome,worstChromosome;
 	public static int timeslot = 40,roomCount=0,moduleCount=0,lecturerCount=0;
 	private String roomType="",overallTimetable="";
 	public int [] rooms,modules,cohorts;
 	String [] moduleTypes, roomTypes;
+	public int status=1;
 	private int freeChromosome=0,freeRoom=-1,freeTimeslot=-1;
 	private boolean consecutiveFreeGeneFound=false;
 	ReadInputs read = new ReadInputs();
@@ -29,6 +30,11 @@ public class Chromosomes {
 		lecturerCount=read.getLecturerCount();
 		rooms= read.getRoomIds();
 		modules = read.getModuleIds();
+		if(modules.length==0){
+			System.out.println("No module to schedule");
+			status=0;
+			return;
+		}
 		cohorts = read.getCohortIds();
 		roomCount= rooms.length;
 		moduleCount=modules.length;
@@ -38,8 +44,8 @@ public class Chromosomes {
 		this.bestChromosome = new int[1][roomCount][timeslot];
 		this.worstChromosome = new int[1][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
-		this.initializePopulation();
-		//initializePopulationWithElitism();
+		//this.initializePopulation();
+		initializePopulationWithElitism();
 		fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules,moduleTypes,roomTypes);
 		
 	}
@@ -150,29 +156,7 @@ public class Chromosomes {
 		this.consecutiveFreeGeneFound=false;
 		
 	}
-	private void handleRandomTwoHourModulesScheduling(int chromosome,int module,int startTime,String moduleType){
-		if(moduleType.equals("lab"))
-			this.findConsecutiveFreeLabRoomsFromStartTime(chromosome, startTime);
-		else
-			this.findConsecutiveFreeLectureRoomsFromStartTime(chromosome, startTime);
-		if(this.consecutiveFreeGeneFound){
-			this.insertGene(chromosome, freeRoom, freeTimeslot, module);
-			this.insertGene(chromosome, freeRoom, freeTimeslot+1, module);
-			this.consecutiveFreeGeneFound=false;
-		}
-		
-	}
-	//Schedule two hour lecture or lab for general purposes
-	private void handleTwoHourModulesScheduling(int chromosome,int module,int startTime,String moduleType){
-		if(moduleType.equals("lab"))
-			this.findConsecutiveFreeLabRoom(chromosome);
-		else
-			this.findConsecutiveFreeLectureRooms(chromosome,module);
-		this.insertGene(chromosome, freeRoom, freeTimeslot, module);
-		this.insertGene(chromosome, freeRoom, freeTimeslot+1, module);
-		this.consecutiveFreeGeneFound=false;
-			
-		}
+	
 	//Schedule two hour lecture or lab for general purposes
 	private void handleTwoHourUnclashingCohortModulesScheduling(int chromosome,int module,String moduleType, int cohort,int level){
 		boolean isOccupied1 = this.isMultipleScheduleForACohort(chromosome, freeTimeslot, cohort, level);
@@ -233,6 +217,8 @@ public class Chromosomes {
 						modulehours = read.getLectureHoursPerWeek(modules[d],"lecture");
 						this.findFreeLectureRoom(i);
 					}
+					if(cohortsAssignedTo.length==0)
+						continue;
 					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
 					boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(i, this.freeTimeslot, cohortsAssignedTo[0], level);
 					boolean isMultiple = this.isMultipleScheduleForACohort(i, this.freeTimeslot, cohortsAssignedTo[0], level);
@@ -275,6 +261,8 @@ public class Chromosomes {
 					isLastHour = this.isLastDayTimeSlot(time);
 					isOccupied = this.isOccupied(i, rm-1, time-1);
 					cohortsAssignedTo = read.getModuleCohort(this.modules[d]);
+					if(cohortsAssignedTo.length==0)
+						continue;
 					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
 					isMultiple = this.isMultipleScheduleForACohort(i, time-1, cohortsAssignedTo[0], level);
 					boolean isCorrectRoomSize = this.roomSizeMatchedModuleSize(modules[d], rm-1);
@@ -354,6 +342,8 @@ public class Chromosomes {
 			boolean isMultiple=false;
 			int [] startTimes = read.getStartTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
 			int [] endTimes = read.getEndTimeGenesForPartTimeLecturers(partTimeLecturers[i]);
+			if(startTimes.length==0)
+				continue;
 			for(int n=0; n<numChromosomes;n++){
 				for(int j=0;j<lecturerModules.length;j++){
 					//Check if current module has been allocated in chromosome
@@ -419,7 +409,8 @@ public class Chromosomes {
 				if(!this.isScheduled(i, this.modules[d])){
 					cohortsAssignedTo = read.getModuleCohort(this.modules[d]);
 					moduleType= this.getModuleType(d);
-					
+					if(cohortsAssignedTo.length==0)
+						continue;//This module has not been assigned to a cohort
 					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
 					if(moduleType.equals("lab")){
 						modulehours = read.getLabHoursPerWeek(modules[d]);

@@ -57,6 +57,10 @@ public class RunGA extends HttpServlet {
 		out.println(message);
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
 		cr = new Chromosomes();
+		if(cr.status==0){
+			out.println("No moddule to Schedule or an error occured");
+			return;
+		}
 		this.maxreward = cr.getMaxFitnessReward();
 		this.maxHard=cr.getMaxHardConstraintReward();
 		this.maxSoft = cr.getMaxSoftConstraintReward();

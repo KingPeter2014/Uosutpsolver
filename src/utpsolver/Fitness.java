@@ -76,14 +76,29 @@ public class Fitness{
 		int h8 = this.computeClassHeldInCorrectRoomTypeFitness(chromosome);
 		if(h8 > this.maxH8)
 			h8=maxH8;
+		if(this.maxH8 !=0)
+			h8=(h8*100)/this.maxH8;
+		
 		int h7 =  this.computeClassHeldInCorrectRoomSizeFitness(chromosome);
 		if(h7 > this.maxH7)
-			h8=maxH7;
+			h7=maxH7;
+		if(this.maxH7 !=0)
+			h7=(h7*100)/this.maxH7;
 		int h3= this.computeMultipleScheduleForACohort(chromosome);
+		if(this.maxH3 !=0)
+			h3 = (h3*100)/this.maxH3;
 		int h2 = this.computeMultipleScheduleForALecturerAtSameTime(chromosome);
+		if(this.maxH2 !=0)
+			h2 = (h2*100)/this.maxH2;
 		int h4 = this.computePartimeLecturerAvailablityScheduling(chromosome);
+		if(this.maxH4 !=0)
+			h4 = (h4*100)/this.maxH4;
 		int h6 = this.computeSpecialModuleConstraintViolation(chromosome);
+		if(this.maxH6 !=0)
+			h6 = (h6*100)/this.maxH6;
 		int h5 = this.computeToVerifyAllModulesWereScheduled(chromosome);
+		if(this.maxH5 !=0)
+			h5 = (h5*100)/this.maxH5;
 		hsFitness = h2 + h3 + h4 + h5+ h6 + h7+h8;
 		this.hardFitnesses[chromosome] = hsFitness;
 		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + h2 + " out of " + Fitness.maxH2;
@@ -112,13 +127,11 @@ public class Fitness{
 		this.maxS9 = this.getMaxS9Reward();
 		this.maxS10 = this.getMaxS10Reward();
 		this.maxSoft = this.getMaximumPossibleSoftConstraintFitnessValue();
-		this.maxHard = this.getMaximumPossibleHardConstraintFitnessValue();
+		//this.maxHard = this.getMaximumPossibleHardConstraintFitnessValue();
+		this.maxHard = this.getMaximumHardConstraintNormalised();
 		this.maxReward = this.maxPossibleFitnessValue();
 	}
-	// Get Moduletype locally
-	private String getModuleType(int moduleIndex){
-		return moduleTypes[moduleIndex];
-	}
+	
 	//Get the indices for the chromosomes arranged in descending order of fitness
 	public int [] getSortedChromosomeIndices(){
 		return this.chromosomeIndices;
@@ -144,7 +157,8 @@ public class Fitness{
 	//Compute maximum fitness possible for a chromosome
 	public int maxPossibleFitnessValue(){
 		int maxFitnessValue=0;
-		maxFitnessValue = this.getMaximumPossibleHardConstraintFitnessValue() ;
+		//maxFitnessValue = this.getMaximumPossibleHardConstraintFitnessValue() ;
+		maxFitnessValue = this.getMaximumHardConstraintNormalised();
 		maxFitnessValue += this.getMaximumPossibleSoftConstraintFitnessValue();
 		return maxFitnessValue;
 		
@@ -152,9 +166,29 @@ public class Fitness{
 	//Compute maximum fitness value possible for all hard constraints
 	public int getMaximumPossibleHardConstraintFitnessValue(){
 		int maxFitnessValue=0;
-		maxFitnessValue = this.getMaxH2Reward()+ this.getMaxH3Reward() + this.getMaxH4Reward() + this.getMaxH5Reward() ;
-		maxFitnessValue += this.getMaxH6Reward() + this.getMaxH7Reward() + this.getMaxH7Reward();
+		maxFitnessValue = this.maxH2+ this.maxH3+ this.maxH4 + this.maxH5 ;
+		maxFitnessValue += this.maxH6 + this.maxH7 + this.maxH8;
 		return maxFitnessValue;	
+	}
+	//normalise hard constraint maximum to 100%
+	public int getMaximumHardConstraintNormalised(){
+		int normalised=0;
+		if(this.maxH2!=0)
+			normalised += Chromosomes.hardWeight;
+		if(this.maxH3!=0)
+			normalised += Chromosomes.hardWeight;
+		if(this.maxH4!=0)
+			normalised += Chromosomes.hardWeight;
+		if(this.maxH5!=0)
+			normalised += Chromosomes.hardWeight;
+		if(this.maxH6!=0)
+			normalised += Chromosomes.hardWeight;
+		if(this.maxH7!=0)
+			normalised += Chromosomes.hardWeight;
+		if(this.maxH8!=0)
+			normalised += Chromosomes.hardWeight;
+		return normalised;
+		
 	}
 	//Compute the maximum fitness value possible for all soft constraints
 	public int getMaximumPossibleSoftConstraintFitnessValue(){

@@ -374,7 +374,7 @@ public class Crossover {
 	}
 	//Mutation by swaping modules in a given room between two timeslots
 	private void mutateChromosomeByTime(int[][] child){
-		int probability = (int)(rooms.length*0.25);
+		int probability = (int)(rooms.length*0.1);
 		int room=0,t1=-1,t2=0;
 		for(int i=0;i<=probability;i++){
 			 room = this.generateRandomInteger(rooms.length-1);
@@ -384,7 +384,7 @@ public class Crossover {
 				int temp = child[room][t1];
 				child[room][t1]=child[room][t2];
 				child[room][t2]=temp;
-				System.out.println("Mutattion: " + i + " for Room " + room+ " from Time " + t1 + " to "+ t2);
+				//System.out.println("Mutattion: " + i + " for Room " + room+ " from Time " + t1 + " to "+ t2);
 			}
 		}
 	}
@@ -398,7 +398,7 @@ public class Crossover {
 	//Mutate by swapping modules between rooms of the same type
 	private void  mutateChromosomeByRoom(int [][] child){
 		
-		int probability = (int)(this.timeslots*0.25);
+		int probability = (int)(this.timeslots*0.1);
 		int temp=0;
 		for(int i=0;i<=probability;i++){
 			int rm1 = this.generateRandomInteger(rooms.length-1);
@@ -408,6 +408,7 @@ public class Crossover {
 					temp=child[rm1][j];
 					child[rm1][j] = child[rm2][j];
 					child[rm2][j] = temp;
+					//System.out.println("Event in room " + rm1 + " Now swapped with events in " + rm2);
 					
 				}
 				
