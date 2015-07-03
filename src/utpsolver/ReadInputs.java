@@ -1736,8 +1736,59 @@ public class ReadInputs {
 				dailySchedule +="</tr>";
 				break;
 			case 2: //Tuesday Timeslots 9-16
+				this.dailySchedule="<tr><td><b>TUE</b></td>";
+				for(int b=8;b <16;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
+						}					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
 				break;
-		}
+			case 3: //Wednesday Timeslots 17-24
+				this.dailySchedule="<tr><td><b>WED</b></td>";
+				for(int b=16;b <24;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
+						}	
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;
+			case 4: //Thursdays Timeslots 25 - 32
+				this.dailySchedule="<tr><td><b>THUR</b></td>";
+				for(int b=24;b <32;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
+						}	
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;
+			case 5://Friday Timeslots 33-40
+				this.dailySchedule="<tr><td><b>FRI</b></td>";
+				for(int b=32;b <40;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
+						}	
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				
+				break;		}
 		return this.dailySchedule;
 	}
 	//Return the title of a cohort
