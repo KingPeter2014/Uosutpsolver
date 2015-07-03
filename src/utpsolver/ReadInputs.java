@@ -3,10 +3,7 @@ package utpsolver;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.*;
-
-//import com.mysql.fabric.Response;
 
 import utpsolver.DBConnection;
 public class ReadInputs {
@@ -18,7 +15,9 @@ public class ReadInputs {
 	private List<Integer> moduleAllocationids=new ArrayList<Integer>();
 	private List<Integer> lecturerAllocationids=new ArrayList<Integer>();
 	private String dailySchedule="";
-	
+	private String timeTableHeader = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
+			"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
+			"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>";
 	int[] idsArray,lecturerIds ;
 	String message="",roomName,roomType="",rooms="",moduleType="",cohorts="",modules="",
 			lecturers="",courseallocations="";
@@ -1718,5 +1717,56 @@ public class ReadInputs {
 			
 		}
 		return this.dailySchedule;
+	}
+	//Returns all lecture schedules for a particular day for a cohort and level
+	public String getDailyCohortSchedule(int day, int cohort, int level,int[][][] population, int chromosome, int[] rooms, int[] modules){
+		this.dailySchedule="";
+		switch(day){
+			case 1: //Monday Timeslots 1-8
+				this.dailySchedule="<tr><td><b>MON</b></td>";
+				for(int b=0;b <8;b++){
+					this.dailySchedule+= "<td>";
+					for(int a=0;a <rooms.length;a++){
+						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
+							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
+						}
+					}
+					this.dailySchedule+= "</td>";
+				}
+				dailySchedule +="</tr>";
+				break;
+			case 2: //Tuesday Timeslots 9-16
+				break;
+		}
+		return this.dailySchedule;
+	}
+	//Return the title of a cohort
+	public String getCohortTitle(int cohortid){
+		String title="";
+		rst = db.executeQuery("SELECT cohortname FROM cohorts WHERE id=" + cohortid);
+		try {
+				if(rst.first())	
+					title=rst.getString("cohortname");
+			
+			
+			}
+			catch (SQLException e) {
+				
+				e.printStackTrace();
+				message+=e.getMessage();
+			}
+			finally{
+				db.closeConnection();
+			}
+		return title;
+	}
+	//Returns all lecture schedules for a particular day for a particular cohort and level
+	public String getCohortScheduleByLevel(int cohort,int level, int[][][] population, int chromosome){
+		int [] roomids = this.getRoomIds(), moduleids = this.getModuleIds();
+		String cohortDailySchedule=this.timeTableHeader;
+		for(int a = 1;a<=5;a++)
+			cohortDailySchedule += this.getDailyCohortSchedule(a, cohort, level, population, chromosome,roomids,moduleids);
+		cohortDailySchedule += "</table>";
+		return cohortDailySchedule;
 	}
 }

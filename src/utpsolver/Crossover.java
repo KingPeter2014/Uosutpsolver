@@ -33,9 +33,9 @@ public class Crossover {
 		this.createChildOne();
 		this.createChildTwo();
 		this.mutateChromosomeByTime(child1);
-		this.mutateChromosomeByTime(child2);
-		this.mutateChromosomeByRoom(child1);
-		this.mutateChromosomeByRoom(child2);
+		//this.mutateChromosomeByTime(child2);
+		//this.mutateChromosomeByRoom(child1);
+		//this.mutateChromosomeByRoom(child2);
 		
 		
 		
@@ -379,11 +379,12 @@ public class Crossover {
 		for(int i=0;i<=probability;i++){
 			 room = this.generateRandomInteger(rooms.length-1);
 			 t1 = this.findModuleOccupiedTimeInRoom(room, child);
+			 int rm2=this.generateRandomInteger(rooms.length-1);
 			 t2 = this.generateRandomInteger(this.timeslots-1);
 			if(t1!=-1 && t1 !=t2){
 				int temp = child[room][t1];
-				child[room][t1]=child[room][t2];
-				child[room][t2]=temp;
+				child[room][t1]=child[rm2][t2];
+				child[rm2][t2]=temp;
 				//System.out.println("Mutattion: " + i + " for Room " + room+ " from Time " + t1 + " to "+ t2);
 			}
 		}

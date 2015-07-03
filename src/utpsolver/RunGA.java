@@ -85,8 +85,9 @@ public class RunGA extends HttpServlet {
 			//Get overall fitness of best child after crossover
 			int overallFitnessOfBestChild = this.overallFitness[this.betterChild-1];
 			out.println("<br/>Best Chromosome fitness : " + cr.getOverallFintnessValue(this.bestChromosome) +", BestChild Fitness: " + overallFitnessOfBestChild + " in generation:" + this.currentGeneration);
-			
-			if(overallFitnessOfBestChild > allFitness[this.worstChromosome] && this.hardFitness[this.betterChild-1] >=hardFitness){
+			//if(overallFitnessOfBestChild > allFitness[this.worstChromosome] && this.hardFitness[this.betterChild-1] >=hardFitness){
+				//cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
+			if(overallFitnessOfBestChild > allFitness[this.worstChromosome]){
 				cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
 				
 				// Evaluate Entire chromosome only after replacement
@@ -110,6 +111,7 @@ public class RunGA extends HttpServlet {
 		//out.println("<hr/>After evaluating children: <br/>" +cr.getCurrentFitnessMessage());
 		
 		//out.println("<br/>" + child1);
+		out.println(cr.displayCohortTimetables(this.bestChromosome));
 		long a = cr.startTime/1000;
 		long b = System.currentTimeMillis()/1000;
 		long runningTime = b-a;

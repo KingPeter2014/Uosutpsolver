@@ -44,8 +44,8 @@ public class Chromosomes {
 		this.bestChromosome = new int[1][roomCount][timeslot];
 		this.worstChromosome = new int[1][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
-		//this.initializePopulation();
-		initializePopulationWithElitism();
+		this.initializePopulation();
+		//initializePopulationWithElitism();
 		fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules,moduleTypes,roomTypes);
 		
 	}
@@ -202,7 +202,7 @@ public class Chromosomes {
 		String moduleType="";
 		boolean inserted=false;
 		int [] cohortsAssignedTo = null;
-		int cohortCount = cohorts.length;
+		
 		for(int i=0;i<this.numChromosomes;i++){
 			for(int d=0; d < moduleCount; d++){
 				if(!this.isScheduled(i, this.modules[d])){
@@ -903,6 +903,25 @@ public class Chromosomes {
 		
 		return overallTimetable;
 		
+	}
+	//Display Timetable for all cohorts and levels
+	public String displayCohortTimetables(int chromosome){
+		int numyears=0,startingLevel=0,modulehours=0;
+		String moduleType="",timetableOwner="";
+		String cohortTimetables="";
+		boolean inserted=false;
+		int [] cohortsAssignedTo = null;
+		for(int i=0;i<cohorts.length;i++){
+			startingLevel = read.getCohortStartingLevel(cohorts[i]);
+			String cohortname =  read.getCohortTitle(cohorts[i]);
+			numyears = read.getNumberOfYearsToGraduate(cohorts[i]);
+			for(int j=startingLevel;j<(startingLevel + numyears);j++){
+				timetableOwner=	"<br/><b>TIMETABLE FOR: "	+ cohortname + ", Level " + j + "</b><br/><hr/>";		
+				cohortTimetables += timetableOwner + read.getCohortScheduleByLevel(cohorts[i], j, chromosomes, chromosome);
+			}
+			
+		}
+		return cohortTimetables;
 	}
 	//Checks if an event has been scheduled more than once for a Cohort at a given level of level of study
 		public boolean isMultipleScheduleForACohort(int chromosome, int timeslot,int cohort,int level){
