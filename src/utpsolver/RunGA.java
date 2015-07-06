@@ -34,7 +34,7 @@ public class RunGA extends HttpServlet {
 	//The maximum number of rooms, modules, cohort and lecturers respectively
 	private int roomCount =0, moduleCount=0,cohortCount=0,lecturerCount=0;
 	int[] allFitness,sortedIndices;
-	private int currentGeneration=0, MaximumGeneration = 100;
+	private int currentGeneration=0, MaximumGeneration = 500;
 	private int maxreward=0,maxHard=0,maxSoft=0;
 	private String message="";
 	Chromosomes cr = null;
@@ -135,13 +135,17 @@ public class RunGA extends HttpServlet {
 	}
 	public void doCrossover(){
 		 children = new int[2][cr.roomCount][cr.timeslot];
-		 int parent1 = this.generateRandomInteger(cr.numChromosomes-1);
-		 int parent2 = this.generateRandomInteger(cr.numChromosomes-cr.numChromosomes/2);
-		 this.parent1=parent1;this.parent2=parent2;
+		 int p1 = this.generateRandomInteger(cr.numChromosomes-1);
+		 int p2 = this.generateRandomInteger(cr.numChromosomes-cr.numChromosomes/2);
+		 this.parent1 = this.doTournamentSelection(p1, p2);
+		 p1 = this.generateRandomInteger(cr.numChromosomes-1);
+		 p2 = this.generateRandomInteger(cr.numChromosomes-cr.numChromosomes/2);
+		 this.parent2 = this.doTournamentSelection(p1, p2);
+		 //Call Crossover and mutation operators
 		 cover = new Crossover(parent1,parent2,cr.chromosomes,cr.numChromosomes,cr.timeslot,cr.rooms,cr.modules,cr.moduleTypes,cr.roomTypes);
-		children[0]= cover.getFirstChild();
-		children[1]= cover.getSecondChild();
-		cr.evaluateChildren(children);
+		 children[0]= cover.getFirstChild();
+		 children[1]= cover.getSecondChild();
+		 cr.evaluateChildren(children);
 		
 	}
 	public void displayGeneralTimetable(int chromosome){
@@ -202,6 +206,15 @@ private int generateRandomInteger(int maxNumber){
 	 Random rn= new Random();
 	 rand = rn.nextInt((maxNumber)  + 1) ;
 	return rand;
+}
+//Tournament Selection of Parents for crossing
+private int doTournamentSelection(int p1,int p2){
+	double random = Math.random();
+	if(this.allFitness[p1]>this.allFitness[p2] && random <=0.7)
+		return this.sortedIndices[p1];
+	else
+		return this.sortedIndices[p2];
+		
 }
 
 

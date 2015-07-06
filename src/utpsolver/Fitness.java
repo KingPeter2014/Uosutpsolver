@@ -101,15 +101,15 @@ public class Fitness{
 			h5 = (h5*100)/this.maxH5;
 		hsFitness = h2 + h3 + h4 + h5+ h6 + h7+h8;
 		this.hardFitnesses[chromosome] = hsFitness;
-		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + h2 + " out of " + Fitness.maxH2;
-		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + h3+ " out of " + Fitness.maxH3;
-		message+= "<br/> H4:Part-time Lecturer availability observed:" + h4 + " out of " + Fitness.maxH4;
-		message += "<br/> H5:All modules Scheduled:" + h5 + " out of " + Fitness.maxH5;
-		message += "<br/> H6:Special Module correctly allocated to preffered room and time:" + h6 + " out of " + Fitness.maxH6;
-		message += "<br/> H7:Classes held in correct room size:" + h7+ " out of " + Fitness.maxH7;
-		message += "<br/>H8: Classes held in correct room type: " + h8 + " out of " + Fitness.maxH8;
+		message  += "<br/>H2:Non-Multiple Scheduling for Lecturer: " + h2 + "% (of " + Fitness.maxH2 + " instances)";
+		message += "<br/>H3:Non-Multiple Scheduling for Cohort:" + h3+ "% (of " + Fitness.maxH3 + " instances)";
+		message+= "<br/> H4:Part-time Lecturer availability observed:" + h4 + " out of (" + Fitness.maxH4+ " instances)";
+		message += "<br/> H5:All modules Scheduled:" + h5 + "%  (of " + Fitness.maxH5+ " instances)";
+		message += "<br/> H6:Special Module correctly allocated to preffered room and time:" + h6 + "% (of " + Fitness.maxH6+ " instances)";
+		message += "<br/> H7:Classes held in correct room size:" + h7+ "% (of " + Fitness.maxH7 + " instances)";
+		message += "<br/>H8: Classes held in correct room type: " + h8 + "% (of " + Fitness.maxH8+ " instances)";
 		if(hsFitness == Fitness.maxHard)
-			message += "<br/><span class=\"success\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + " out of " + Fitness.maxHard + "</span>";
+			message += "<br/><span class=\"success\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + "% out of " + Fitness.maxHard + " %</span>";
 		else
 			message += "<br/><span class=\"error\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + " out of " + Fitness.maxHard + "</span>";
 			

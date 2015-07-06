@@ -44,8 +44,8 @@ public class Chromosomes {
 		this.bestChromosome = new int[1][roomCount][timeslot];
 		this.worstChromosome = new int[1][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
-		this.initializePopulation();
-		//initializePopulationWithElitism();
+		//this.nonConstructivePopulationInitialisation();
+		this.constructivePopulationInitialisation();
 		fit = new Fitness(chromosomes,numChromosomes,roomCount,timeslot,rooms,modules,moduleTypes,roomTypes);
 		
 	}
@@ -58,7 +58,7 @@ public class Chromosomes {
 		moduleCount=modules.length;
 		chromosomes = new int[numChromosomes][roomCount][timeslot];
 		this.initialAllChromosomesToZero();
-		this.initializePopulationWithElitism();
+		this.constructivePopulationInitialisation();
 		
 		
 	}
@@ -67,7 +67,7 @@ public class Chromosomes {
 	 * has satisfied most or all of the hard constraints
 	 * Use randomization to allocate remaining events that has no special requirements
 	 */
-	private void initializePopulation(){
+	private void nonConstructivePopulationInitialisation(){
 		int time=0,rm=0;
 		boolean isLastHour=false, isOccupied=true,inserted=false;
 		String moduleType="";
@@ -180,7 +180,7 @@ public class Chromosomes {
 
 			}
 
-	private void initializePopulationWithElitism(){
+	private void constructivePopulationInitialisation(){
 		
 		//Schedule special modules first to satisfy special room and time constraints (H6)
 		this.scheduleSpecialModules();

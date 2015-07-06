@@ -7,7 +7,7 @@ public class Crossover {
 	private int startCrossoverPoint=0,stopCrossoverPoint=0;
 	private int [][] parent1,parent2,child1,child2;
 	private int [] rooms,modules;
-	int fosterRoom=0,fosterTime=0;
+	int fosterRoom=0,fosterTime=0,foundroom=-1;
 	private int timeslots=0,p1,p2; //p1 and p2 are the chromosome indices of selected parents for crossover
 	private int [][][] chromosomes;
 	ReadInputs read = new ReadInputs();
@@ -33,7 +33,7 @@ public class Crossover {
 		this.createChildOne();
 		this.createChildTwo();
 		this.mutateChromosomeByTime(child1);
-		//this.mutateChromosomeByTime(child2);
+		this.mutateChromosomeByTime(child2);
 		//this.mutateChromosomeByRoom(child1);
 		//this.mutateChromosomeByRoom(child2);
 		
@@ -391,8 +391,10 @@ public class Crossover {
 	}
 	private int findModuleOccupiedTimeInRoom(int room, int [][]child){
 		for(int i=0;i<this.timeslots;i++){
-			if(child[room][i]!=0)
+			if(child[room][i]!=0){
+				
 				return i;
+			}
 		}
 		return -1;
 	}
