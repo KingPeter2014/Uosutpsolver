@@ -37,7 +37,7 @@ public class RunGA extends HttpServlet {
 	private int currentGeneration=0, MaximumGeneration = 500;
 	private int maxreward=0,maxHard=0,maxSoft=0;
 	private String message="";
-	Chromosomes cr = null;
+	private Chromosomes cr = null;
 	PrintWriter out;
 	
 	private List<String> cohortTimetable,lecturerTimetable,roomTimetable;
