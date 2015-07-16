@@ -71,9 +71,10 @@
 	</legend> 
 	
 	<form action="/utpsolver/RunGA" method="post">
-		<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
+	<!--  	<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
 		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
-		<input type="Submit" value="Generate Timetable" name="runGA">
+		-->
+		<input type="Submit" value="Generate Timetable" name="runGA" id="runGA">
 	</form>
 	
 	</fieldset>

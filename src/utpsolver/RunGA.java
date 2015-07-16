@@ -53,7 +53,16 @@ public class RunGA extends HttpServlet {
 		// Prepare HTML page for output
 		res.setContentType("text/html");
 		out = res.getWriter();
-		message = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
+		message = "<html><head>" + 
+				"<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>" 
+				+"<script>"+
+				"$(document).ready(function(){"+
+				    "$(\"#best\").click(function(){"+
+				        "$(\"#statistics\").toggle(\"slow\");" +       
+				   "});"+
+				"});</script>"
+			
+				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
 		out.println(message);
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
 		cr = new Chromosomes();
@@ -74,7 +83,7 @@ public class RunGA extends HttpServlet {
 			//If overall fitness of best chromosome is same as maximum fitness discontinue generations
 			
 			if(allFitness[this.bestChromosome] >=this.maxreward){
-				out.println("Jumping out of loop");
+				out.println("Jumping out of loop,Optimunm solution reached");
 				break;
 			}
 			this.currentGeneration = i;
@@ -84,40 +93,58 @@ public class RunGA extends HttpServlet {
 			int hardFitness = cr.getOverallHardConstraintRewards(this.worstChromosome);
 			//Get overall fitness of best child after crossover
 			int overallFitnessOfBestChild = this.overallFitness[this.betterChild-1];
-			out.println("<br/>Best Chromosome fitness : " + cr.getOverallFintnessValue(this.bestChromosome) +", BestChild Fitness: " + overallFitnessOfBestChild + " in generation:" + this.currentGeneration);
+			//out.println("<br/>Best Chromosome fitness : " + cr.getOverallFintnessValue(this.bestChromosome) +", BestChild Fitness: " + overallFitnessOfBestChild + " in generation:" + this.currentGeneration);
 			//if(overallFitnessOfBestChild > allFitness[this.worstChromosome] && this.hardFitness[this.betterChild-1] >=hardFitness){
 				//cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
 			if(overallFitnessOfBestChild > allFitness[this.worstChromosome]){
 				cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
-				
+				long start = System.currentTimeMillis();
 				// Evaluate Entire chromosome only after replacement
 				allFitness = cr.evaluatePopulationFitness();
+				long end = System.currentTimeMillis();
+				long evalTime=end-start;
+				//out.println("Evaluation time for population in Generation" + i + " is " + evalTime + " millisecond(s).<br/>");
 				sortedIndices = cr.getSortedChromosomeIndices();
 				this.bestChromosome = sortedIndices[0];
 				this.worstChromosome = sortedIndices[cr.numChromosomes-1];
 			}
 			
 		}
-		String test = "<br/><button id=\"best\"><b>Click to Display/Hide the Fitness of Best Chromosome</button><hr/>" + cr.getFitnessOnAContraint(this.bestChromosome);
+		String test = "<br/><button id=\"best\"><b>Click to Display/Hide the Fitness of Best Chromosome</button><hr/><div id=\"statistics\">" + cr.getFitnessOnAContraint(this.bestChromosome) + "</div>";
 		out.println(test);
 		String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
 				"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
 				"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
 				+ cr.displayGeneratedTimetable(this.bestChromosome) + "</table>";
-				out.println("<br/>" + test1);
+				out.println("<br/>" + test1); 
 		//this.disPlayChromosome(this.bestChromosome);
 		//this.disPlayChromosome(parent2);
 		//String child1 = cover.printChildren();
 		//out.println("<hr/>After evaluating children: <br/>" +cr.getCurrentFitnessMessage());
 		
 		//out.println("<br/>" + child1);
+		int feasible = this.countFeasibleSolutions();
 		out.println(cr.displayCohortTimetables(this.bestChromosome));
 		long a = cr.startTime/1000;
 		long b = System.currentTimeMillis()/1000;
 		long runningTime = b-a;
-		out.println("<b><h2>It took approximately "+ runningTime + " seconds to run this GA</h2></b>");
+		long initendTime = cr.initEnd;
+		long initTime = initendTime - cr.startTime;
+		out.println(" <H3>There are " + feasible + " feasible solution(s)</H3><br/>");
+		out.println("<b><h2>Initialisation Time:" +initTime + "millisecond(s),Total run Time:"+ runningTime + " second(s)</h2></b>");
 
 		
+	}
+	private int countFeasibleSolutions(){
+		int feasibleSolutions=0;
+		int [] hard = cr.getHardFitnesses();
+		int numHard = hard.length;
+		int maxHard = cr.getMaxHardConstraintReward();
+		for(int i=0;i<numHard;i++){
+			if(hard[i]>=maxHard)
+				feasibleSolutions +=1;
+		}
+		return feasibleSolutions;
 	}
 	public void disPlayChromosome(int chromosome){
 

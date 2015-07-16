@@ -3,7 +3,7 @@ package utpsolver;
 import java.util.Random;
 
 public class Crossover {
-	private double crossover_probability=0.5,startpoint=0.25,endpoint=0.5;
+	private double crossover_probability=0.7,startpoint=0.25,endpoint=0.5;
 	private int startCrossoverPoint=0,stopCrossoverPoint=0;
 	private int [][] parent1,parent2,child1,child2;
 	private int [] rooms,modules;
@@ -17,7 +17,7 @@ public class Crossover {
 		this.chromosomes = chromosomes;
 		this.p1=p1;
 		this.p2=p2;
-		this.startpoint = this.generateRandomInteger(5) *0.1;
+		this.startpoint = this.generateRandomInteger(3) *0.1;
 		this.startCrossoverPoint = (int)(timeslots * startpoint);
 		this.endpoint = this.startpoint + this.crossover_probability;
 		this.stopCrossoverPoint = (int)(timeslots * endpoint);
@@ -32,8 +32,8 @@ public class Crossover {
 		this.initiaizeOffSpringToZero();
 		this.createChildOne();
 		this.createChildTwo();
-		this.mutateChromosomeByTime(child1);
-		this.mutateChromosomeByTime(child2);
+		//this.mutateChromosomeByTime(child1);
+		//this.mutateChromosomeByTime(child2);
 		//this.mutateChromosomeByRoom(child1);
 		//this.mutateChromosomeByRoom(child2);
 		

@@ -25,6 +25,7 @@ public class Fitness{
 	private int [] specialRooms = read.getRoomsWithSpecialModuleConstraints();
 	private int [] specialModules = read.getModulesWithSpecialConstraints();
 	public static int maxH2=0,maxH3=0,maxH4=0,maxH5=0,maxH6=0,maxH7=0,maxH8=0,maxS9=0,maxS10=0,maxS11=5,maxS12=5,maxSoft=0,maxHard=0,maxReward = 0;
+	public double percentHard=0,percentSoft=0,percentOverall=0;
 	public String message="";
 	String [] moduleTypes, roomTypes;
 	public Fitness(int[][][] chromosomes,int numChromosome,int roomCount,int timeslots,int [] rooms,int[] modules, String[] moduleTypes, String[] roomTypes ){
@@ -68,6 +69,10 @@ public class Fitness{
 		chromosomeFitness =this.getOverallRewardsOnHardConstraints(chromosome);
 		chromosomeFitness += this.getOverallRewardsOnSoftConstraints(chromosome);
 		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome ) + " is: " + chromosomeFitness + " out of " + Fitness.maxReward + "</span>";
+		this.percentOverall = (chromosomeFitness *100.0)/this.maxReward;
+		message += "<br/><h2><b>Statistical Summary</b></h2><hr>Hard Constraint Satisfaction: " + this.percentHard + "%,";
+		message += " Soft Constraint Satisfaction: " + this.percentSoft + "%<br/>";
+		message += "Overall Constraints Satisfaction: " + this.percentOverall + "%<hr/>";
 		return chromosomeFitness;
 	}
 	//Compute total hard constraints Rewards
@@ -112,7 +117,7 @@ public class Fitness{
 			message += "<br/><span class=\"success\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + "% out of " + Fitness.maxHard + " %</span>";
 		else
 			message += "<br/><span class=\"error\">HARD Constraint fitness for Chromosome " + (chromosome ) + " is: " + hsFitness + " out of " + Fitness.maxHard + "</span>";
-			
+		this.percentHard = (hsFitness *100.0)/this.maxHard;
 		return hsFitness;
 	}
 	//Computes all maximum fitnesses immediately the fitness class is instantiated and saves them in static variables
@@ -149,7 +154,8 @@ public class Fitness{
 		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + s10 + " out of " + Fitness.maxS10;
 		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + s11 + " out of 5";
 		message += "<br/> S12: No lecture/Lab during Launch time: " + s12 + " out of 5";
-		message += "<br/><span class=\"success\">SOFT Constraint fitness for Chromosome " + (chromosome ) + " is: " + scFitness + " out of " + Fitness.maxSoft + "</span>";
+		message += "<br/><span class=\"warning\">SOFT Constraint fitness for Chromosome " + (chromosome ) + " is: " + scFitness + " out of " + Fitness.maxSoft + "</span>";
+		this.percentSoft = (scFitness *100.0)/this.maxSoft;
 		return scFitness;
 		
 		
@@ -235,8 +241,11 @@ public class Fitness{
 		int count=0;
 		int [] partTimeLecturers = read.getPartimeLecturerIDs();
 		int partimeLecturersCount = partTimeLecturers.length;
-		if (partimeLecturersCount==0)
+		if (partimeLecturersCount==0){
+			//System.out.println(" No par")
 			return subfitness;//No part time lecture exists for this semester
+			
+		}
 		
 		for(int i=0;i<partimeLecturersCount;i++){
 			int [] lecturerModules = read.getLecturerModules(partTimeLecturers[i]);

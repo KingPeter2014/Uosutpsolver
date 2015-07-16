@@ -938,10 +938,40 @@ public class ReadInputs {
 
 		
 	}
-	
+	//Returns the ids of the Lecturers to which a module is allocated
+	public int[] getModuleLecturersList(int moduleid){
+		List<Integer> lecturerids=new ArrayList<Integer>();
+			/**
+			rst = db.executeQuery("SELECT cohort_id FROM modules_in_cohort WHERE course_id=" + moduleid);
+			
+			try {
+				while(rst.next()){
+					cohortids.add(rst.getInt("cohort_id"));
+				}
+				}
+				catch (SQLException e) {
+					
+					e.printStackTrace();
+					message+=e.getMessage();
+				}
+				finally{
+					db.closeConnection();
+				}
+				**/
+		int l =ReadInputs.courseAllocationsDB.length;
+			
+		for(int i=0;i <l;i++){
+			if(courseAllocationsDB[i][1]==moduleid){
+				lecturerids.add(courseAllocationsDB[i][0]);
+					
+			}
+		}
+		return convertIntegerListToIntegerArray(lecturerids);	
+		}
+			
 	//Returns the level  in which a module is offered
-		public int getModuleCohortLevel(int moduleid,int cohortid){
-			int level=0;
+	public int getModuleCohortLevel(int moduleid,int cohortid){
+		int level=0;
 			/*
 			rst = db.executeQuery("SELECT level FROM modules_in_cohort WHERE course_id=" + moduleid + " AND cohort_id=" + cohortid);
 			
@@ -959,16 +989,15 @@ public class ReadInputs {
 					db.closeConnection();
 				}
 				*/
-			int l =ReadInputs.modulesInCohort.length;
+		int l =ReadInputs.modulesInCohort.length;
 			
-			for(int i=0;i <l;i++){
-				if(modulesInCohort[i][1]==moduleid && modulesInCohort[i][0]==cohortid){
+		for(int i=0;i <l;i++){
+			if(modulesInCohort[i][1]==moduleid && modulesInCohort[i][0]==cohortid){
 					return modulesInCohort[i][2];//Returns level a module is studied by a cohort
-				}
 			}
-			return level;
-
-			
+		}
+		return level;
+	
 		}
 	// Returns Name of Lecturer for mapping from genotype to phenotype
 		public String getLecturerName(int lecturerid){
