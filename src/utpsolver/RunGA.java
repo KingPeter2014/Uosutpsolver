@@ -112,11 +112,11 @@ public class RunGA extends HttpServlet {
 		}
 		String test = "<br/><button id=\"best\"><b>Click to Display/Hide the Fitness of Best Chromosome</button><hr/><div id=\"statistics\">" + cr.getFitnessOnAContraint(this.bestChromosome) + "</div>";
 		out.println(test);
-		String test1 = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
+		String timetable = "Generated Timetable:<br/><table border=\"1\"> <tr> <th>Day/Time</th>"+
 				"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
 				"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
 				+ cr.displayGeneratedTimetable(this.bestChromosome) + "</table>";
-				out.println("<br/>" + test1); 
+				out.println("<br/>" + timetable); 
 		//this.disPlayChromosome(this.bestChromosome);
 		//this.disPlayChromosome(parent2);
 		//String child1 = cover.printChildren();
