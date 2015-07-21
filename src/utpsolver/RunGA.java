@@ -128,7 +128,6 @@ public class RunGA extends HttpServlet {
 		out.println(cr.displayCohortTimetables(this.bestChromosome));
 		long a = this.startTime/1000;
 		long b = System.currentTimeMillis()/1000;
-		
 		long runningTime = b-a;
 		long initendTime = cr.initEnd;
 		long initTime = initendTime - cr.startTime;
@@ -145,6 +144,7 @@ public class RunGA extends HttpServlet {
 				feasibleSolutions +=1;
 				out.print("<br/> Overall:" + allFitness[sortedIndices[i]]  + ", Hard Fitness:" + hard[i]);
 			}
+			//out.print(" <br/>HArd just considered:" + hard[i]);
 		}
 		return feasibleSolutions;
 	}

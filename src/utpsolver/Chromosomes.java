@@ -213,8 +213,7 @@ public class Chromosomes {
 					}
 					if(cohortsAssignedTo.length==0)
 						continue ;
-					int level = read.getModuleCohortLevel(modules[d], cohortsAssignedTo[0]);
-					boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(i, this.freeTimeslot, cohortsAssignedTo[0], level);
+					boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(i, this.freeTimeslot, cohortsAssignedTo,modules[d]);
 					boolean isMultiple = false;//this.isMultipleScheduleForACohort(i, this.freeTimeslot, cohortsAssignedTo[0], level);
 					isMultiple = this.isClashingForAnycohortInModule(cohortsAssignedTo, i, this.freeTimeslot, modules[d]);
 					
@@ -290,8 +289,13 @@ public class Chromosomes {
 				//Check if correct room size was chosen
 				boolean isCorrectRoomSize = this.roomSizeMatchedModuleSize(modules[d], rm-1);
 				
+				//Check if more than four consecutive hours of lecture has been fixed for a cohort
+				boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(i, time-1, cohortsAssignedTo,modules[d]);
+				if(isMoreThan4CohortHours){
+					System.out.println(" More than four cohort hours detected in Schedule randomly");
+				}
 				//Handle 1-hour Lecture or Lab genes
-				if(modulehours==1 && isCorrectRoomSize && !isMultiple && !isMultipleForLecturer){
+				if(modulehours==1 && isCorrectRoomSize && !isMultiple && !isMultipleForLecturer && !isMoreThan4CohortHours){
 					//System.out.println("Single Randomly Scheduled:" + modules[d] + " in Chromosome " + i);
 					inserted = this.insertGene(i, rm-1, time-1, modules[d]);
 				}
@@ -304,7 +308,7 @@ public class Chromosomes {
 					
 					boolean isMultiple2= this.isClashingForAnycohortInModule(cohortsAssignedTo, i, time, modules[d]);
 					
-					if(isCorrectRoomSize && !isMultiple && !isMultipleForLecturer&& !isMultiple2 && !isMultipleForLecturer2){
+					if(isCorrectRoomSize && !isMultiple && !isMultipleForLecturer&& !isMultiple2 && !isMultipleForLecturer2 && !isMoreThan4CohortHours){
 					inserted = this.insertGene(i, rm-1, time-1, modules[d]);
 					inserted = this.insertGene(i, rm-1, time, modules[d]);
 					}
@@ -449,8 +453,12 @@ public class Chromosomes {
 						this.findFreeCohortLectureRoom(i, cohortsAssignedTo,modules[d] );
 
 					}
+					boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(i, freeTimeslot, cohortsAssignedTo,modules[d]);
+					if(isMoreThan4CohortHours){
+						System.out.println(" More than four cohort hours detected in Schedule Remaining modules");
+					}
 					boolean isClashing = this.isClashingForAnycohortInModule(cohortsAssignedTo, i, freeTimeslot, modules[d]);
-					if( modulehours==1 && freeRoom!=-1 && !isClashing){
+					if( modulehours==1 && freeRoom!=-1 && !isClashing && !isMoreThan4CohortHours){
 						//chromosomes[i][rm-1][time-1]=modules[d];
 						//System.out.println("Single Schedule in Remaining Modules:" + this.modules[d] + " in Chromosome" + i);
 						inserted = this.insertGene(i, freeRoom, freeTimeslot, modules[d]);
@@ -751,19 +759,16 @@ public class Chromosomes {
 						boolean isCorrectSize = this.roomSizeMatchedModuleSize(module, rooms[c]);
 						isMultiple1 = this.isClashingForAnycohortInModule(cohort, chromosome, a, module);
 						isMultiple2= this.isClashingForAnycohortInModule(cohort, chromosome, a+1, module);
-						/**for(int i=0;i<cohortsInModule;i++){//Check clashing per cohort In module
-							level = read.getModuleCohortLevel(module, cohorts[i]);
-							isMultiple1 = this.isMultipleScheduleForACohort(i, a, cohorts[i], level);
-							isMultiple2 = this.isMultipleScheduleForACohort(i, a+1, cohorts[i], level);
-							if(isMultiple1 || isMultiple2 )
-								break;
-						} **/
 						
+						boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome, a, cohort,module);
+						if(isMoreThan4CohortHours){
+							System.out.println(" More than four cohort hours detected in findConsecFreeCohortLecture");
+						}
 						lecturersAllocatedTo=read.getModuleLecturersList(module);
 						lectMultiple = this.isClashingForAnyLecturerInModule(lecturersAllocatedTo, chromosome, a);
 						lectMultiple2 = this.isClashingForAnyLecturerInModule(lecturersAllocatedTo, chromosome, a+1);
 						
-						if(!isMultiple1  && !isMultiple2 && !lectMultiple && !lectMultiple2 && isCorrectSize){
+						if(!isMultiple1  && !isMultiple2 && !lectMultiple && !lectMultiple2 && isCorrectSize && !isMoreThan4CohortHours){
 							freeRoom=c;
 							freeTimeslot=a;
 							this.consecutiveFreeGeneFound=true;
@@ -800,7 +805,10 @@ public class Chromosomes {
 						lecturersAllocatedTo=read.getModuleLecturersList(module);
 						lectMultiple = this.isClashingForAnyLecturerInModule(lecturersAllocatedTo, chromosome, a);
 						lectMultiple2 = this.isClashingForAnyLecturerInModule(lecturersAllocatedTo, chromosome, a+1);
-						
+						boolean isMoreThan4CohortHours = this.isMoreThan4HoursOfConsecutiveLecturesPerCohort(chromosome, a, cohorts,module);
+						if(isMoreThan4CohortHours){
+							System.out.println(" More than four cohort hours detected in findConsecFreeCohortLab");
+						}
 						if(!isMultiple1  && !isMultiple2 && !lectMultiple && !lectMultiple2 && isCorrectSize){
 							freeRoom=c;
 							freeTimeslot=a;
@@ -1100,23 +1108,27 @@ public class Chromosomes {
 			return isMatched;
 	}
 	//Check if a cohort has more than four hours of lecture per day
-	private boolean isMoreThan4HoursOfConsecutiveLecturesPerCohort(int chromosome,int currentTime, int cohort,int level){
+	private boolean isMoreThan4HoursOfConsecutiveLecturesPerCohort(int chromosome,int currentTime, int[] cohort,int module){
 			boolean isCohortModule=false,isCohortModule2=false,found=false;
-			int count=0;			
+			int count=0;	
+			
 			for(int i=0;i<currentTime;i++){
-				isCohortModule = this.cohortHasEventAtGivenTime(chromosome, i, cohort, level);
-				isCohortModule2 = this.cohortHasEventAtGivenTime(chromosome, i+1, cohort, level);
-				if(isCohortModule && isCohortModule2)
-					count+=1;
-				else
-					count=0;
-						
-				if(count==4)
-						return	found=true;
-								
-				//reset counter before checking the next day
-				if(i==7||i==15||i==23||i==31)
-					count=0;
+				for(int j=0;j < cohort.length;j++){
+					int level = read.getModuleCohortLevel(module, cohort[j]);
+					isCohortModule = this.cohortHasEventAtGivenTime(chromosome, i, cohort[j], level);
+					isCohortModule2 = this.cohortHasEventAtGivenTime(chromosome, i+1, cohort[j], level);
+					if(isCohortModule && isCohortModule2)
+						count+=1;
+					else
+						count=0;
+							
+					if(count==4)
+							return	found=true;
+									
+					//reset counter before checking the next day
+					if(i==7||i==15||i==23||i==31)
+						count=0;
+				}
 						
 			}
 					

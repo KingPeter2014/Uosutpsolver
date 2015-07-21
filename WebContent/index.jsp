@@ -71,7 +71,6 @@ allocating modules to lecturers.</b></h2>
 <% 
 
 	long start = System.currentTimeMillis()/1000;
-
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
 	
@@ -91,9 +90,10 @@ allocating modules to lecturers.</b></h2>
 	int[] moduleIdsArray = read.getModuleIds();
 	int numModules = moduleIdsArray.length;
 	int i=0; 
+	int [] hard = cr.getHardFitnesses();
 	out.println("<button id=\"chromo\"> Hide/Show all Chromosome Fitness</button><div id=\"allchromosomes\">");
 	for(i=0;i<cr.numChromosomes;i++){
-		out.println("Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +allFitness[i] + "<br/>");
+		out.println("Hard Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +hard[i] + "<br/>");
 		
 	}
 	out.println("</div>");
