@@ -145,6 +145,14 @@ public class ReadInputs {
 		finally{
 			db.closeConnection();
 		}
+		/**
+		for(int i=0;i<modulesInCohort.length;i++){
+			for(int j=0;j<3;j++){
+				System.out.print(modulesInCohort[i][j]  + "  ");
+			}
+			System.out.println(); 
+		}
+		**/
 	}
 	//Read lecturerooms table to courseAllocationsDB Array
 	private void getCourseAllocationTableFromDB(){
@@ -344,6 +352,7 @@ public class ReadInputs {
 		for(int i=0;i<l;i++){
 			if(ReadInputs.modulesInCohort[i][0]==cohort && ReadInputs.modulesInCohort[i][1]==module && ReadInputs.modulesInCohort[i][2]==level){
 				belongsToCohort= true;
+				//System.out.println(cohort + " offers " + module + " at level " + level );
 				return belongsToCohort;
 			}
 
@@ -993,6 +1002,7 @@ public class ReadInputs {
 			
 		for(int i=0;i <l;i++){
 			if(modulesInCohort[i][1]==moduleid && modulesInCohort[i][0]==cohortid){
+				//System.out.println(" cohort " +cohortid + " offers " + moduleid + " in level " + modulesInCohort[i][2] );
 					return modulesInCohort[i][2];//Returns level a module is studied by a cohort
 			}
 		}
@@ -1287,7 +1297,7 @@ public class ReadInputs {
 	//Get Lecturers to whom Courses could be assigned
 	public String displayLecturers(){
 		lecturers = "";
-		rst = db.executeQuery("SELECT * FROM lecturers");
+		rst = db.executeQuery("SELECT * FROM lecturers  WHERE lecturer_type='partime'");
 		
 		try {
 			while(rst.next()){

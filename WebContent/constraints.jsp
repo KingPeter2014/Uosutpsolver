@@ -35,7 +35,7 @@
 	<table>
 	<tr>
 				<td><label>Lecturer:&nbsp;<em>*</em></label></td>
-				<td><select name="lecturer" id="lecturer"><option value="0">Select</option>
+				<td><select name="lecturer" id="lecturer"><option value="0">Select Lecturer</option>
 				<% out.println(lecturers); %>
 					</select> is available</td>
 						<td>from <select name="from">
@@ -86,12 +86,12 @@
 	<table>
 		<tr>
 				<td><label>Module:&nbsp;<em>*</em></label></td>
-				<td><select name="module" id="module"><option value="0">Select</option>
+				<td><select name="module" id="module"><option value="0">Select Module</option>
 				<% out.println(courses); %>
 			</select>MUST TAKE PLACE IN
 		</td>
 		<td><label>Room:&nbsp;<em>*</em></label></td>
-				<td><select name="room" id="room"><option value="0">Select</option>
+				<td><select name="room" id="room"><option value="0">Select Room</option>
 				<% out.println(rooms); %>
 			</select>		</td>
 			<td>from <select name="from">
@@ -121,9 +121,22 @@
 		</table>
 		</form>
 	</fieldset>
+	<hr/>
+	<fieldset><legend>Generate Timetable
+	</legend> 
+	
+	<form action="/utpsolver/RunGA" method="post">
+	<!--  	<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
+		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
+		-->
+		<input type="Submit" value="Generate Timetable" name="runGA" id="runGA">
+	</form>
+	
+	</fieldset>
+	
 	</div>
 	<div class="right">
-			
+				
 	</div>
 </div>
 </body>

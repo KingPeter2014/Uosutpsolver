@@ -39,11 +39,14 @@ public class RunGA extends HttpServlet {
 	private String message="";
 	private Chromosomes cr = null;
 	PrintWriter out;
+	long startTime=0;
 	
 	private List<String> cohortTimetable,lecturerTimetable,roomTimetable;
 	
 	public RunGA(){
-		super();
+		//super();
+		this.startTime = System.currentTimeMillis();
+		cr = new Chromosomes();
 		
 		
 	}
@@ -65,7 +68,7 @@ public class RunGA extends HttpServlet {
 				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
 		out.println(message);
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
-		cr = new Chromosomes();
+		//cr = new Chromosomes();
 		if(cr.status==0){
 			out.println("No moddule to Schedule or an error occured");
 			return;
@@ -107,8 +110,7 @@ public class RunGA extends HttpServlet {
 				sortedIndices = cr.getSortedChromosomeIndices();
 				this.bestChromosome = sortedIndices[0];
 				this.worstChromosome = sortedIndices[cr.numChromosomes-1];
-			}
-			
+			}	
 		}
 		String test = "<br/><button id=\"best\"><b>Click to Display/Hide the Fitness of Best Chromosome</button><hr/><div id=\"statistics\">" + cr.getFitnessOnAContraint(this.bestChromosome) + "</div>";
 		out.println(test);
@@ -121,19 +123,17 @@ public class RunGA extends HttpServlet {
 		//this.disPlayChromosome(parent2);
 		//String child1 = cover.printChildren();
 		//out.println("<hr/>After evaluating children: <br/>" +cr.getCurrentFitnessMessage());
-		
 		//out.println("<br/>" + child1);
 		int feasible = this.countFeasibleSolutions();
 		out.println(cr.displayCohortTimetables(this.bestChromosome));
-		long a = cr.startTime/1000;
+		long a = this.startTime/1000;
 		long b = System.currentTimeMillis()/1000;
+		
 		long runningTime = b-a;
 		long initendTime = cr.initEnd;
 		long initTime = initendTime - cr.startTime;
 		out.println(" <H3>There are " + feasible + " feasible solution(s)</H3><br/>");
 		out.println("<b><h2>Initialisation Time:" +initTime + "millisecond(s),Total run Time:"+ runningTime + " second(s)</h2></b>");
-
-		
 	}
 	private int countFeasibleSolutions(){
 		int feasibleSolutions=0;
@@ -141,10 +141,19 @@ public class RunGA extends HttpServlet {
 		int numHard = hard.length;
 		int maxHard = cr.getMaxHardConstraintReward();
 		for(int i=0;i<numHard;i++){
-			if(hard[i]>=maxHard)
+			if(hard[i]>=maxHard){
 				feasibleSolutions +=1;
+				out.print("<br/> Overall:" + allFitness[sortedIndices[i]]  + ", Hard Fitness:" + hard[i]);
+			}
 		}
 		return feasibleSolutions;
+	}
+	private int getOverallFitnessIndex(int hardIndex){
+		for(int i=0;i<sortedIndices.length;i++){
+			if(sortedIndices[i]==hardIndex)
+				return sortedIndices[i];
+		}
+		return 0;
 	}
 	public void disPlayChromosome(int chromosome){
 

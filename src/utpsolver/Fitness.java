@@ -154,7 +154,10 @@ public class Fitness{
 		message += "<br/> S10:Not more than 4-hr consecutive Events for a Cohort: " + s10 + " out of " + Fitness.maxS10;
 		message += "<br/> S11: No lecture/Lab fixed on Wednesday afternoon: " + s11 + " out of 5";
 		message += "<br/> S12: No lecture/Lab during Launch time: " + s12 + " out of 5";
-		message += "<br/><span class=\"warning\">SOFT Constraint fitness for Chromosome " + (chromosome ) + " is: " + scFitness + " out of " + Fitness.maxSoft + "</span>";
+		if(scFitness < this.maxSoft)
+			message += "<br/><span class=\"warning\">SOFT Constraint fitness for Chromosome " + (chromosome ) + " is: " + scFitness + " out of " + Fitness.maxSoft + "</span>";
+		else
+			message += "<br/><span class=\"success\">SOFT Constraint fitness for Chromosome " + (chromosome ) + " is: " + scFitness + " out of " + Fitness.maxSoft + "</span>";
 		this.percentSoft = (scFitness *100.0)/this.maxSoft;
 		return scFitness;
 		
@@ -586,7 +589,7 @@ public class Fitness{
 	
 	//Check if class held in appropriate room Size for a gene event in a chromosome
 	private boolean checkIfClassHeldInCorrectRoomSize(int chromosome,int room,int module){
-		int tolerance = -10; // A tolerance of 10 is when module size is more than room Capacity by only 10 students
+		int tolerance = -20; // A tolerance of 10 is when module size is more than room Capacity by only 10 students
 		boolean isCorrect = false;
 		int roomSize = read.getRoomCapacity(room);
 		int moduleSize = read.getModuleSize(module);
@@ -658,14 +661,20 @@ public class Fitness{
 		int temp = 0;
 		for(int i=0;i<len;i++){
 			for(int j=0;j<len-1;j++){
-				if(fitnessValues[j]<fitnessValues[j+1]){
-					temp=fitnessValues[j];
-					fitnessValues[j] = fitnessValues[j+1];
-					fitnessValues[j+1]=temp;
-					temp=this.chromosomeIndices[j];
-					this.chromosomeIndices[j]=this.chromosomeIndices[j+1];
-					this.chromosomeIndices[j+1]=temp;
-					
+				if(this.hardFitnesses[j] <this.hardFitnesses[j+1]){
+					//if(fitnessValues[j]<fitnessValues[j+1] ){
+						temp=fitnessValues[j];
+						fitnessValues[j] = fitnessValues[j+1];
+						fitnessValues[j+1]=temp;
+						
+						temp=this.chromosomeIndices[j];
+						this.chromosomeIndices[j]=this.chromosomeIndices[j+1];
+						this.chromosomeIndices[j+1]=temp;
+						
+						temp=this.hardFitnesses[j];
+						this.hardFitnesses[j]=this.hardFitnesses[j+1];
+						this.hardFitnesses[j+1]=temp;
+					//}
 				}
 			}
 		}

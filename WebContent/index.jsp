@@ -41,15 +41,35 @@ $(document).ready(function(){
 			<li> <a href="inputs/lecturers.jsp">Lecturers</a></li>
 			<li> <a href="inputs/modules.jsp"> Modules</a> </li>
 			<li> <a href="inputs/classes.jsp"> Cohort</a> </li>
-			<li> <a href="settings.jsp"> GA Settings</a> </li>
-			<li> <a href="constraints.jsp"> Constraints</a> </li>
+			<!--  <li> <a href="settings.jsp"> GA Settings</a> </li>-->
+			<li> <a href="constraints.jsp"> Special Constraints</a> </li>
 		</div>
 <div>
 </div>
 <br/>
-<fieldset><legend>Randomly Generated Timetable</legend>
+<fieldset><legend>UTPSolver</legend>
+<h1> Usage Instructions</h1>
+The usage of each of the tabs above for running this University Timetabling problem solver (UTPSolver) is described below:
+<ol>
+	<li><b>Home</b> - This keeps you on this home page</li>
+	<li><b>Rooms</b> - This enables one to add rooms, their types and capacity</li>
+	<li><b>Lecturers</b> - This enables one to add lecturers, indicate if they are fulltime or partime as well as 
+	allocate a module to them.</li>
+	<li><b>Modules</b> - This enables one to add module code, lecture and lab hours, number of students that enroll 
+	in it and then allocate the module to a lecturer too.</li>
+	<li><b>Cohort</b> - This enables one to add cohort, the starting level for the cohort, the number of 
+	years to graduate and also the modules to be taken by this cohort at each level of study.</li>
+	<li><b>Special Constraints</b> - This is where one can specify the times of the week that 
+	partime lecturers are available. It also enables the timetable officer to specify 
+	modules that must take place in a particular room and time. After adding this constraints one can click 
+	<b>"Generate timetable" </b> on that page to run the program to generate timetable based on previously
+	 entered data.</li>
+</ol>
+<h2><b>Add rooms, modules, lecturers and cohorts before assigning modules to cohorts or 
+allocating modules to lecturers.</b></h2>
 
 <% 
+
 	long start = System.currentTimeMillis()/1000;
 
 	ReadInputs read = new ReadInputs();
@@ -70,7 +90,19 @@ $(document).ready(function(){
 	int [][][] chromo = cr.chromosomes;
 	int[] moduleIdsArray = read.getModuleIds();
 	int numModules = moduleIdsArray.length;
-	int i=0;
+	int i=0; 
+	out.println("<button id=\"chromo\"> Hide/Show all Chromosome Fitness</button><div id=\"allchromosomes\">");
+	for(i=0;i<cr.numChromosomes;i++){
+		out.println("Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +allFitness[i] + "<br/>");
+		
+	}
+	out.println("</div>");
+	
+	long b = System.currentTimeMillis()/1000;
+	long runningTime = b-start;
+	out.println("<b><h2>It took approximately "+ runningTime + " second(s) to run this GA</h2></b>");
+	
+
 	
 	/**
 	out.println("<br/><hr/>Best Chromosome Structure[" + (sortedIndices[0]+1)+ "]<hr/>");
@@ -90,16 +122,6 @@ $(document).ready(function(){
 	}
 	
 	**/
-	out.println("<button id=\"chromo\"> Hide/Show all Chromosome Fitness</button><div id=\"allchromosomes\">");
-	for(i=0;i<cr.numChromosomes;i++){
-		out.println("Fitness of chromosome:  " + (sortedIndices[i] + 1) + " is " +allFitness[i] + "<br/>");
-		
-	}
-	out.println("</div>");
-	
-	long b = System.currentTimeMillis()/1000;
-	long runningTime = b-start;
-	out.println("<b><h2>It took approximately "+ runningTime + " second(s) to run this GA</h2></b>");
 	
 %>
 <!--  <a rel='nofollow' href='http://www.qrcode-generator.de' border='0' style='cursor:default'><img src='https://chart.googleapis.com/chart?cht=qr&chl=www.kingrock.com.ng&chs=180x180&choe=UTF-8&chld=L|2' alt=''></a> -->
