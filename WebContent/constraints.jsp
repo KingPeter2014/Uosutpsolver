@@ -28,9 +28,9 @@
 			
 	</div>
 	<br/>
-	<div class="left">
+	<div class="center">
 	<fieldset><legend>Part-Time Lecturer Constraints</legend>
-	
+	<b>Only use this section if applicable, else click 'Generate Timetable' button to generate weekly timetable</b><br/>
 	<form action="/utpsolver/LecturerAvailabilityServlet" method="post">
 	<table>
 	<tr>
@@ -66,22 +66,11 @@
 	</fieldset>
 	</div>
 	
-	<div class="right">
-	<fieldset><legend>Generate Timetable
-	</legend> 
 	
-	<form action="/utpsolver/RunGA" method="post">
-	<!--  	<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
-		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
-		-->
-		<input type="Submit" value="Generate Timetable" name="runGA" id="runGA">
-	</form>
 	
-	</fieldset>
-	</div>
-	
-	<div class="left">
+	<div class="center">
 	<fieldset><legend>Special Module Constraints</legend>
+	<b>Only use this section if applicable, else click 'Generate Timetable' button to generate weekly timetable</b><br/>
 	<form action="/utpsolver/SpecialModuleConstraint" method="post">
 	<table>
 		<tr>
@@ -129,7 +118,7 @@
 	<!--  	<input type="checkbox" name="excludelunchtime"> Exclude Lunch time (Between 1 - 2pm daily)<br/>
 		<input type="checkbox" name="excludewednesdaynoon"> Exclude Wednesday afternoon(From 12:noon) <br/>
 		-->
-		<input type="Submit" value="Generate Timetable" name="runGA" id="runGA">
+		<center><input width="100%" type="Submit" value="Generate Timetable" name="runGA" id="runGA"></center>
 	</form>
 	
 	</fieldset>

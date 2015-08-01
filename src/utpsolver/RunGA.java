@@ -70,7 +70,7 @@ public class RunGA extends HttpServlet {
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
 		//cr = new Chromosomes();
 		if(cr.status==0){
-			out.println("No moddule to Schedule or an error occured");
+			out.println("No module to Schedule or an error occured");
 			return;
 		}
 		this.maxreward = cr.getMaxFitnessReward();
@@ -97,9 +97,9 @@ public class RunGA extends HttpServlet {
 			//Get overall fitness of best child after crossover
 			int overallFitnessOfBestChild = this.overallFitness[this.betterChild-1];
 			//out.println("<br/>Best Chromosome fitness : " + cr.getOverallFintnessValue(this.bestChromosome) +", BestChild Fitness: " + overallFitnessOfBestChild + " in generation:" + this.currentGeneration);
-			//if(overallFitnessOfBestChild > allFitness[this.worstChromosome] && this.hardFitness[this.betterChild-1] >=hardFitness){
+			if(this.hardFitness[this.betterChild-1] >=hardFitness){
 				//cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
-			if(overallFitnessOfBestChild > allFitness[this.worstChromosome]){
+			//if(overallFitnessOfBestChild > allFitness[this.worstChromosome]){
 				cr.replaceChromosome(this.worstChromosome, this.betterChild-1, this.children);
 				long start = System.currentTimeMillis();
 				// Evaluate Entire chromosome only after replacement
@@ -118,7 +118,7 @@ public class RunGA extends HttpServlet {
 				"<th>9 - 9.50am</th><th>10 - 10.50am</th><th>11 - 11.50am</th><th>12 - 12.50pm</th><th>1 - 1.50pm</th>" +
 				"<th>2 - 2.50pm</th><th>3 - 3.50pm</th><th>4 - 5pm</th></tr>"
 				+ cr.displayGeneratedTimetable(this.bestChromosome) + "</table>";
-				out.println("<br/>" + timetable); 
+		out.println("<br/>" + timetable); 
 		//this.disPlayChromosome(this.bestChromosome);
 		//this.disPlayChromosome(parent2);
 		//String child1 = cover.printChildren();
@@ -126,6 +126,7 @@ public class RunGA extends HttpServlet {
 		//out.println("<br/>" + child1);
 		int feasible = this.countFeasibleSolutions();
 		out.println(cr.displayCohortTimetables(this.bestChromosome));
+		
 		long a = this.startTime/1000;
 		long b = System.currentTimeMillis()/1000;
 		long runningTime = b-a;
@@ -148,13 +149,7 @@ public class RunGA extends HttpServlet {
 		}
 		return feasibleSolutions;
 	}
-	private int getOverallFitnessIndex(int hardIndex){
-		for(int i=0;i<sortedIndices.length;i++){
-			if(sortedIndices[i]==hardIndex)
-				return sortedIndices[i];
-		}
-		return 0;
-	}
+	
 	public void disPlayChromosome(int chromosome){
 
 		int timeslots = 40;

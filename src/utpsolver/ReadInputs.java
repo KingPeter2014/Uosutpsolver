@@ -23,7 +23,7 @@ public class ReadInputs {
 			lecturers="",courseallocations="";
 	//Equivalence of Database data
 	public static int [][] cohortDB=null;//nx3,0=cohortid,1=start_level,2=number of years
-	public static int [][] modulesDB = null;//nx3,0=moduleid,1= numstudents,2=lab/lecturehours
+	public static int [][] modulesDB = null;//nx3,0=moduleid,1= numstudents,2=lab/lecturehours,3=level_offered
 	public static int [][] courseAllocationsDB = null;//nx2,0=lecturerid,1=courseid
 	public static int [][] lectureroomsDB = null;//nx2,0=roomid,1=roomcapacity
 	public static String [] roomTypes,moduleTypes;
@@ -43,7 +43,7 @@ public class ReadInputs {
 		lectureroomsDB = new int[roomCount][2];
 		ReadInputs.roomTypes = this.getRoomTypesArray();
 		moduleTypes = this.getModuleTypesArray();
-		modulesDB = new int[moduleTypes.length][3];
+		modulesDB = new int[moduleTypes.length][4];
 		int [] c = this.getAllCohortIds();
 		cohortDB = new int[c.length][3];
 		int [] d = this.getModuleIdsFromCourseAllocationTable();
@@ -185,6 +185,7 @@ public class ReadInputs {
 				modulesDB[count][2]=rst.getInt("lecturehours");
 				else
 					modulesDB[count][2]=rst.getInt("labhours");
+				modulesDB[count][3]=rst.getInt("level");
 				count+=1;
 			}
 		}
@@ -604,6 +605,20 @@ public class ReadInputs {
 		return courseids;
 		
 	}
+	//Return level a module is first offered
+	public int getFirstLevelOffered(int module){
+		
+		int l =ReadInputs.modulesDB.length;
+		int level=0;
+		for(int i=0;i <l;i++){
+			if(modulesDB[i][0] ==module){
+				level=modulesDB[i][3];
+				return level;
+			}
+		}
+		return level;
+		
+	}
 	//Returns a list of all the room types available
 	public String getRooms(){
 		rooms = "<tr>";
@@ -615,7 +630,7 @@ public class ReadInputs {
 				rooms += "<td>" + rst.getInt("id") +"</td><td>" + rst.getString("code") + "</td><td>" + 
 						rst.getString("roomtype") + "</td><td>" + rst.getInt("capacity") + "</td><td>"
 						+ "<a href=\"editroom.jsp?id=" +rst.getInt("id") + "\"> Edit</a>|" 
-						+ "<a href=\"deleteroom.jsp?id=" +rst.getInt("id") + "\"> Delete</a></td></tr>"
+						+ "<a href=\"delete.jsp?id=" +rst.getInt("id") + "&what=room\"> Delete</a></td></tr>"
 						;
 			}
 		} catch (SQLException e) {
@@ -1683,6 +1698,8 @@ public class ReadInputs {
 	//Returns all lecture schedules for a particular day
 	public String getDailySchedule(int day, int[][][] population, int chromosome, int[] rooms, int[] modules){
 		this.dailySchedule="";
+		if (population ==null)
+			return "Unable to initialise GA. Missing resources for events";
 		switch(day){
 			case 1: //Monday Timeslots 1-8
 				this.dailySchedule="<tr><td><b>MON</b></td>";

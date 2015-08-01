@@ -101,6 +101,8 @@ public class Fitness{
 		int h6 = this.computeSpecialModuleConstraintViolation(chromosome);
 		if(this.maxH6 !=0)
 			h6 = (h6*100)/this.maxH6;
+		if(this.maxH6==0)
+			h6=0;
 		int h5 = this.computeToVerifyAllModulesWereScheduled(chromosome);
 		if(this.maxH5 !=0)
 			h5 = (h5*100)/this.maxH5;
@@ -324,7 +326,6 @@ public class Fitness{
 	//CONSTRAINT 6: Accommodate lectures and labs that must hold at a specific time and venue within the week
 	public int computeSpecialModuleConstraintViolation(int chromosome){
 		subfitness=0;
-		int count=0;
 		
 		int specialModuleCount = specialModules.length;
 		
@@ -536,7 +537,7 @@ public class Fitness{
 		
 	}
 	public void evaluateFitnessOfChildren(int [][][] children){
-		//Save statistics for parents
+		//Save statistics for entire generation
 		int [][][] saveChromosome=null;
 		saveChromosome= this.chromosomes;
 		int saveNumChromosome = this.numChromosome;
@@ -546,11 +547,13 @@ public class Fitness{
 		tempfitnessValues = this.fitnessValues;
 		temphardFitnesses = this.hardFitnesses;
 		tempsoftFitness = this.softFitness;
+		
 		//Compute fitness of children
 		this.computeFitnessOfEntirePopulation();
 		this.childrenfitnessValues = this.fitnessValues;
 		this.childrenhardFitnesses = this.hardFitnesses;
 		this.childrensoftFitness = this.softFitness;
+		
 		//Put back the fitness of parents to old values
 		this.chromosomes = saveChromosome;
 		this.numChromosome = saveNumChromosome;
@@ -659,6 +662,7 @@ public class Fitness{
 			this.chromosomeIndices[i]=i;
 			
 		int temp = 0;
+		//Sought according to hard fitness
 		for(int i=0;i<len;i++){
 			for(int j=0;j<len-1;j++){
 				if(this.hardFitnesses[j] <this.hardFitnesses[j+1]){
@@ -675,6 +679,26 @@ public class Fitness{
 						this.hardFitnesses[j]=this.hardFitnesses[j+1];
 						this.hardFitnesses[j+1]=temp;
 					//}
+				}
+			}
+		}
+		//Sought all feasible solutions according to level of optimisation
+		for(int i=0;i<len;i++){
+			for(int j=0;j<len-1;j++){
+				if(this.hardFitnesses[j] >= this.maxHard){
+					if(fitnessValues[j]<fitnessValues[j+1] ){
+						temp=fitnessValues[j];
+						fitnessValues[j] = fitnessValues[j+1];
+						fitnessValues[j+1]=temp;
+						
+						temp=this.chromosomeIndices[j];
+						this.chromosomeIndices[j]=this.chromosomeIndices[j+1];
+						this.chromosomeIndices[j+1]=temp;
+						
+						temp=this.hardFitnesses[j];
+						this.hardFitnesses[j]=this.hardFitnesses[j+1];
+						this.hardFitnesses[j+1]=temp;
+					}
 				}
 			}
 		}

@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 		<div id="menubar">
-			<li> <a href="rooms.jsp">Home</a></li> 
+			<li> <a href="/utpsolver/index.jsp">Home</a></li> 
 			<li><a href="addroom.jsp"> Add Room</a></li>
 			
 		</div>

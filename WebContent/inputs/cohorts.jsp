@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 		<div id="menubar">
-			<li> <a href="classes.jsp">Home</a></li> 
+			<li> <a href="/utpsolver/index.jsp">Home</a></li> 
 			<li><a href="addcohort.jsp"> Add Cohort</a></li>
 			<li><a href="addmoduletocohort.jsp"> Add Module to Cohort</a></li>
 			

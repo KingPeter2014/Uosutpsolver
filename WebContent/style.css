@@ -56,12 +56,18 @@ body{
 	background: #4ab9b9 url(../images/gradient.png) repeat-x 0 -110px;
 	margin-left: 50px;
 	margin-right: 50px;
+	width: 120%;
 	
 }
 .left{
 	float: left;
 	background: #aaa url(../images/gradient.png) repeat-x 0 -110px;
 	width: 60%;
+}
+.center{
+	margin-left: 15%;
+	background: #aaa url(../images/gradient.png) repeat-x 0 -110px;
+	width: 70%;
 }
 .right{
 	float: right;
@@ -83,6 +89,10 @@ body{
 }
 #publications fieldset{
 	margin-left: 0px;
+}
+.footer{
+	background: #7887ab;
+	width: 100%;
 }
 .success{
 	background: green;

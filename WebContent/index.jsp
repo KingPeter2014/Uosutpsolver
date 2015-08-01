@@ -40,7 +40,7 @@ $(document).ready(function(){
 			<li> <a href="inputs/rooms.jsp"> Rooms</a></li>
 			<li> <a href="inputs/lecturers.jsp">Lecturers</a></li>
 			<li> <a href="inputs/modules.jsp"> Modules</a> </li>
-			<li> <a href="inputs/classes.jsp"> Cohort</a> </li>
+			<li> <a href="inputs/cohorts.jsp"> Cohort</a> </li>
 			<!--  <li> <a href="settings.jsp"> GA Settings</a> </li>-->
 			<li> <a href="constraints.jsp"> Special Constraints</a> </li>
 		</div>
@@ -65,14 +65,23 @@ The usage of each of the tabs above for running this University Timetabling prob
 	<b>"Generate timetable" </b> on that page to run the program to generate timetable based on previously
 	 entered data.</li>
 </ol>
-<h2><b>Add rooms, modules, lecturers and cohorts before assigning modules to cohorts or 
-allocating modules to lecturers.</b></h2>
+ 
+
+<h2><b>IMPORTANT:<br/>
+Add rooms, modules, lecturers and cohorts before assigning modules to cohorts or 
+allocating modules to lecturers. These set up must be completed before executing the UTPSolver.</b></h2><br/>
+<form action="constraints.jsp" method="post">
+	
+		<input type="Submit" value="Execute UTPSolver" name="runGA" id="runGA">
+	</form>
 
 <% 
-
+/**
 	long start = System.currentTimeMillis()/1000;
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
+	if(cr==null)
+		return;
 	
 	int[] allFitness = cr.evaluatePopulationFitness();
 	int[] sortedIndices = cr.getSortedChromosomeIndices();
@@ -125,7 +134,8 @@ allocating modules to lecturers.</b></h2>
 	
 %>
 <!--  <a rel='nofollow' href='http://www.qrcode-generator.de' border='0' style='cursor:default'><img src='https://chart.googleapis.com/chart?cht=qr&chl=www.kingrock.com.ng&chs=180x180&choe=UTF-8&chld=L|2' alt=''></a> -->
-</fieldset>
+</fieldset><br/>
+<center><span class="footer"> <b> 2015 Masters of Advanced Software Engineering Dissertation Project by: Eze Peter U.; Supervised by: Dr. D.C. Walker</b></span></center>
 </div>
 </body>
 </html>
