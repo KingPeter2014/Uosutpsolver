@@ -58,14 +58,19 @@ public class RunGA extends HttpServlet {
 		out = res.getWriter();
 		message = "<html><head>" + 
 				"<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>" 
+				+
+				"<script type=\"text/javascript\" src=\"draganddrop.js\"></script>" 
 				+"<script>"+
+
 				"$(document).ready(function(){"+
 				    "$(\"#best\").click(function(){"+
 				        "$(\"#statistics\").toggle(\"slow\");" +       
 				   "});"+
-				"});</script>"
+				"});"
+	
+ + "</script>"
 			
-				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
++ "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><div id=\"maincontent\">";
 		out.println(message);
 		//Process constraint variables set from constraints page and call the elitism Chromosome constructor
 		//cr = new Chromosomes();
@@ -143,7 +148,7 @@ public class RunGA extends HttpServlet {
 		for(int i=0;i<numHard;i++){
 			if(hard[i]>=maxHard){
 				feasibleSolutions +=1;
-				out.print("<br/> Overall:" + allFitness[sortedIndices[i]]  + ", Hard Fitness:" + hard[i]);
+				//out.print("<br/> Overall:" + allFitness[sortedIndices[i]]  + ", Hard Fitness:" + hard[i]);
 			}
 			//out.print(" <br/>HArd just considered:" + hard[i]);
 		}

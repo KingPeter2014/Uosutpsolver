@@ -7,12 +7,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script type="text/javascript">
-
-</script>
+<style>
+#div1, #div2
+{float:left; width:100px; height:35px; margin:10px;padding:10px;border:1px solid #aaaaaa;}
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 <script>
+
 $(document).ready(function(){
     $("#best").click(function(){
         $("#statistics").toggle("slow");
@@ -24,6 +26,42 @@ $(document).ready(function(){
         $("#allchromosomes").toggle("slow");
     });
 });
+var dragData = null; 
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+	ev.dataTransfer.effectAllowed = 'move';
+    ev.dataTransfer.setData("text", ev.target.id);
+    dragData = ev.target.id;
+    /*
+    dragData = ev.dataTransfer.getData("text");
+	ev.dataTransfer.effectAllowed = 'move';
+	ev.dataTransfer.setData('text/html', this.innerHTML);
+	*/
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    if (ev.stopPropagation) {
+		ev.stopPropagation();
+	}
+   // dragData.innerHTML = this.innerHTML;
+    var data = ev.dataTransfer.getData("text");
+    dragData.text = data;
+    ev.target.appendChild(document.getElementById(data));
+  
+    
+	//if (dragData != this) {
+	//	dragData.innerHTML = this.innerHTML;
+	//	this.innerHTML = ev.dataTransfer.getData('text/html');
+	//} 
+	//return false;
+
+	
+}	
+	
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UoSTimetabler</title>
@@ -48,6 +86,14 @@ $(document).ready(function(){
 </div>
 <br/>
 <fieldset><legend>UTPSolver</legend>
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+  <span draggable="true" ondragstart="drag(event)" id="drag1" width="88" height="31">Drag me</span>
+</div>
+
+<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+
+<!-- 
 <h1> Usage Instructions</h1>
 The usage of each of the tabs above for running this University Timetabling problem solver (UTPSolver) is described below:
 <ol>
@@ -70,14 +116,15 @@ The usage of each of the tabs above for running this University Timetabling prob
 <h2><b>IMPORTANT:<br/>
 Add rooms, modules, lecturers and cohorts before assigning modules to cohorts or 
 allocating modules to lecturers. These set up must be completed before executing the UTPSolver.</b></h2><br/>
+ -->
 <form action="constraints.jsp" method="post">
 	
 		<input type="Submit" value="Execute UTPSolver" name="runGA" id="runGA">
 	</form>
-	<table><tr><td draggable="true">A</td><td>B</td><td draggable="true">C</td></tr></table>
+	<table><tr><td id="a" draggable="true">A</td><td>B</td><td id="c" draggable="true">C</td></tr></table>
 
 <% 
-/**
+
 	long start = System.currentTimeMillis()/1000;
 	ReadInputs read = new ReadInputs();
 	Chromosomes cr = new Chromosomes();
