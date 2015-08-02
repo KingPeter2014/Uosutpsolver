@@ -1704,20 +1704,20 @@ public class ReadInputs {
 			case 1: //Monday Timeslots 1-8
 				this.dailySchedule="<tr><td><b>MON</b></td>";
 				for(int b=0;b <8;b++){
-					this.dailySchedule+= "<td id=\"m" +b + "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b+ "\">";
+					this.dailySchedule+= "<td  id=\"m" +b + "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><div draggable=\"false\" ondragstart=\"drag(event)\" id=\"slot" + b+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
 						}
 					}
-					this.dailySchedule+= "</span></td>";
+					this.dailySchedule+= "</div></td>";
 				}
 				dailySchedule +="</tr>";
 				break;
 			case 2: //Tuesday Timeslots 9-16
 				this.dailySchedule="<tr><td><b>TUE</b></td>";
 				for(int b=8;b <16;b++){
-					this.dailySchedule+= "<td id=\"m" +b + "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b+ "\">";
+					this.dailySchedule+= "<td id=\"m" +b + "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"false\" ondragstart=\"drag(event)\" id=\"slot" + b+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<hr/>";
@@ -1781,52 +1781,52 @@ public class ReadInputs {
 			case 1: //Monday Timeslots 1-8
 				this.dailySchedule="<tr><td><b>MON</b></td>";
 				for(int b=0;b <8;b++){
-					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
+					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><div class=\"draggable\" draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
 						}
 					}
-					this.dailySchedule+= "</span></td>";
+					this.dailySchedule+= "</div></td>";
 				}
 				dailySchedule +="</tr>";
 				break;
 			case 2: //Tuesday Timeslots 9-16
 				this.dailySchedule="<tr><td><b>TUE</b></td>";
 				for(int b=8;b <16;b++){
-					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
+					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><div class=\"draggable\" draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
 						}
 					}
-					this.dailySchedule+= "</span></td>";
+					this.dailySchedule+= "</div></td>";
 				}
 				dailySchedule +="</tr>";
 				break;
 			case 3: //Wednesday Timeslots 17-24
 				this.dailySchedule="<tr><td><b>WED</b></td>";
 				for(int b=16;b <24;b++){
-					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
+					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><div class=\"draggable\" draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
 						}
 					}
-					this.dailySchedule+= "</span></td>";				}
+					this.dailySchedule+= "</div></td>";				}
 				dailySchedule +="</tr>";
 				
 				break;
 			case 4: //Thursdays Timeslots 25 - 32
 				this.dailySchedule="<tr><td><b>THUR</b></td>";
 				for(int b=24;b <32;b++){
-					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
+					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><div class=\"draggable\" draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
 						}
 					}
-					this.dailySchedule+= "</span></td>";
+					this.dailySchedule+= "</div></td>";
 				}
 				dailySchedule +="</tr>";
 				
@@ -1834,13 +1834,13 @@ public class ReadInputs {
 			case 5://Friday Timeslots 33-40
 				this.dailySchedule="<tr><td><b>FRI</b></td>";
 				for(int b=32;b <40;b++){
-					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><span draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
+					this.dailySchedule+= "<td id=\"c" +b + cohort + level+ "\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"><div class=\"draggable\" draggable=\"true\" ondragstart=\"drag(event)\" id=\"slot" + b + cohort + level+ "\">";
 					for(int a=0;a <rooms.length;a++){
 						if(population[chromosome][a][b]!=0 && this.confirmCohortEventAtALevelOfStudy(population[chromosome][a][b], cohort, level)){
 							this.dailySchedule+=  this.mapEventGeneToPhenotype(b+1, rooms[a], population[chromosome][a][b]) + "<br/>";
 						}
 					}
-					this.dailySchedule+= "</span></td>";				}
+					this.dailySchedule+= "</div></td>";				}
 				dailySchedule +="</tr>";
 				
 				break;		}

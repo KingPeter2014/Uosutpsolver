@@ -67,15 +67,17 @@ The usage of each of the tabs above for running this University Timetabling prob
 </ol>
  
 
-<h2><b>IMPORTANT:<br/>
-Add rooms, modules, lecturers and cohorts before assigning modules to cohorts or 
-allocating modules to lecturers. These set up must be completed before executing the UTPSolver.</b></h2><br/>
+<b><h2>IMPORTANT:</h2>
+<li>Add rooms, modules, lecturers and cohorts before assigning modules to cohorts or 
+allocating modules to lecturers. These set up must be completed before executing the UTPSolver.</li>
+<li>Drag and drop features added on Cohort timetables will help to improve the efficiency of the final timetable. However, use
+ the master timetable as guide to avoid errors.</li>
+</b><br/>
 <form action="constraints.jsp" method="post">
 	
 		<input type="Submit" value="Execute UTPSolver" name="runGA" id="runGA">
 	</form>
-	<table><tr><td draggable="true">A</td><td>B</td><td draggable="true">C</td></tr></table>
-
+	
 <% 
 /**
 	long start = System.currentTimeMillis()/1000;
