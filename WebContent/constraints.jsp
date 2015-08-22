@@ -17,7 +17,7 @@
 	session.setAttribute("roomConstraint", "");
 	ReadInputs read = new ReadInputs();
 	String allocations = read.getCourseAllocations();
-	String lecturers = read.displayLecturers();
+	String lecturers = read.displayPartimeLecturers();
 	String courses = read.displayCourses();
 	String rooms = read.displayRooms();
 
@@ -25,6 +25,7 @@
 <div class="maincontainer">
 	<div id="menubar">
 			<li> <a href="index.jsp">Home</a></li> 
+			<li> <a href="existingConstraints.jsp">Constraints</a></li> 
 			
 	</div>
 	<br/>

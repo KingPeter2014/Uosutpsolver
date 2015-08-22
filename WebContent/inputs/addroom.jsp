@@ -29,19 +29,23 @@
 					<td>Capacity<em>*</em></td>
 					<td><input type="number" name="capacity" id="capacity" value = "0" placeholder="How many students can it take?"/></td>
 				</tr>
-				<tr>
-					<td>Longitude</td>
-					<td><input type="decimal" name="longitude" id="longitude"  value="0.0" placeholder="Longitude if known"/></td>
-				</tr>
-				<tr>
-					<td>Latitude</td>
-					<td><input type="text" name="latitude" id="latitude"  value="0.0" placeholder="Latitude if knwon"/></td>
-				</tr>
-				<tr>
-					<td> <input type="submit" name="addroom" value="Create Room"/></td>
-					<td> <input type="reset" /> </td> 
-
-				</tr>
+				<!--  
+					<tr>
+						<td>Longitude</td>
+						<td><input type="decimal" name="longitude" id="longitude"  value="0.0" placeholder="Longitude if known"/></td>
+					</tr>
+				
+					<tr>
+						<td>Latitude</td>
+						<td><input type="text" name="latitude" id="latitude"  value="0.0" placeholder="Latitude if knwon"/></td>
+					</tr>
+				-->
+					<tr>
+						<td> <input type="submit" name="addroom" value="Create Room"/></td>
+						<td> <input type="reset" /> </td> 
+	
+					</tr>
+				
 	</table>
 	</form>
 	</fieldset>

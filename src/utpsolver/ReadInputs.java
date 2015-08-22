@@ -1312,7 +1312,7 @@ public class ReadInputs {
 	//Get Lecturers to whom Courses could be assigned
 	public String displayLecturers(){
 		lecturers = "";
-		rst = db.executeQuery("SELECT * FROM lecturers  WHERE lecturer_type='partime'");
+		rst = db.executeQuery("SELECT * FROM lecturers");
 		
 		try {
 			while(rst.next()){
@@ -1329,6 +1329,28 @@ public class ReadInputs {
 		
 		return lecturers;
 	}
+	
+	//Get Part time Lecturers to whom Courses could be assigned
+	public String displayPartimeLecturers(){
+		lecturers = "";
+		rst = db.executeQuery("SELECT * FROM lecturers WHERE lecturer_type='partime'");
+		
+		try {
+			while(rst.next()){
+				lecturers += "<option value=\"" + rst.getInt("id") +"\">" + rst.getString("lecturername") + "</option>";
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			lecturers+=e.getMessage();
+		}
+		finally{
+			db.closeConnection();
+		}
+			
+		return lecturers;
+	}
+		
 	
 	//Get Cohorts to which Courses could be assigned to
 	public String displayCohorts(){
@@ -1866,6 +1888,70 @@ public class ReadInputs {
 			}
 		return title;
 	}
+	private String getDay(int day){
+		String d="";
+		switch(day){
+			case 1: d="Monday";break;
+			case 2: d="Tuesday";break;
+			case 3: d="Wednesday";break;
+			case 4: d="Thursday";break;
+			case 5: d="Friday";break;
+		}
+		return d;	
+	}
+	
+	//Get availabilities of partime lecturers
+	public String getPartimeLecturerAvailabilities(){
+		String available="";
+		int count=1;
+		String query ="SELECT l.lecturername,av.* FROM lecturers l INNER JOIN lecturer_availabilites av on l.id = av.lecturer_id";
+		
+		rst = db.executeQuery(query);
+		try{
+			while(rst.next()){
+				available += "<tr><td>" + count + "</td><td>" + rst.getString("lecturername") + "</td><td>" + this.getDay(rst.getInt("day"))+ "</td><td>" + rst.getInt("start_time")+"hours</td><td>"+rst.getInt("end_time") + "hours</td></tr>";
+				count+=1;
+					}
+			
+		}
+		catch (SQLException e) {
+			
+			//e.printStackTrace();
+			message+=e.getMessage();
+			System.out.println(message);
+		}
+		finally{
+			db.closeConnection();
+		}
+		return available;
+	}
+	//Get availabilities of partime lecturers
+		public String getSpecialConstraintSettings(){
+			String special="";
+			int count=1;
+			String query ="SELECT c.coursecode,c.coursetitle,c.coursetype,c.level, av.*,r.* FROM courses c INNER JOIN special_module_constraints av on c.id = av.module_id INNER JOIN lecturerooms r on av.room_id = r.id";
+			
+			//String query ="SELECT c.coursecode,c.coursetype,av.* FROM courses c INNER JOIN special_module_constraints av on c.id = av.module_id";
+			
+			rst = db.executeQuery(query);
+			try{
+				while(rst.next()){
+					special += "<tr><td>" + count + "</td><td>" + rst.getString("coursecode") + "</td><td>"+ rst.getString("code") +"</td><td>" + this.getDay(rst.getInt("day"))+ "</td><td>" + rst.getInt("start_time")+"hours</td><td>"+rst.getInt("end_time") + "hours</td></tr>";
+					count+=1;
+						}
+				
+			}
+			catch (SQLException e) {
+				
+				//e.printStackTrace();
+				message+=e.getMessage();
+				System.out.println(message);
+			}
+			finally{
+				db.closeConnection();
+			}
+			return special;
+		}
 	//Returns all lecture schedules for a particular day for a particular cohort and level
 	public String getCohortScheduleByLevel(int cohort,int level, int[][][] population, int chromosome){
 		int [] roomids = this.getRoomIds(), moduleids = this.getModuleIds();

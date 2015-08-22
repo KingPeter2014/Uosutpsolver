@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,11 +16,6 @@
 					<td><input type="text" name="cname" id="cname" placeholder=" Eg. B.Sc Computer Science"/></td>
 				</tr>
 				
-				
-				<tr>
-				<td><label>Cohort Name&nbsp;<em>*</em></label></td>
-				<td><select name="cohortname" id="cohortname"><option value="0">...</option><option value="bsccsc">Bsc. Computer Science</option><option value="bengcsc">B.Eng Computer Science</option><option value="both">Both</optio></select></td>
-				</tr>
 				
 				<tr>
 					<td>Number of Students<em>*</em></td>

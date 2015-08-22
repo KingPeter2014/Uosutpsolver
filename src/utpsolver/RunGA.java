@@ -136,9 +136,10 @@ public class RunGA extends HttpServlet {
 		long b = System.currentTimeMillis()/1000;
 		long runningTime = b-a;
 		long initendTime = cr.initEnd;
+		
 		long initTime = initendTime - cr.startTime;
-		out.println(" <H3>There are " + feasible + " feasible solution(s)</H3><br/>");
-		out.println("<b><h2>Initialisation Time:" +initTime + "millisecond(s),Total run Time:"+ runningTime + " second(s)</h2></b>");
+		//out.println(" <H3>There are " + feasible + " feasible solution(s)</H3><br/>");
+		//out.println("<b><h2>Initialisation Time:" +initTime + "millisecond(s),Total run Time:"+ runningTime + " second(s)</h2></b>");
 	}
 	private int countFeasibleSolutions(){
 		int feasibleSolutions=0;

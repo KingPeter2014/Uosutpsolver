@@ -641,7 +641,7 @@ public class Chromosomes {
 			isMultiple = this.isMultipleScheduleForACohort(chromosome, time, cohorts[i], level);
 			if(isMultiple){
 				count+=1;
-				System.out.println("Clashing for cohort found while scheduling " + module );
+				//System.out.println("Clashing for cohort found while scheduling " + module );
 				return true;
 			}
 				
@@ -1342,7 +1342,7 @@ public class Chromosomes {
 						count=0;
 							
 					if(count==4){
-						System.out.println(" More than four consecutive hours detected in chromosome " + chromosome);
+						//System.out.println(" More than four consecutive hours detected in chromosome " + chromosome);
 						
 						return	found=true;
 					}

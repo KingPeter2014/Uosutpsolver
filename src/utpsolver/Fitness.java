@@ -70,11 +70,12 @@ public class Fitness{
 		chromosomeFitness += this.getOverallRewardsOnSoftConstraints(chromosome);
 		message += "<br/><span class=\"success\">Overall fitness for Chromosome " + (chromosome ) + " is: " + chromosomeFitness + " out of " + Fitness.maxReward + "</span>";
 		this.percentOverall = (chromosomeFitness *100.0)/this.maxReward;
-		message += "<br/><h2><b>Statistical Summary</b></h2><hr>Hard Constraint Satisfaction: " + this.percentHard + "%,";
+		message += "<br/><h2><b>Constraint Satisfaction Summary</b></h2><hr>Hard Constraint Satisfaction: " + this.percentHard + "%,";
 		message += " Soft Constraint Satisfaction: " + this.percentSoft + "%<br/>";
 		message += "Overall Constraints Satisfaction: " + this.percentOverall + "%<hr/>";
 		return chromosomeFitness;
 	}
+	
 	//Compute total hard constraints Rewards
 	public int getOverallRewardsOnHardConstraints(int chromosome){
 		int hsFitness=0;
