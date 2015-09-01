@@ -15,7 +15,6 @@
 	ReadInputs read = new ReadInputs();
 	String availabilities = read.getPartimeLecturerAvailabilities();
 	String special = read.getSpecialConstraintSettings();
-
 %>
 <div>
 	<fieldset><legend>Part time Lecturer Availabilities</legend>
