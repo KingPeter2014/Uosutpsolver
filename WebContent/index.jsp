@@ -37,17 +37,18 @@ $(document).ready(function(){
 <div class="container">
 		<div id="menubar"> 
 			<li><a href="index.jsp"> Home</a></li>
-			<li> <a href="inputs/rooms.jsp"> Rooms</a></li>
-			<li> <a href="inputs/lecturers.jsp">Lecturers</a></li>
-			<li> <a href="inputs/modules.jsp"> Modules</a> </li>
-			<li> <a href="inputs/cohorts.jsp"> Cohort</a> </li>
-			<!--  <li> <a href="settings.jsp"> GA Settings</a> </li>-->
-			<li> <a href="constraints.jsp"> Special Constraints</a> </li>
+				<li> <a href="inputs/rooms.jsp"> Rooms</a></li>
+				<li> <a href="inputs/lecturers.jsp">Lecturers</a></li>
+				<li> <a href="inputs/modules.jsp"> Modules</a> </li>
+				<li> <a href="inputs/cohorts.jsp"> Cohort</a> </li>
+				<!--  <li> <a href="settings.jsp"> GA Settings</a> </li>-->
+				<li> <a href="constraints.jsp"> Special Constraints</a> </li>
+			
 		</div>
-<div>
-</div>
-<br/>
-<fieldset><legend>UTPSolver</legend>
+<center><h1>The UTPSolver: Department of Computer Science</h1><span class="show">-An Automated Electronic Departmental Course Timetabling System</span></center><br/>
+
+<hr/>
+<fieldset>
 <h1> Usage Instructions</h1>
 The usage of each of the tabs above for running this University Timetabling problem solver (UTPSolver) is described below:
 <ol>
@@ -55,8 +56,8 @@ The usage of each of the tabs above for running this University Timetabling prob
 	<li><b>Rooms</b> - This enables one to add rooms, their types and capacity</li>
 	<li><b>Lecturers</b> - This enables one to add lecturers, indicate if they are fulltime or partime as well as 
 	allocate a module to them.</li>
-	<li><b>Modules</b> - This enables one to add module code, lecture and lab hours, number of students that enroll 
-	in it and then allocate the module to a lecturer too.</li>
+	<li><b>Modules</b> - This enables one to add module code, lecture and lab hours, number of students  
+	enrolled and then module allocation to lecturer(s).</li>
 	<li><b>Cohort</b> - This enables one to add cohort, the starting level for the cohort, the number of 
 	years to graduate and also the modules to be taken by this cohort at each level of study.</li>
 	<li><b>Special Constraints</b> - This is where one can specify the times of the week that 

@@ -75,7 +75,7 @@ public class Fitness{
 		message += "Overall Constraints Satisfaction: " + this.percentOverall + "%<hr/>";
 		return chromosomeFitness;
 	}
-	
+
 	//Compute total hard constraints Rewards
 	public int getOverallRewardsOnHardConstraints(int chromosome){
 		int hsFitness=0;

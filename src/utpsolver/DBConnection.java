@@ -10,10 +10,19 @@ public class DBConnection {
 	private ResultSet resultSet = null;
 	private boolean initialized = false;
 	private PreparedStatement pstm = null;
+	/*
 	private String dbServer = "jdbc:mysql://localhost:3306/";//"jdbc:mysql://localhost/"
 	private String dbname = "dissertation";
 	private String user = "root";
 	private String dbPassword = "mysql";
+	*/
+	
+	//For departmental server
+	private String dbServer = "jdbc:mysql://stusql.dcs.shef.ac.uk/";
+	private String dbname = "team158";
+	private String user = "team158";
+	private String dbPassword = "9a5b309d";
+	
 
 	public DBConnection() {
 		initConnection();

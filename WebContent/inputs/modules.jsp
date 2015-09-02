@@ -27,7 +27,7 @@
 <fieldset><legend>Listing Modules</legend>
 	<table width="100%"> 
 		<tr>
-			<th> id</th><th>Course Code</th><th>Title</th><th>Level of Study</th><th>Actions</th>
+			<th> id</th><th>Course Code</th><th>Title</th><th>No. Of Students</th><th>Actions</th>
 		</tr>
 		<% 
 			
