@@ -17,12 +17,12 @@
 			<li><a href="addroom.jsp"> Add Room</a></li>
 			
 		</div>
-<div>
 <% 
 	ReadInputs read = new ReadInputs();
  	String rooms = read.getRooms();
  
 %>
+<br/>
 <fieldset><legend>Listing Rooms</legend>
 	<table width="100%"> 
 		<tr>
@@ -35,7 +35,7 @@
 
 	</table>
 </fieldset>
-</div>
+
 </div>
 </body>
 </html>

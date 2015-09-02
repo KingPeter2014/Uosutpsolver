@@ -156,3 +156,6 @@ input[type="submit"]{
   align:  right;
   background:	blue;
 }
+th{
+	text-align: left;
+}

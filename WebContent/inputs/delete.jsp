@@ -5,8 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Delete Object</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 <body>
+<div class="containter">
 	Delete not allowed from the application version 1. To be considered for version 2.
 	<%
 		String id = request.getParameter("id");
@@ -14,5 +16,6 @@
 		out.println(" <hr/>You want to delete " + what + " with id of " + id);
 	
 	%>
+	</div>
 </body>
 </html>

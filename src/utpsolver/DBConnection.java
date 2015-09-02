@@ -16,7 +16,6 @@ public class DBConnection {
 	private String user = "root";
 	private String dbPassword = "mysql";
 	*/
-	
 	//For departmental server
 	private String dbServer = "jdbc:mysql://stusql.dcs.shef.ac.uk/";
 	private String dbname = "team158";
